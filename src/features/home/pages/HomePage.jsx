@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import * as BootstrapIcon from 'react-bootstrap-icons';
+import SweetAlert from 'react-bootstrap-sweetalert';
 
 const HomePage = () => {
 
