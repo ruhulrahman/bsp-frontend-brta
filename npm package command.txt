@@ -1,0 +1,8 @@
+npx create-react-app my-app
+npm install react-bootstrap bootstrap
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+npm install @reduxjs/toolkit react-redux
+npm install react-router-dom
+npm i bootstrap-icons
+npm install react-icons --save
