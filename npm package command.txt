@@ -4,9 +4,12 @@ npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 npm install @reduxjs/toolkit react-redux
 npm install react-router-dom
+npm install react-transition-group
 npm i bootstrap-icons
 npm i react-sweetalert2
 npm install --save react-toastify
 npm install moment --save
 npm i hashids
 npm install axios
+npm install swiper
+npm install react-i18next@legacy i18next --save

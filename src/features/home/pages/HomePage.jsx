@@ -3,11 +3,11 @@ import { Button } from 'react-bootstrap';
 import { toaster } from '../../../utils/helpers.js';
 // import SweetAlert from 'react-bootstrap-sweetalert';
 import { ToastContainer } from 'react-toastify';
+import HeroContent from './HeroContent.jsx';
 
 const HomePage = () => {
 
     const notify = () => toaster('Ok')
-
 
     // function handleClick(){
     //     this.swal.fire({
@@ -19,12 +19,21 @@ const HomePage = () => {
 
     return (
         <div className="container mx-auto">
-            <h1 className="text-3xl font-bold text-center mb-4 text-green-500">Hello, React Bootstrap with Tailwind!</h1>
-            <Button variant="primary">React Bootstrap Button</Button>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded ml-2">Tailwind Button</button>
+            {/* <h1 className="text-3xl font-bold text-center mb-4 text-green-500 mt-3">Welcome to BRTA Service Portal</h1> */}
+            <HeroContent />
+
+            <Button variant="success btn-sm">React Bootstrap Button</Button>
+            <button className="btn btn-primary btn-sm ml-2">Tailwind Button</button>
+            <button className="btn btn-secondary btn-sm ml-2">Tailwind Button</button>
+            <button className="btn btn-info btn-sm ml-2">Tailwind Button</button>
+            <button className="btn btn-warning btn-sm ml-2">Tailwind Button</button>
+            <button className="btn btn-danger btn-sm ml-2">Tailwind Button</button>
+            <span className="badge text-bg-primary ml-2">Tailwind Button</span>
+            {/* <button className="bg-blue-500 text-white px-4 py-2 rounded ml-2">Tailwind Button</button> */}
 
             <button className="bg-red-500 text-white px-4 py-2 rounded ml-2" onClick={notify}>Notify!</button>
             <ToastContainer />
+
 
             <div className="card mt-[160px]">
                 <div className="card-body">

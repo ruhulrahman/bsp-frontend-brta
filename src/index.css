@@ -12,7 +12,27 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* transitions.css */
+.alert-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+.alert-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.alert-exit {
+  opacity: 1;
+}
+.alert-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
 
+
+/* @import "~bootstrap/scss/bootstrap"; */
 
 @tailwind base;
 @tailwind components;
@@ -20,9 +40,9 @@
 
 @layer components {
   /* .btn-primary {
-      @apply py-1.5 px-3 text-center bg-blue-700 rounded-md text-white;
-  } */
-   
+      @apply py-1.5 px-3 text-center bg-green-500 rounded-md text-white;
+  }
+    */
   /* label {
     @apply
     font-semibold text-xs text-gray-400
@@ -32,5 +52,10 @@
     @apply
     border rounded-lg px-3 py-2 mb-2 text-sm w-full outline-none dark:border-gray-500 dark:bg-gray-900
   } */
+
+  .custom-active-class {
+    @apply
+    text-green-700
+  }
 }
 

@@ -1,0 +1,14 @@
+// Override Bootstrap's default variables
+$primary: #ff6347; // Tomato color for primary
+$secondary: #6c757d; // Default secondary color (you can change it)
+$success: #61a728; // Green color for success
+// $success: #1BAB57; // Green color for success
+$danger: #EF4444; // Red color for danger
+$info: #7b56ff; // Yellow color for warning
+$warning: #ffc107; // Yellow color for warning
+
+// Import Bootstrap styles
+// @import "~bootstrap/scss/bootstrap";
+// @import "~bootstrap/scss/bootstrap";
+@import "../node_modules/bootstrap/scss/bootstrap";
+// @import "node_modules/bootstrap/scss/bootstrap";
