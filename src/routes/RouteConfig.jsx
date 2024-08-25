@@ -23,7 +23,7 @@ export const routeConfig = [
     ],
   },
   {
-    path: '/registration',
+    path: '/register',
     element: <LoginLayout />,
     children: [
       { path: '', element: <RegistrationPage /> },

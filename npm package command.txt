@@ -7,3 +7,6 @@ npm install react-router-dom
 npm i bootstrap-icons
 npm i react-sweetalert2
 npm install --save react-toastify
+npm install moment --save
+npm i hashids
+npm install axios
