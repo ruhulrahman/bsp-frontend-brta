@@ -1,18 +1,24 @@
 import logo from '@/assets/images/logo.png';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // import logo from '../../../assets/images/logo.png';
 
 import { toaster } from '@/utils/helpers.js';
 import { ToastContainer } from 'react-toastify';
 
 const LoginPage = () => {
+    const navigate = useNavigate();
 
-
-    const handleLogin = () => {
-        console.log('clicked')
-        toaster('Success')
-    }
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // Add your authentication logic here
+        if (username === 'user' && password === 'password') {
+            toaster('Success')
+            navigate('/dashboard');
+        } else {
+            alert('Invalid credentials');
+        }
+    };
 
     return (
         <div className="relative py-3 sm:max-w-xs sm:mx-auto">
