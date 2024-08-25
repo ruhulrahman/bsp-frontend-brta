@@ -1,15 +1,30 @@
-import React, { useState } from 'react'
-import { Button, Modal } from 'react-bootstrap';
-import * as BootstrapIcon from 'react-bootstrap-icons';
+import React from 'react';
+import { Button } from 'react-bootstrap';
+import { toaster } from '../../../utils/helpers.js';
 // import SweetAlert from 'react-bootstrap-sweetalert';
+import { ToastContainer } from 'react-toastify';
 
 const HomePage = () => {
+
+    const notify = () => toaster('Ok')
+
+
+    // function handleClick(){
+    //     this.swal.fire({
+    //         title: 'Example',
+    //         text: 'Swal injected',
+    //         icon: 'success',
+    //     });
+    // }
 
     return (
         <div className="container mx-auto">
             <h1 className="text-3xl font-bold text-center mb-4 text-green-500">Hello, React Bootstrap with Tailwind!</h1>
             <Button variant="primary">React Bootstrap Button</Button>
             <button className="bg-blue-500 text-white px-4 py-2 rounded ml-2">Tailwind Button</button>
+
+            <button className="bg-red-500 text-white px-4 py-2 rounded ml-2" onClick={notify}>Notify!</button>
+            <ToastContainer />
 
             <div className="card mt-[160px]">
                 <div className="card-body">
@@ -30,8 +45,8 @@ const HomePage = () => {
                             className="inline-flex items-center gap-2 rounded bg-[#e91e63] px-8 py-3 text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-pink-500/40 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
                             Play
-                            
-            {/* <BootstrapIcon.PlayBtn className='text-yellow-500 text-[18px]' /> */}
+
+                            {/* <BootstrapIcon.PlayBtn className='text-yellow-500 text-[18px]' /> */}
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
                                 <path
                                     fillRule="evenodd"

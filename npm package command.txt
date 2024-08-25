@@ -5,3 +5,5 @@ npx tailwindcss init -p
 npm install @reduxjs/toolkit react-redux
 npm install react-router-dom
 npm i bootstrap-icons
+npm i react-sweetalert2
+npm install --save react-toastify

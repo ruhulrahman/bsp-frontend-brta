@@ -1,11 +1,19 @@
-import React from 'react'
-import { Link, Route } from 'react-router-dom'
 import logo from '@/assets/images/logo.png';
+import React from 'react';
+import { Link } from 'react-router-dom';
 // import logo from '../../../assets/images/logo.png';
 
-import LoginBackground from '@/assets/images/login-background.png';
+import { toaster } from '@/utils/helpers.js';
+import { ToastContainer } from 'react-toastify';
 
 const LoginPage = () => {
+    
+    
+    const handleLogin = () => {
+        console.log('clicked')
+        toaster('Success')
+    }
+    
     return (
         <div className="min-h-96 px-8 py-6 mt-4 text-left bg-white dark:bg-gray-900  rounded-xl shadow-lg">
             <div className="flex flex-col justify-center items-center h-full select-none">
@@ -27,7 +35,8 @@ const LoginPage = () => {
                 <input type="password" className="border rounded-lg px-3 py-2 mb-2 text-sm w-full outline-none dark:border-gray-500 dark:bg-gray-900" placeholder="••••••••" />
             </div>
             <div className="mt-1">
-                <button className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">Login</button>
+                <button onClick={handleLogin} className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">Login</button>
+                <ToastContainer />
             </div>
         </div>
     )

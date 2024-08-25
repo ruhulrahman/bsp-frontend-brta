@@ -1,11 +1,22 @@
-import React from 'react'
-import { Link, Route } from 'react-router-dom'
 import logo from '@/assets/images/logo.png';
+import React from 'react';
+import { Link } from 'react-router-dom';
 // import logo from '../../../assets/images/logo.png';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
-import LoginBackground from '@/assets/images/login-background.png';
 
 const RegistrationPage = () => {
+
+    const registerHandle = () => {
+
+        Swal.fire({
+            title: 'Error!',
+            text: 'Do you want to continue',
+            icon: 'success',
+            confirmButtonText: 'Cool'
+        })
+    }
+
     return (
         <div className="min-h-96 px-8 py-6 mt-4 text-left bg-white dark:bg-gray-900  rounded-xl shadow-lg">
             <div className="flex flex-col justify-center items-center h-full select-none">
@@ -26,7 +37,7 @@ const RegistrationPage = () => {
                 <input type="password" className="border rounded-lg px-3 py-2 mb-2 text-sm w-full outline-none dark:border-gray-500 dark:bg-gray-900" placeholder="••••••••" />
             </div>
             <div className="mt-1">
-                <button className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">Register</button>
+                <button onClick={registerHandle} className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">Register</button>
             </div>
         </div>
     )
