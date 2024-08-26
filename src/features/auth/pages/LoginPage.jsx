@@ -11,13 +11,15 @@ const LoginPage = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
+        toaster('Success')
+        navigate('/dashboard/dashboard');
         // Add your authentication logic here
-        if (username === 'user' && password === 'password') {
-            toaster('Success')
-            navigate('/dashboard');
-        } else {
-            alert('Invalid credentials');
-        }
+        // if (username === 'user' && password === 'password') {
+        //     toaster('Success')
+        //     navigate('/dashboard');
+        // } else {
+        //     alert('Invalid credentials');
+        // }
     };
 
     return (

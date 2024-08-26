@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { routeConfig } from './RouteConfig';
 import PrivateRoute from '../components/common/PrivateRoute';
+import { routeConfig } from './RouteConfig';
 
 const PrivateRoutes = () => {
   return (

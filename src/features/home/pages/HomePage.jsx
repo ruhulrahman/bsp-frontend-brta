@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { toaster } from '../../../utils/helpers.js';
 // import SweetAlert from 'react-bootstrap-sweetalert';
+import Select from 'react-select';
 import { ToastContainer } from 'react-toastify';
 import HeroContent from './HeroContent.jsx';
 
@@ -16,6 +17,12 @@ const HomePage = () => {
     //         icon: 'success',
     //     });
     // }
+
+    const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' }
+      ]
 
     return (
         <div className="container mx-auto">
@@ -33,7 +40,13 @@ const HomePage = () => {
 
             <button className="bg-red-500 text-white px-4 py-2 rounded ml-2" onClick={notify}>Notify!</button>
             <ToastContainer />
-
+            
+            <div className='row'>
+                <div className="col-md-4">
+                    <h6 className="text-sm mb-1 font-semibold">Select your size</h6>
+                    <Select options={options} />
+                </div>
+            </div>
 
             <div className="card mt-[160px]">
                 <div className="card-body">

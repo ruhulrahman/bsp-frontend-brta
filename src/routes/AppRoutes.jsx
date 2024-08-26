@@ -1,9 +1,8 @@
 import React from 'react';
 // import { Route, Routes } from 'react-router-dom';
-import PublicRoutes from './PublicRoutes';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import PrivateRoutes from './PrivateRoutes';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import PublicRoutes from './PublicRoutes';
 
 const AppRoutes = () => {
   const location = useLocation();
