@@ -1,8 +1,8 @@
-import React from 'react'
-import { Link, NavLink, Route } from 'react-router-dom'
 import logo from '@/assets/images/logo.png';
 import i18n from '@/i18n';
+import React from 'react';
 import { withNamespaces } from 'react-i18next';
+import { Link, NavLink } from 'react-router-dom';
 
 const TopNavbar = ({ t }) => {
 
@@ -16,7 +16,8 @@ const TopNavbar = ({ t }) => {
         i18n.changeLanguage(preferredLanguage);
     }
     
-    const preferredLanguage = localStorage.getItem('preferredLanguage');
+    let preferredLanguage = localStorage.getItem('preferredLanguage');
+    preferredLanguage = preferredLanguage ? preferredLanguage : 'bn'
 
     return (
         <>

@@ -35,7 +35,8 @@ const LoginPage = () => {
                 </div>
                 <div className="w-full flex flex-col gap-2">
                     <label className="font-semibold text-xs text-gray-400">Username</label>
-                    <input className="border rounded-lg px-3 py-2 mb-2 text-sm w-full outline-none dark:border-gray-500 dark:bg-gray-900" placeholder="Username" />
+                    <input type="text" />
+                    {/* <input className="border rounded-lg px-3 py-2 mb-2 text-sm w-full outline-none dark:border-gray-500 dark:bg-gray-900" placeholder="Username" /> */}
                 </div>
                 <div className="w-full flex flex-col gap-2">
                     <label className="font-semibold text-xs text-gray-400">Password</label>
