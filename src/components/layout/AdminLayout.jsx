@@ -34,10 +34,10 @@ const AdminLayout = () => {
                     <nav className=''>
                         <ul className='admin-sidebar-ul'>
                             <li className="">
-                                <Link to="/admin" className={({ isActive }) => isActive ? "text-white font-bold" : "text-gray-400"}>Dashboard</Link>
+                                <Link to="/admin" className={({ isActive }) => isActive ? "bg-green-700 text-white font-bold" : ""}>Dashboard</Link>
                             </li>
                             <li className="">
-                                <Link to="/admin/profile">Profile</Link>
+                                <Link to="/admin/profile" className={({ isActive }) => isActive ? "bg-green-700 text-white font-bold" : ""}>Profile</Link>
                             </li>
                         </ul>
                     </nav>
