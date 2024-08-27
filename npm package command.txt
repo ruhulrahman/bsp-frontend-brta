@@ -14,3 +14,5 @@ npm install axios
 npm install swiper
 npm install react-i18next@legacy i18next --save
 npm i --save react-select
+npm install @headlessui/react
+npm install @heroicons/react

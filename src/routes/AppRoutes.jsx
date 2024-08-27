@@ -13,7 +13,7 @@ const AppRoutes = () => {
       <Route path="/*" element={<PublicRoutes />} />
 
       {/* Private routes */}
-      <Route path="/dashboard/*" element={<PrivateRoutes />} />
+      {/* <Route path="/admin/*" element={<PrivateRoutes />} /> */}
     </Routes>
 
     // <TransitionGroup>

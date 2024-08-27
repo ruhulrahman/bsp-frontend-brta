@@ -7,7 +7,7 @@ const PrivateRoutes = () => {
   return (
     <Routes>
       {routeConfig
-        .filter(route => route.path === '/dashboard') // Assume dashboard routes are private
+        .filter(route => route.path === '/admin') // Assume dashboard routes are private
         .map(({ path, element, children }) => (
           <Route key={path} path={path} element={<PrivateRoute element={element} />}>
             {children?.map((child) => (

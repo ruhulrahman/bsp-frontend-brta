@@ -1,11 +1,13 @@
-import DashboardLayout from '../components/layout/DashboardLayout.jsx';
+import AdminLayout from '../components/layout/AdminLayout.jsx';
 import HomeLayout from '../components/layout/HomeLayout.jsx';
 import LoginLayout from '../components/layout/LoginLayout.jsx';
 
 import LoginPage from '../features/auth/pages/LoginPage.jsx';
 import RegistrationPage from '../features/auth/pages/RegistrationPage.jsx';
 import DashboardPage from '../features/dashboard/pages/DashboardPage.jsx';
+import Profile from '../features/dashboard/pages/Profile.jsx';
 import HomePage from '../features/home/pages/HomePage.jsx';
+import AuthGuard from './AuthGuard';
 
 export const routeConfig = [
   {
@@ -29,12 +31,24 @@ export const routeConfig = [
       { path: '', element: <RegistrationPage /> },
     ],
   },
+  // {
+  //   path: '/admin',
+  //   element: <AdminLayout />,
+  //   children: [
+  //     { path: '', element: <DashboardPage /> },
+  //     { path: 'profile', element: <Profile /> }
+  //   ],
+  // },
   {
-    path: '/dashboard',
-    element: <DashboardLayout />,
-    children: [
-      { path: '/dashboard', element: <DashboardPage /> },
-      // Add more dashboard-related routes here
-    ],
-  },
+      path: '/admin',
+      element: (
+          <AuthGuard>
+              <AdminLayout />
+          </AuthGuard>
+      ),
+      children: [
+          { path: '', element: <DashboardPage /> },
+          { path: 'profile', element: <Profile /> },
+      ],
+  }
 ];

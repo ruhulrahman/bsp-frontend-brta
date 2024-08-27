@@ -11,8 +11,8 @@ const LoginPage = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        toaster('Success')
-        navigate('/dashboard/dashboard');
+        // toaster('Success')
+        navigate('/admin');
         // Add your authentication logic here
         // if (username === 'user' && password === 'password') {
         //     toaster('Success')
@@ -37,8 +37,7 @@ const LoginPage = () => {
                 </div>
                 <div className="w-full flex flex-col gap-2">
                     <label className="font-semibold text-xs text-gray-400">Username</label>
-                    <input type="text" />
-                    {/* <input className="border rounded-lg px-3 py-2 mb-2 text-sm w-full outline-none dark:border-gray-500 dark:bg-gray-900" placeholder="Username" /> */}
+                    <input className="border rounded-lg px-3 py-2 mb-2 text-sm w-full outline-none dark:border-gray-500 dark:bg-gray-900" placeholder="Username" />
                 </div>
                 <div className="w-full flex flex-col gap-2">
                     <label className="font-semibold text-xs text-gray-400">Password</label>

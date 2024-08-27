@@ -13,7 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 /* transitions.css */
-.alert-enter {
+/* .alert-enter {
   opacity: 0;
   transform: scale(0.9);
 }
@@ -29,10 +29,38 @@
   opacity: 0;
   transform: scale(0.9);
   transition: opacity 300ms, transform 300ms;
-}
-
+} */
 
 /* @import "~bootstrap/scss/bootstrap"; */
+
+ 
+/* .admin-sidebar-ul li {
+  @apply
+  hover:bg-green-900
+} */
+
+/* .admin-sidebar-ul li:hover {
+  @apply
+  bg-green-900
+}
+
+.admin-sidebar-ul li.active {
+  @apply
+  bg-green-900
+} */
+
+.admin-sidebar-ul li a {
+  @apply
+  text-gray-300 
+  hover:bg-green-800
+  hover:text-white
+  block
+  p-2
+}
+/* .admin-sidebar-ul li a {
+  @apply
+  d-block
+} */
 
 @tailwind base;
 @tailwind components;
@@ -57,5 +85,6 @@
     @apply
     text-green-700
   }
+ 
 }
 
