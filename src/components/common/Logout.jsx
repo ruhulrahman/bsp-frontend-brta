@@ -1,0 +1,27 @@
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const Logout = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Clear authentication data (e.g., tokens, user info)
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+
+        // Optionally, clear other related data
+        // sessionStorage.clear();
+        // localStorage.clear();
+
+        // Redirect to the login page
+        navigate('/login');
+    }, [navigate]);
+
+    return (
+        <div className="flex items-center justify-center h-screen bg-gray-100">
+            <p className="text-lg font-medium text-gray-700">Logging you out...</p>
+        </div>
+    );
+};
+
+export default Logout;

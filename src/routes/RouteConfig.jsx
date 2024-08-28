@@ -3,6 +3,7 @@ import HomeLayout from '../components/layout/HomeLayout.jsx';
 import LoginLayout from '../components/layout/LoginLayout.jsx';
 
 import LoginPage from '../features/auth/pages/LoginPage.jsx';
+import Logout from '@/components/common/Logout.jsx';
 import RegistrationPage from '../features/auth/pages/RegistrationPage.jsx';
 import DashboardPage from '../features/dashboard/pages/DashboardPage.jsx';
 import Profile from '../features/dashboard/pages/Profile.jsx';
@@ -23,6 +24,10 @@ export const routeConfig = [
     children: [
       { path: '', element: <LoginPage /> },
     ],
+  },
+  {
+    path: '/logout',
+    element: <Logout />
   },
   {
     path: '/register',
@@ -47,7 +52,7 @@ export const routeConfig = [
           </AuthGuard>
       ),
       children: [
-          { path: '', element: <DashboardPage /> },
+          { path: 'dashboard', element: <DashboardPage /> },
           { path: 'profile', element: <Profile /> },
       ],
   }
