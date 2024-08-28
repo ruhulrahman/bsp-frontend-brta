@@ -12,7 +12,7 @@ const LoginPage = () => {
     const handleLogin = (e) => {
         e.preventDefault();
         // toaster('Success')
-        navigate('/admin');
+        navigate('/admin/dashboard');
         // Add your authentication logic here
         // if (username === 'user' && password === 'password') {
         //     toaster('Success')

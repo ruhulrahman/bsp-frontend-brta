@@ -1,6 +1,8 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
+import i18n from '@/i18n';
+import { withNamespaces } from 'react-i18next';
 
 const navigation = [
     { name: 'Contact', href: '/admin/contact' },
@@ -10,12 +12,21 @@ const navigation = [
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
-const AdminNavbar = () => {
+const AdminNavbar = ({ t }) => {
     const navigate = useNavigate()
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/login');
+
+    const setLanguage = (language) => {
+        localStorage.setItem('preferredLanguage', language);
     }
+
+    const changeLanguage = (lng) => {
+        setLanguage(lng)
+        const preferredLanguage = localStorage.getItem('preferredLanguage');
+        i18n.changeLanguage(preferredLanguage);
+    }
+
+    let preferredLanguage = localStorage.getItem('preferredLanguage');
+    preferredLanguage = preferredLanguage ? preferredLanguage : 'bn'
 
     return (
         <Disclosure as="nav" className="bg-gray-800">
@@ -52,7 +63,7 @@ const AdminNavbar = () => {
                                     // >
                                     //     {item.name}
                                     // </a>
-                                    <NavLink className={({ isActive }) => isActive ? 'bg-green-700 rounded-md px-3 py-2 text-sm font-medium text-gray-100' : 'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium'} to={item.href}>
+                                    <NavLink key={item.name} className={({ isActive }) => isActive ? 'bg-green-700 rounded-md px-3 py-2 text-sm font-medium text-gray-100' : 'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium'} to={item.href}>
                                         {item.name}
                                     </NavLink>
                                 ))}
@@ -60,6 +71,16 @@ const AdminNavbar = () => {
                         </div>
                     </div>
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                        
+                        {preferredLanguage === 'en' &&
+                            <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
+                                <span className="text-md">BN</span>
+                            </button>}
+                        {preferredLanguage === 'bn' &&
+                            <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
+                                <span className="text-md">EN</span>
+                            </button>}
+
                         <button
                             type="button"
                             className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -93,12 +114,12 @@ const AdminNavbar = () => {
                             >
                                 <MenuItem>
                                     <Link to="/admin/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                    Ruhul Amin
+                                        Ruhul Amin
                                     </Link>
                                 </MenuItem>
                                 <MenuItem>
                                     <Link to="/admin/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                    Your Profile
+                                        Your Profile
                                     </Link>
                                 </MenuItem>
                                 <MenuItem>
@@ -108,10 +129,10 @@ const AdminNavbar = () => {
                                 </MenuItem>
                                 <MenuItem className="w-full">
                                     <Link to={"/logout"} className="px-4 py-2 text-sm text-red-500 text-gray-700 data-[focus]:bg-gray-100 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-                                            </svg>
-                                            Logout
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                                        </svg>
+                                        Logout
                                     </Link>
                                 </MenuItem>
                             </MenuItems>
@@ -142,4 +163,4 @@ const AdminNavbar = () => {
     )
 }
 
-export default AdminNavbar
+export default withNamespaces()(AdminNavbar)

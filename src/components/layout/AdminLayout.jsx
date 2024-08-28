@@ -27,7 +27,7 @@ const AdminLayout = () => {
                 {/* <!-- Main Content --> */}
                 <main className="flex-1">
                     <AdminNavbar />
-                    <main className="bg-white p-3 m-3 rounded shadow-lg">
+                    <main className="bg-white m-3.5 rounded shadow-lg">
                         <Outlet /> {/* Renders nested routes */}
                     </main>
                 </main>

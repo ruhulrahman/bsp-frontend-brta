@@ -13,5 +13,12 @@
   "list": "List",
   "login": "Login",
   "logout": "Logout",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "review_each_data_before_edit_or_delete": "Review each data before edit or delete",
+  "user_list": "User List",
+  "name": "Name",
+  "status": "Status",
+  "action": "Action",
+  "active": "Active",
+  "inactive": "Inactive"
 }
