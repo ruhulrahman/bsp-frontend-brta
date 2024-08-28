@@ -1,7 +1,7 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 // import './custom-bootstrap.scss';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'sweetalert2/src/sweetalert2.scss';
 import App from './App.jsx';

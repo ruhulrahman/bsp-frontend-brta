@@ -1,5 +1,4 @@
 import React from 'react'
-import Badge from 'react-bootstrap/Badge';
 
 const User = () => {
     return (
@@ -13,8 +12,8 @@ const User = () => {
                             <p class="text-slate-500">Review each data before edit or delete</p>
                         </div>
                         <div class="flex flex-col gap-2 shrink-0 sm:flex-row">
-                            <button className='btn-black-rounded'>Add New</button>
-                            {/* <button
+                            <button className='btn btn-outline-success rounded-[50px] px-4 btn-sm'>Add New</button>
+                            <button
                                 class="flex select-none items-center gap-2 rounded bg-slate-800 py-2.5 px-4 text-xs font-semibold text-white shadow-md shadow-slate-900/10 transition-all hover:shadow-lg hover:shadow-slate-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                 type="button">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
@@ -24,7 +23,7 @@ const User = () => {
                                     </path>
                                 </svg>
                                 Add New
-                            </button> */}
+                            </button>
                         </div>
                     </div>
 
@@ -33,16 +32,65 @@ const User = () => {
                     <table class="w-full mt-4 text-left table-auto min-w-max">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Office & Designation</th>
-                                <th>Status</th>
-                                <th>Employed</th>
-                                <th>Action</th>
+                                <th
+                                    class="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
+                                    <p
+                                        class="flex items-center justify-between gap-2 font-sans text-sm font-normal leading-none text-slate-500">
+                                        Member
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" aria-hidden="true" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"></path>
+                                        </svg>
+                                    </p>
+                                </th>
+                                <th
+                                    class="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
+                                    <p
+                                        class="flex items-center justify-between gap-2 font-sans text-sm font-normal leading-none text-slate-500">
+                                        Function
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" aria-hidden="true" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"></path>
+                                        </svg>
+                                    </p>
+                                </th>
+                                <th
+                                    class="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
+                                    <p
+                                        class="flex items-center justify-between gap-2 font-sans text-sm  font-normal leading-none text-slate-500">
+                                        Status
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" aria-hidden="true" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"></path>
+                                        </svg>
+                                    </p>
+                                </th>
+                                <th
+                                    class="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
+                                    <p
+                                        class="flex items-center justify-between gap-2 font-sans text-sm  font-normal leading-none text-slate-500">
+                                        Employed
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" aria-hidden="true" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"></path>
+                                        </svg>
+                                    </p>
+                                </th>
+                                <th
+                                    class="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
+                                    <p
+                                        class="flex items-center justify-between gap-2 font-sans text-sm  font-normal leading-none text-slate-500">
+                                    </p>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <div class="flex items-center gap-3">
                                         <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
                                             alt="John Michael" class="relative inline-block h-9 w-9 !rounded-full object-cover object-center" />
@@ -57,7 +105,7 @@ const User = () => {
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <div class="flex flex-col">
                                         <p class="text-sm font-semibold text-slate-700">
                                             Manager
@@ -68,15 +116,20 @@ const User = () => {
                                         </p>
                                     </div>
                                 </td>
-                                <td>
-                                    <span class="badge bg-success">Active</span>
+                                <td class="p-4 border-b border-slate-200">
+                                    <div class="w-max">
+                                        <div
+                                            class="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20">
+                                            <span class="">online</span>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <p class="text-sm text-slate-500">
                                         23/04/18
                                     </p>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <button
                                         class="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-slate-900 transition-all hover:bg-slate-900/10 active:bg-slate-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                         type="button">
@@ -92,7 +145,7 @@ const User = () => {
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <div class="flex items-center gap-3">
                                         <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg"
                                             alt="Alexa Liras" class="relative inline-block h-9 w-9 !rounded-full object-cover object-center" />
@@ -107,7 +160,7 @@ const User = () => {
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <div class="flex flex-col">
                                         <p class="text-sm font-semibold text-slate-700">
                                             Designer
@@ -118,17 +171,20 @@ const User = () => {
                                         </p>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <div class="w-max">
-                                        <span className='badge bg-danger'>Inactive</span>
+                                        <div
+                                            class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-md select-none whitespace-nowrap bg-slate-100 text-slate-500">
+                                            <span class="">offline</span>
+                                        </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <p class="text-sm text-slate-500">
                                         23/04/18
                                     </p>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <button
                                         class="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-slate-900 transition-all hover:bg-slate-900/10 active:bg-slate-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                         type="button">
@@ -144,7 +200,7 @@ const User = () => {
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <div class="flex items-center gap-3">
                                         <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg"
                                             alt="Laurent Perrier"
@@ -160,7 +216,7 @@ const User = () => {
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <div class="flex flex-col">
                                         <p class="text-sm font-semibold text-slate-700">
                                             Executive
@@ -171,15 +227,20 @@ const User = () => {
                                         </p>
                                     </div>
                                 </td>
-                                <td>
-                                    <span class="badge bg-danger">Inactive</span>
+                                <td class="p-4 border-b border-slate-200">
+                                    <div class="w-max">
+                                        <div
+                                            class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-md select-none whitespace-nowrap bg-slate-100 text-slate-500">
+                                            <span class="">offline</span>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <p class="text-sm text-slate-500">
                                         19/09/17
                                     </p>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <button
                                         class="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-slate-900 transition-all hover:bg-slate-900/10 active:bg-slate-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                         type="button">
@@ -195,7 +256,7 @@ const User = () => {
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <div class="flex items-center gap-3">
                                         <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg"
                                             alt="Michael Levi" class="relative inline-block h-9 w-9 !rounded-full object-cover object-center" />
@@ -210,7 +271,7 @@ const User = () => {
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <div class="flex flex-col">
                                         <p class="text-sm font-semibold text-slate-700">
                                             Designer
@@ -221,15 +282,20 @@ const User = () => {
                                         </p>
                                     </div>
                                 </td>
-                                <td>
-                                    <span class="badge bg-success">Active</span>
+                                <td class="p-4 border-b border-slate-200">
+                                    <div class="w-max">
+                                        <div
+                                            class="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20">
+                                            <span class="">online</span>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <p class="text-sm text-slate-500">
                                         24/12/08
                                     </p>
                                 </td>
-                                <td>
+                                <td class="p-4 border-b border-slate-200">
                                     <button
                                         class="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-slate-900 transition-all hover:bg-slate-900/10 active:bg-slate-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                         type="button"
