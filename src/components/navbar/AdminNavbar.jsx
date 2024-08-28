@@ -1,12 +1,10 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Team', href: '#', current: false },
-    { name: 'Projects', href: '#', current: false },
-    { name: 'Calendar', href: '#', current: false },
+    { name: 'Contact', href: '/admin/contact' },
+    { name: 'Help', href: '/admin/help' },
 ]
 
 function classNames(...classes) {
@@ -43,17 +41,20 @@ const AdminNavbar = () => {
                         <div className="hidden sm:ml-6 sm:block">
                             <div className="flex space-x-4">
                                 {navigation.map((item) => (
-                                    <a
-                                        key={item.name}
-                                        href={item.href}
-                                        aria-current={item.current ? 'page' : undefined}
-                                        className={classNames(
-                                            item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                            'rounded-md px-3 py-2 text-sm font-medium',
-                                        )}
-                                    >
+                                    // <a
+                                    //     key={item.name}
+                                    //     href={item.href}
+                                    //     aria-current={item.current ? 'page' : undefined}
+                                    //     className={classNames(
+                                    //         item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                    //         'rounded-md px-3 py-2 text-sm font-medium',
+                                    //     )}
+                                    // >
+                                    //     {item.name}
+                                    // </a>
+                                    <NavLink className={({ isActive }) => isActive ? 'bg-green-700 rounded-md px-3 py-2 text-sm font-medium text-gray-100' : 'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium'} to={item.href}>
                                         {item.name}
-                                    </a>
+                                    </NavLink>
                                 ))}
                             </div>
                         </div>
@@ -67,6 +68,11 @@ const AdminNavbar = () => {
                             <span className="sr-only">View notifications</span>
                             <BellIcon aria-hidden="true" className="h-6 w-6" />
                         </button>
+
+                        <div className='text-gray-300 flex flex-col'>
+                            <span className='text-[14px]'>Ruhul Amin</span>
+                            <span className='text-[12px] text-green-200 text-right leadin'>Admin</span>
+                        </div>
 
                         {/* Profile dropdown */}
                         <Menu as="div" className="relative ml-3">
@@ -85,6 +91,11 @@ const AdminNavbar = () => {
                                 transition
                                 className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                             >
+                                <MenuItem>
+                                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                                        Ruhul Amin
+                                    </a>
+                                </MenuItem>
                                 <MenuItem>
                                     <a href="#" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
                                         Your Profile
