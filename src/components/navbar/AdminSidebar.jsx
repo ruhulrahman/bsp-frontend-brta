@@ -6,6 +6,7 @@ import Collapse from 'react-bootstrap/Collapse';
 const AdminSidebar = () => {
 
     const [openConfiguration, setOpenConfiguration] = useState(false);
+    const [openUserManagement, setOpenUserManagement] = useState(false);
 
     return (
         <>
@@ -50,6 +51,24 @@ const AdminSidebar = () => {
                                     <li>
                                         <NavLink to="/admin/configurations/personal">
                                             <span className="text-[15px] ml-4 text-gray-200 font-bold">Personal</span>
+                                        </NavLink>
+                                    </li>
+                                </ul>
+                            )}
+                        </li>
+                        <li>
+                            <div onClick={() => setOpenUserManagement(!openUserManagement)} className="flex items-center justify-content-between cursor-pointer">
+                                <i className="bi bi-gear-fill"></i>
+                                <span className="text-[15px] ml-4 text-gray-200 font-bold">User Management</span>
+                                <span className={`text-sm rotate-180 ${open ? 'rotate-0' : ''}`}>
+                                    <i className="bi bi-chevron-down"></i>
+                                </span>
+                            </div>
+                            {openUserManagement && (
+                                <ul id="example-collapse-text" className="pl-10" style={{ height: '80px', visibilty: 'visible' }}>
+                                    <li>
+                                        <NavLink to="/admin/user-management/user">
+                                            <span className="text-[15px] ml-4 text-gray-200 font-bold">Users</span>
                                         </NavLink>
                                     </li>
                                 </ul>
