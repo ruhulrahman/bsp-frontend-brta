@@ -36,7 +36,6 @@ const HomePage = () => {
             <button className="btn btn-warning btn-sm ml-2">Tailwind Button</button>
             <button className="btn btn-danger btn-sm ml-2">Tailwind Button</button>
             <span className="badge text-bg-primary ml-2">Tailwind Button</span>
-            {/* <button className="bg-blue-500 text-white px-4 py-2 rounded ml-2">Tailwind Button</button> */}
 
             <button className="bg-red-500 text-white px-4 py-2 rounded ml-2" onClick={notify}>Notify!</button>
             <ToastContainer />
@@ -62,13 +61,11 @@ const HomePage = () => {
                     <h1 className="text-center text-2xl font-bold">CloveUI-Buttons</h1>
                     <h1 className="text-center text-xl font-bold mt-2 opacity-50">For more components, search cloveui on github</h1>
                     <div className="flex h-40 items-center justify-center gap-5">
-                        {/* <!-- button1 --> */}
                         <button
                             className="inline-flex items-center gap-2 rounded bg-[#e91e63] px-8 py-3 text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-pink-500/40 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
                             Play
 
-                            {/* <BootstrapIcon.PlayBtn className='text-yellow-500 text-[18px]' /> */}
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
                                 <path
                                     fillRule="evenodd"
@@ -78,7 +75,6 @@ const HomePage = () => {
                             </svg>
                         </button>
 
-                        {/* <!-- button2 --> */}
                         <button
                             className="inline-flex items-center gap-2 rounded bg-[#e91e63] px-6 py-3 text-sm font-semibold text-white transition-all ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-pink-500/40 active:scale-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
@@ -90,7 +86,6 @@ const HomePage = () => {
                             </svg>
                         </button>
 
-                        {/* <!-- button3 --> */}
                         <button
                             className="group inline-flex min-w-0 items-center gap-2 rounded bg-[#e91e63] px-6 py-3 text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-pink-500/40 active:scale-95 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
@@ -107,7 +102,6 @@ const HomePage = () => {
                             </svg>
                         </button>
 
-                        {/* <!-- button4 --> */}
                         <button
                             className="group inline-flex items-center gap-2 rounded-full bg-[#e91e63] px-3 py-3 text-sm font-semibold text-white transition-all ease-in-out hover:shadow-lg hover:shadow-pink-500/40 active:scale-90 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
@@ -123,7 +117,6 @@ const HomePage = () => {
                             </svg>
                         </button>
 
-                        {/* <!-- button5 --> */}
                         <button
                             className="group inline-flex items-center gap-2 rounded-full bg-[#e91e63] px-3 py-3 text-sm font-semibold text-white transition-all ease-in-out hover:shadow-lg hover:shadow-pink-500/40 active:scale-90 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
@@ -142,7 +135,6 @@ const HomePage = () => {
                         </button>
                     </div>
                     <div className="flex h-20 items-center justify-center gap-5">
-                        {/* <!-- button1 --> */}
                         <button
                             className="inline-flex items-center gap-2 rounded border border-[#7629c8] px-6 py-2 text-sm font-semibold text-[#7629c8] transition-all hover:shadow-lg disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
@@ -163,28 +155,24 @@ const HomePage = () => {
                             </svg>
                         </button>
 
-                        {/* <!-- button2 --> */}
                         <button
                             className="inline-flex items-center gap-2 rounded border border-[#7629c8] px-6 py-2 text-sm font-semibold text-[#7629c8] transition-all hover:bg-[#7629c8] hover:text-white hover:shadow-lg active:scale-95 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
                             Outline
                         </button>
 
-                        {/* <!-- button3 --> */}
                         <button
                             className="inline-flex items-center gap-2 rounded-full border border-[#7629c8] px-6 py-2 text-sm font-semibold text-[#7629c8] transition-all hover:bg-[#7629c8] hover:text-white hover:shadow-lg active:scale-95 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
                             Outline
                         </button>
 
-                        {/* <!-- button4 --> */}
                         <button
                             className="inline-flex items-center gap-2 rounded-full border border-[#7629c8] px-6 py-2 text-sm font-semibold text-[#7629c8] transition-all hover:rotate-3 hover:scale-105 hover:shadow-lg active:scale-95 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
                             Outline
                         </button>
 
-                        {/* <!-- button5 --> */}
                         <button
                             className="group relative inline-flex items-center gap-2 border border-[#7629c8] px-6 py-2 text-sm font-semibold text-[#7629c8] transition-all hover:text-white hover:shadow-lg disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
@@ -192,7 +180,6 @@ const HomePage = () => {
                             Outline
                         </button>
 
-                        {/* <!-- button6 --> */}
                         <button
                             className="group inline-flex items-center gap-2 rounded bg-gradient-to-r from-[#9e58e9] to-blue-500 p-[2px] text-sm font-semibold transition-all hover:text-white hover:shadow-lg active:scale-95 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >

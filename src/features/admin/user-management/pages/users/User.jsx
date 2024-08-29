@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import Badge from 'react-bootstrap/Badge';
 import { withNamespaces } from 'react-i18next';
+import Pagination from 'react-bootstrap/Pagination'
 import AddNew from './AddNew';
 
 const User = ({ t }) => {
@@ -13,7 +14,7 @@ const User = ({ t }) => {
     const getListData = () => {
         console.log("getListData");
     }
-    
+
     useEffect(() => {
         getListData()
     }, []);

@@ -20,5 +20,14 @@
   "status": "Status",
   "action": "Action",
   "active": "Active",
-  "inactive": "Inactive"
+  "inactive": "Inactive",
+  "bn": "Bn",
+  "en": "En",
+  "email": "Email",
+  "phone": "Phone",
+  "mobile": "Mobile",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "username": "Username",
+  "designation": "Designation"
 }
