@@ -18,7 +18,7 @@ const AddNew = ({ t }) => {
 
             <Modal size='md' show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Add New User</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -33,10 +33,10 @@ const AddNew = ({ t }) => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="danger" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleClose}>
+                    <Button variant="success" onClick={handleClose}>
                         Save Changes
                     </Button>
                 </Modal.Footer>

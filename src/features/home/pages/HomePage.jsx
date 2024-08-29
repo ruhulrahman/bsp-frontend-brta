@@ -30,7 +30,7 @@ const HomePage = () => {
             <HeroContent />
 
             <Button variant="success btn-sm">React Bootstrap Button</Button>
-            <button className="btn btn-primary btn-sm ml-2">Tailwind Button</button>
+            <button className="btn btn-primary-rounded btn-sm ml-2">Tailwind Button</button>
             <button className="btn btn-secondary btn-sm ml-2">Tailwind Button</button>
             <button className="btn btn-info btn-sm ml-2">Tailwind Button</button>
             <button className="btn btn-warning btn-sm ml-2">Tailwind Button</button>

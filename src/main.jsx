@@ -5,9 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'sweetalert2/src/sweetalert2.scss';
 import App from './App.jsx';
-import './index.css';
 import './i18n';
 import { store } from './store/store';
+import './index.css';
 
 // const preferredLanguage = localStorage.getItem('preferredLanguage');
 

@@ -22,7 +22,7 @@ const User = ({ t }) => {
         <div className="relative flex flex-col w-full h-full text-slate-700 bg-white shadow-md rounded-xl bg-clip-border">
             <div className="relative mx-4 overflow-hidden text-slate-700 bg-white rounded-none bg-clip-border">
                 <div className="flex items-center justify-between ">
-                    <div>
+                    <div className='mt-2'>
                         <h3 className="text-lg font-semibold text-slate-800">{t('user_list')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
@@ -45,7 +45,7 @@ const User = ({ t }) => {
 
             </div>
             <div className="p-0 overflow-scroll">
-                <table className="w-full mt-4 text-left table-auto min-w-max">
+                <table className="w-full mt-2 text-left table-auto min-w-max">
                     <thead>
                         <tr>
                             <th>{t('name')}</th>
