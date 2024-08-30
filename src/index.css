@@ -64,6 +64,20 @@
   p-2
 }
 
+.form-check-input:checked {
+  @apply
+  !border-green-700
+  !bg-green-700
+}
+
+/* .form-check-input:not(:checked) {
+  @apply
+  !border-red-500
+  !bg-red-500
+  opacity-80
+} */
+
+
 /* .admin-sidebar-ul li a, .admin-sidebar-ul li button {
   @apply
   w-full

@@ -1,12 +1,14 @@
+import Checkbox from '@/components/ui/Checkbox';
+import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { Formik, Form as FormikForm, Field, ErrorMessage, useFormikContext } from 'formik';
-import { FormCheck } from 'react-bootstrap';
-import * as Yup from 'yup';
 import { withNamespaces } from 'react-i18next';
+import * as Yup from 'yup';
 
 const AddNew = ({ t, ...props }) => {
+
+    // const { handleChange, submitForm, touched, errors, values } = useFormikContext() ?? {};
 
     // const { setFieldValue } = useFormikContext();
 
@@ -14,6 +16,24 @@ const AddNew = ({ t, ...props }) => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [initialValues, setInitialValues] = useState({
+        name_en: '',
+        name_bn: '',
+        email: '',
+        username: '',
+        password: '',
+        confirmPassword: '',
+        is_active: true,
+    })
+
+    // const handleInputChange = (e) => {
+    //     console.log('Input changed:', e.target.name, e.target.value);
+    //     setInitialValues((prevValues) => ({
+    //         ...prevValues,
+    //         [e.target.name]: e.target.value,
+    //     }));
+    // };
 
     const validationSchema = Yup.object().shape({
         name_bn: Yup.string().required('Name is required'),
@@ -38,8 +58,8 @@ const AddNew = ({ t, ...props }) => {
         is_active: Yup.string().required('Is active is required'),
     });
 
-    const initialValues = {
-        name_bn: 'Ruhul',
+    const resetValues = {
+        name_bn: '',
         name_en: '',
         email: '',
         username: '',
@@ -50,13 +70,13 @@ const AddNew = ({ t, ...props }) => {
 
     const handleReset = (resetForm) => {
         resetForm({
-            values: initialValues, // Reset to initial values
+            values: resetValues, // Reset to initial values
         });
     };
 
-    //   useEffect(() => {
-    //     handleReset();
-    //   }, []);
+    useEffect(() => {
+        console.log('initialValues', initialValues)
+    }, []);
 
 
     // console.log('values', values);
@@ -86,20 +106,6 @@ const AddNew = ({ t, ...props }) => {
                     <Offcanvas.Title>Add New User</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-
-                    <div>
-                        <h1>Initial Values</h1>
-                        <div>
-                            {/* <p>Name (EN): {values.name_en}</p>
-                            <p>Name (BN): {values.name_bn}</p>
-                            <p>Email: {values.email}</p>
-                            <p>Username: {values.username}</p>
-                            <p>Password: {values.password}</p>
-                            <p>Confirm Password: {values.confirmPassword}</p>
-                            <p>Is Active: {values.is_active}</p> */}
-                        </div>
-                    </div>
-
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
@@ -108,7 +114,7 @@ const AddNew = ({ t, ...props }) => {
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
                             onSubmit(values);
-                          }}
+                        }}
                     >
                         {({ values, resetForm }) => (
                             <FormikForm>
@@ -144,36 +150,11 @@ const AddNew = ({ t, ...props }) => {
                                     <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="is_active">
-                                    <Form.Label>{t('active')}</Form.Label>
-                                    {/* <Form.Check
-                                    type="switch"
-                                    id="custom-switch"
-                                    label={t('active')}
-                                /> */}
-                                    <Field name="is_active">
-                                        {({ field }) => (
-                                            <FormCheck type="switch" {...field} id="custom-switch" label={t('active')} />
-                                        )}
-                                    </Field>
+                                    <Checkbox id="custom-switch" name="is_active" className="" label={values.is_active ? t('active') : t('inactive')} />
                                     <ErrorMessage name="is_active" component="div" className="text-danger" />
                                 </Form.Group>
                                 <button type='submit' className='btn btn-success btn-rounded btn-xs'>Save</button>
-                                {/* <button type='reset' className='btn btn-outline-black btn-rounded btn-xs ml-2'>Reset</button> */}
-                                <button
-                                    type="button"
-                                    onClick={() => handleReset(resetForm)}
-                                    style={{ marginLeft: '10px' }}
-                                >
-                                    Reset Form
-                                </button>
-                                <div>
-                                    <h3>Initial Values</h3>
-                                    {Object.keys(values).map((key) => (
-                                        <p key={key}>
-                                            {key}: {values[key]}
-                                        </p>
-                                    ))}
-                                </div>
+                                <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>Reset</button>
                             </FormikForm>
                         )}
                     </Formik>

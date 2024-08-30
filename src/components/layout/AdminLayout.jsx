@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink, Link, useNavigate, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import AdminNavbar from '../navbar/AdminNavbar';
 import AdminSidebar from '../navbar/AdminSidebar';
 
