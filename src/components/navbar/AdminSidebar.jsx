@@ -8,7 +8,7 @@ const AdminSidebar = ({ openSidebar }) => {
 
     return (
         <>
-            <nav className={`bg-gray-800 text-white ${openSidebar ? 'w-64 min-h-screen' : 'w-0 h-0 hidden'}`}>
+            <nav className={`bg-gray-800 text-white ${openSidebar ? 'w-[270px] min-h-screen' : 'w-0 h-0 hidden'}`}>
                 <ul className='admin-sidebar-ul'>
                     <li>
                         <NavLink to="/admin/dashboard">
