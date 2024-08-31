@@ -31,7 +31,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
     return (
         <div className='flex'>
             {/* <div className={openSidebar ? 'flex justify-between text-green-500 bg-gray-600 p-[18px] w-[300px]' : 'flex justify-between text-green-500 bg-gray-600 p-[18px] w-auto'}> */}
-            <div className={`flex justify-between text-green-500 bg-gray-600 p-[18px] ${openSidebar ? 'w-[300px]' : 'w-auto'}`}>
+            <div onClick={!openSidebar && onToggleSidebar} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500 ${openSidebar ? 'w-[300px]' : 'w-auto cursor-pointer hover:bg-gray-500'}`}>
                 {/* <div className='flex justify-between w-[300px] text-green-500 bg-gray-600 p-[18px]'> */}
                 {openSidebar && (<h2 className="text-xl font-semibold">BRTA Service Portal</h2>)}
                 <button onClick={onToggleSidebar} id="menu-button" className="focus:outline-none">
