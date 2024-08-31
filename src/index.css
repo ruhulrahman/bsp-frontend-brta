@@ -38,30 +38,19 @@
 
 /* @import "~bootstrap/scss/bootstrap"; */
 
- 
-/* .admin-sidebar-ul li {
-  @apply
-  hover:bg-green-900
-} */
-
-/* .admin-sidebar-ul li:hover {
-  @apply
-  bg-green-900
-}
-
-.admin-sidebar-ul li.active {
-  @apply
-  bg-green-900
-} */
 
 .admin-sidebar-ul li a, .admin-sidebar-ul li button, .admin-sidebar-ul li div {
   @apply
-  w-full
   text-gray-300 
   hover:bg-green-900
   hover:text-white
   block
   p-2
+}
+
+.admin-sidebar-ul li a.active {
+  @apply
+  bg-green-700
 }
 
 .form-check-input:checked {
@@ -75,21 +64,6 @@
   !border-red-500
   !bg-red-500
   opacity-80
-} */
-
-
-/* .admin-sidebar-ul li a, .admin-sidebar-ul li button {
-  @apply
-  w-full
-} */
-
-.admin-sidebar-ul li a.active {
-  @apply
-  bg-green-700
-}
-/* .admin-sidebar-ul li a {
-  @apply
-  d-block
 } */
 
 
