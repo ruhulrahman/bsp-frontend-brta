@@ -2,14 +2,22 @@ import React, { useEffect, useState } from 'react';
 // import Badge from 'react-bootstrap/Badge';
 import { withNamespaces } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
-import Spinner from 'react-bootstrap/Spinner';
 // import Pagination from 'react-bootstrap/Pagination'
 import AddNew from './AddNew';
 import Loading from '@/components/common/Loading';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Select from 'react-select';
+import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 
 const User = ({ t }) => {
+
+    const options = [
+        { value: 'Dhaka Metro-1', label: 'Dhaka Metro-1' },
+        { value: 'Dhaka Metro-2', label: 'Dhaka Metro-2' },
+        { value: 'Dhaka Metro-3', label: 'Dhaka Metro-3' },
+        { value: 'Dhaka Metro-4', label: 'Dhaka Metro-4' }
+    ]
 
     const [loading, setLoading] = useState(true)
 
@@ -22,10 +30,52 @@ const User = ({ t }) => {
         setTimeout(() => setLoading(false), 1000)
     }
 
+    const [initialSearchValues, setInitialSearchValues] = useState({
+        name_en: '',
+        name_bn: '',
+        email: '',
+        office: '',
+        username: '',
+        is_active: '',
+    })
+
+    const resetSearchValues = {
+        name_en: '',
+        name_bn: '',
+        email: '',
+        office: '',
+        username: '',
+        is_active: '',
+    };
+
+    const inputOnChange = (e) => {
+        console.log('e', e)
+        const { name, value } = e.target;
+        // console.log('name', value)
+        setInitialSearchValues({
+            ...initialSearchValues,
+            [name]: value
+        })
+    }
+
+    // const [selectedOption, setSelectedOption] = useState(null);
+
+    const selectOnChange = (selectedOption) => {
+        console.log('selectedOption', selectedOption);
+        setInitialSearchValues({
+            ...initialSearchValues,
+            office: selectedOption ? selectedOption.value : ''
+        });
+    };
+    
     const searchData = () => {
-        console.log("searchData");
+        console.log("searchData", initialSearchValues);
         getListData()
     }
+
+    const clearSearchFields = () => {
+        setInitialSearchValues(resetSearchValues)
+    };
 
     const deleteData = (data) => {
         console.log("deleteData", data);
@@ -72,9 +122,9 @@ const User = ({ t }) => {
     // State to manage the list of users
     const [users, setUsers] = useState([
         { id: 1, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-1', designation: 'HR Admin', is_active: true },
-        { id: 2, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-1', designation: 'Software Engineer', is_active: false },
-        { id: 3, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-1', designation: 'Team Lead', is_active: true },
-        { id: 4, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-1', designation: 'Software Engineer', is_active: false },
+        { id: 2, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-2', designation: 'Software Engineer', is_active: false },
+        { id: 3, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-3', designation: 'Team Lead', is_active: true },
+        { id: 4, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-4', designation: 'Software Engineer', is_active: false },
     ]);
 
 
@@ -114,50 +164,52 @@ const User = ({ t }) => {
 
     return (
         <>
-        {showFilter && 
-            <div class="card bg-gray-300 mb-3">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            <h5 className='text-dark font-semibold'>Search Filter</h5>
+            {showFilter &&
+                <div className="card bg-gray-300 mb-3">
+                    <div className="card-body">
+
+                        <div className="row">
+                            <div className="col">
+                                <h5 className='text-dark font-semibold'>Search Filter</h5>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col-md-3">
-                            <input type="text" v-model="search.contact_email" class="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
+                        <div className="row mt-1">
+                            <div className="col-md-3">
+                                <input type="text" name="name_en" value={initialSearchValues.name_en} onChange={inputOnChange} className="form-control" placeholder="Enter name" autocomplete="off" />
+                            </div>
+                            <div className="col-md-3">
+                                <Select options={options} name="office" value={initialSearchValues.office} onChange={selectOnChange} placeholder="Select Office" />
+                            </div>
+                            <div className="col-md-3">
+                                <input type="text" name="email" value={initialSearchValues.email} onChange={inputOnChange} className="form-control" placeholder="Enter email" autocomplete="off" />
+                            </div>
+                            <div className="col-md-3">
+                                <input type="text" v-model="search.contact_email" className="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <input type="text" v-model="search.contact_email" class="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" v-model="search.contact_email" class="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" v-model="search.contact_email" class="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
-                        </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col-md-3">
-                        </div>
-                        <div class="col-md-3">
-                        </div>
-                        <div class="col-md-3">
-                        </div>
-                        <div class="col-md-3">
-                            <div class="flex">
-                                <div class="flex-1">
-                                    <button class="btn btn-success btn-sm w-full">Search</button>
-                                </div>
-                                <div class="flex-1 ml-2">
-                                    <button class="btn btn-outline-danger btn-sm w-full">Clear</button>
+                        <div className="row mt-1">
+                            <div className="col-md-3">
+                            </div>
+                            <div className="col-md-3">
+                            </div>
+                            <div className="col-md-3">
+                            </div>
+                            <div className="col-md-3">
+                                <div className="flex">
+                                    <div className="flex-1">
+                                        <button onClick={searchData} className="btn btn-success btn-sm w-full">Search</button>
+                                    </div>
+                                    <div className="flex-1 ml-2">
+                                        <button onClick={clearSearchFields} className="btn btn-outline-danger btn-sm w-full">Clear</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
-            </div>
-        }
-            <div className=" text-slate-700 bg-white shadow-md rounded-xl">
+            }
+            <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
                         <h3 className="text-lg font-semibold text-slate-800">{t('user_list')}</h3>
