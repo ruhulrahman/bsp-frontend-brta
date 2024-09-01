@@ -73,16 +73,15 @@ table th {
   @apply
   p-2
   transition-colors 
-  cursor-pointer 
   border-y 
-  border-slate-200 
-  bg-gray-500 
-  hover:bg-slate-700
+  !border-slate-200 
+  !bg-gray-500 
+  hover:!bg-slate-700
   font-sans 
   text-sm 
   font-normal 
   leading-none 
-  text-gray-100
+  !text-gray-100
 }
 
 table tr {

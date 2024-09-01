@@ -6,16 +6,10 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
 import * as Yup from 'yup';
 
-const AddNew = ({ t, ...props }) => {
+const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
-    // const { handleChange, submitForm, touched, errors, values } = useFormikContext() ?? {};
-
-    // const { setFieldValue } = useFormikContext();
-
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => setFormOpen(false);
+    const handleShow = () => setFormOpen(true);
 
     const [initialValues, setInitialValues] = useState({
         name_en: '',
@@ -26,6 +20,14 @@ const AddNew = ({ t, ...props }) => {
         confirmPassword: '',
         is_active: true,
     })
+
+    
+
+    useEffect(() => {
+        if (editData) {
+            setInitialValues(editData);
+        }
+    }, [editData, show]);
 
     // const handleInputChange = (e) => {
     //     console.log('Input changed:', e.target.name, e.target.value);
@@ -90,20 +92,14 @@ const AddNew = ({ t, ...props }) => {
     const onSubmit = async (values) => {
         // Perform form submission logic here
         console.log('Form submitted:', values);
+        onSave(values);
     };
-
-    // const onSubmit = async (values) => {
-    //     await sleep(500);
-    //     alert(JSON.stringify(values, null, 2));
-    //   }
 
     return (
         <div>
-            <button className='btn btn-black btn-rounded btn-sm' onClick={handleShow}>{t('add_new')}</button>
-
-            <Offcanvas size="sm" show={show} onHide={handleClose} placement="end">
+            <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>Add New User</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? 'Edit User' : 'Add New User'}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik
@@ -153,7 +149,9 @@ const AddNew = ({ t, ...props }) => {
                                     <Checkbox id="custom-switch" name="is_active" className="" label={values.is_active ? t('active') : t('inactive')} />
                                     <ErrorMessage name="is_active" component="div" className="text-danger" />
                                 </Form.Group>
-                                <button type='submit' className='btn btn-success btn-rounded btn-xs'>Save</button>
+                                <button type='submit' className='btn btn-success btn-rounded btn-xs'>
+                                    {editData ? 'Save Changes' : 'Add User'}
+                                </button>
                                 <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>Reset</button>
                             </FormikForm>
                         )}

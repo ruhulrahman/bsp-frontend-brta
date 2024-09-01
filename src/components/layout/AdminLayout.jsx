@@ -15,13 +15,13 @@ const AdminLayout = () => {
                 <div className="flex-1">
                     <AdminNavbar openSidebar={openSidebar} onToggleSidebar={() => setOpenSidebar(!openSidebar)} />
                     {/* Main Content */}
-                    <main className=" ">
+                    <main className="flex-1">
                         <div className='flex'>
-                            <div className={`${openSidebar ? 'w-[270px]' : 'w-0'}`}>
+                            <div className='flex-none w-[268px]'>
                                 {/* Sidebar */}
                                 <AdminSidebar openSidebar={openSidebar} />
                             </div>
-                            <div className="flex-initial w-full m-3.5 bg-white rounded-lg shadow-lg">
+                            <div className="w-full m-3.5 ">
                                 <Outlet />
                             </div>
                         </div>
