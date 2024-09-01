@@ -6,6 +6,8 @@ import Spinner from 'react-bootstrap/Spinner';
 // import Pagination from 'react-bootstrap/Pagination'
 import AddNew from './AddNew';
 import Loading from '@/components/common/Loading';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const User = ({ t }) => {
 
@@ -104,107 +106,167 @@ const User = ({ t }) => {
         getListData()
     };
 
-    return (
-        <div className=" text-slate-700 bg-white shadow-md rounded-xl">
-            <div className='row m-1'>
-                <div className="col-md-8 col-sm-12">
-                    <h3 className="text-lg font-semibold text-slate-800">{t('user_list')}</h3>
-                    <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
-                </div>
-                <div className="col-md-4 col-sm-12 text-right">
+    const [showFilter, setShowFilter] = useState(false)
 
-                    <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button>
-                    {/* <AddNew formOpen={formOpen} setFormOpen={toggleFormOpen} editItem={editItem} /> */}
-                    <AddNew
-                        show={modalOpen}
-                        onHide={handleCloseModal}
-                        onSave={handleSave}
-                        editData={editData}
-                    />
+    const toggleFilter = () => {
+        setShowFilter(!showFilter)
+    }
+
+    return (
+        <>
+        {showFilter && 
+            <div class="card bg-gray-300 mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5 className='text-dark font-semibold'>Search Filter</h5>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-3">
+                            <input type="text" v-model="search.contact_email" class="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" v-model="search.contact_email" class="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" v-model="search.contact_email" class="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" v-model="search.contact_email" class="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="flex">
+                                <div class="flex-1">
+                                    <button class="btn btn-success btn-sm w-full">Search</button>
+                                </div>
+                                <div class="flex-1 ml-2">
+                                    <button class="btn btn-outline-danger btn-sm w-full">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="p-0 overflow-scroll relative min-h-[300px]">
-                <Loading loading={loading} />
-                <table className="mt-2 text-left table table-responsive min-w-max">
-                    <thead>
-                        <tr>
-                            <th>{t('name')}</th>
-                            <th>Office & Designation</th>
-                            <th>{t('status')}</th>
-                            <th>Employed</th>
-                            <th>{t('action')}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        {users.map(user => (
-                            <tr key={user.id} className='text-slate-500'>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
-                                            alt="John Michael" className="relative inline-block h-9 w-9 !rounded-full object-cover object-center" />
+        }
+            <div className=" text-slate-700 bg-white shadow-md rounded-xl">
+                <div className='row m-1'>
+                    <div className="col-md-8 col-sm-12">
+                        <h3 className="text-lg font-semibold text-slate-800">{t('user_list')}</h3>
+                        <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                    </div>
+                    <div className="col-md-4 col-sm-12 text-right">
+                        <OverlayTrigger
+                            overlay={
+                                <Tooltip>
+                                    Toogle Search Filter
+                                </Tooltip>
+                            }
+                        >
+                            <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
+                        </OverlayTrigger>
+
+                        <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button>
+                        {/* <AddNew formOpen={formOpen} setFormOpen={toggleFormOpen} editItem={editItem} /> */}
+                        <AddNew
+                            show={modalOpen}
+                            onHide={handleCloseModal}
+                            onSave={handleSave}
+                            editData={editData}
+                        />
+                    </div>
+                </div>
+                <div className="p-0 overflow-scroll relative min-h-[300px]">
+                    <Loading loading={loading} />
+                    <table className="mt-2 text-left table table-responsive min-w-max">
+                        <thead>
+                            <tr>
+                                <th>{t('name')}</th>
+                                <th>Office & Designation</th>
+                                <th>{t('status')}</th>
+                                <th>Employed</th>
+                                <th>{t('action')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {users.map(user => (
+                                <tr key={user.id} className='text-slate-500'>
+                                    <td>
+                                        <div className="flex items-center gap-3">
+                                            <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
+                                                alt="John Michael" className="relative inline-block h-9 w-9 !rounded-full object-cover object-center" />
+                                            <div className="flex flex-col">
+                                                <p className="text-sm font-semibold text-slate-700">
+                                                    {user.name}
+                                                </p>
+                                                <p
+                                                    className="text-sm text-slate-500">
+                                                    {user.email}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
                                         <div className="flex flex-col">
                                             <p className="text-sm font-semibold text-slate-700">
-                                                {user.name}
+                                                {user.office}
                                             </p>
                                             <p
                                                 className="text-sm text-slate-500">
-                                                {user.email}
+                                                {user.designation}
                                             </p>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex flex-col">
-                                        <p className="text-sm font-semibold text-slate-700">
-                                            {user.office}
+                                    </td>
+                                    <td>
+                                        <span className={`badge ${user.is_active ? 'bg-success' : 'bg-danger'}`}> {user.is_active ? t('active') : t('inactive')}</span>
+                                    </td>
+                                    <td>
+                                        <p className="text-sm text-slate-500">
+                                            23/04/18
                                         </p>
-                                        <p
-                                            className="text-sm text-slate-500">
-                                            {user.designation}
-                                        </p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className={`badge ${user.is_active ? 'bg-success' : 'bg-danger'}`}> {user.is_active ? t('active') : t('inactive')}</span>
-                                </td>
-                                <td>
-                                    <p className="text-sm text-slate-500">
-                                        23/04/18
-                                    </p>
-                                </td>
-                                <td>
-                                    <button onClick={() => handleOpenEditModal(user)} className='btn btn-sm text-[12px] btn-outline-info'>
-                                        <i className="fa fa-pen"></i>
-                                    </button>
-                                    <button onClick={() => deleteData(user)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
-                                        <i className="fa fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                    <td>
+                                        <button onClick={() => handleOpenEditModal(user)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                            <i className="fa fa-pen"></i>
+                                        </button>
+                                        <button onClick={() => deleteData(user)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
+                                            <i className="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
 
-                    </tbody>
-                </table>
-            </div>
-            <div className="flex items-center justify-between p-3">
-                <p className="block text-sm text-slate-500">
-                    Page 1 of 10
-                </p>
-                <div className="flex gap-1">
-                    <button
-                        className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                        type="button">
-                        Previous
-                    </button>
-                    <button
-                        className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                        type="button">
-                        Next
-                    </button>
+                        </tbody>
+                    </table>
+                </div>
+                <div className="flex items-center justify-between p-3">
+                    <p className="block text-sm text-slate-500">
+                        Page 1 of 10
+                    </p>
+                    <div className="flex gap-1">
+                        <button
+                            className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                            type="button">
+                            Previous
+                        </button>
+                        <button
+                            className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                            type="button">
+                            Next
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 
