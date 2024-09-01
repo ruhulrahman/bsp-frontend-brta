@@ -166,7 +166,7 @@ const User = ({ t }) => {
         <>
             {showFilter &&
                 <div className="card bg-gray-300 mb-3">
-                    <div className="card-body">
+                    <div className="card-body p-2">
 
                         <div className="row">
                             <div className="col">

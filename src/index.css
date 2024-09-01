@@ -190,6 +190,12 @@ table td {
     @apply
     !p-20
   }
+
+  input {
+    @apply
+    !py-[2px]
+    !px-[10px]
+  }
  
 }
 
