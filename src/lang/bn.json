@@ -33,5 +33,6 @@
   "are_you_sure_to_delete_this": "আপনি কি এই ডেটা মুছে ফেলতে নিশ্চিত?",
   "you_will_not_be_able_to_revert_this": "আপনি এটি ফিরিয়ে আনতে পারবেন না!",
   "deleted": "মুছে ফেলা হয়েছে",
-  "your_data_has_been_deleted": "আপনার ডেটা মুছে ফেলা হয়েছে।"
+  "your_data_has_been_deleted": "আপনার ডেটা মুছে ফেলা হয়েছে।",
+  "search_filter": "অনুসন্ধান ফিল্টার"
 }

@@ -33,5 +33,6 @@
   "are_you_sure_to_delete_this": "Are you sure to delete this?",
   "you_will_not_be_able_to_revert_this": "You won't be able to revert this!",
   "deleted": "Deleted!",
-  "your_data_has_been_deleted": "Your data has been deleted."
+  "your_data_has_been_deleted": "Your data has been deleted.",
+  "search_filter": "Search Filter"
 }

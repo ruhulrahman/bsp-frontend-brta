@@ -33,15 +33,15 @@ const AdminSidebar = ({ openSidebar }) => {
                         {openConfiguration && (
                             <ul id="example-collapse-text" className="pl-10" style={{ height: '80px', visibilty: 'visible' }}>
                                 <li>
-                                    <NavLink to="/admin/configurations/social">
-                                        <i className="bi bi-chevron-right"></i>
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Social</span>
+                                    <NavLink to="/admin/configurations/country-list">
+                                        {/* <i className="bi bi-chevron-right"></i> */}
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Countries</span>
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/admin/configurations/personal">
-                                        <i className="bi bi-chevron-right"></i>
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Personal</span>
+                                    <NavLink to="/admin/configurations/location-list">
+                                        {/* <i className="bi bi-chevron-right"></i> */}
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Locations</span>
                                     </NavLink>
                                 </li>
                             </ul>
