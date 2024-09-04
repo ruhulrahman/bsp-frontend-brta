@@ -99,7 +99,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('user')}</Offcanvas.Title>
+                <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('designation')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik

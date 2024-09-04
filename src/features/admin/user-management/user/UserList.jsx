@@ -4,15 +4,15 @@ import { withNamespaces } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 // import Pagination from 'react-bootstrap/Pagination'
 import AddNew from './AddNew';
-import Loading from '@/components/common/Loading';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Select from 'react-select';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
+import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
 import { toaster } from '@/utils/helpers.js';
 
-const User = ({ t }) => {
+const UserList = ({ t }) => {
 
     const options = [
         { value: 'Dhaka Metro-1', label: 'Dhaka Metro-1' },
@@ -21,17 +21,17 @@ const User = ({ t }) => {
         { value: 'Dhaka Metro-4', label: 'Dhaka Metro-4' }
     ]
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         getListData()
     }, []);
 
     const getListData = async () => {
-        
+
         setLoading(true);
         try {
-            const result = await RestApi.post('api/v1/admin/configurations/country/list')
+            const result = await RestApi.get('api/v1/admin/user-management/users/list', initialSearchValues)
             if (result.status == 200) {
                 setListData(result)
             }
@@ -44,10 +44,11 @@ const User = ({ t }) => {
 
     const [initialSearchValues, setInitialSearchValues] = useState({
         name_en: '',
-        name_bn: '',
         email: '',
-        office: '',
-        username: '',
+        office_id: '',
+        user_type_id: '',
+        role_id: '',
+        designation_id: '',
         is_active: '',
     })
 
@@ -79,7 +80,7 @@ const User = ({ t }) => {
             office: selectedOption ? selectedOption.value : ''
         });
     };
-    
+
     const searchData = () => {
         console.log("searchData", initialSearchValues);
         getListData()
@@ -180,13 +181,13 @@ const User = ({ t }) => {
             } else {
                 result = await RestApi.post('api/v1/admin/configurations/country/create', values)
             }
-    
+
             if (result.status == 201) {
                 toaster('Country has been created')
                 handleCloseModal();
                 getListData()
             }
-    
+
         } catch (error) {
             console.log('error', error)
             // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
@@ -279,55 +280,65 @@ const User = ({ t }) => {
                         <thead>
                             <tr>
                                 <th>{t('name')}</th>
-                                <th>Office & Designation</th>
+                                <th>{t('email')} & {t('mobile')}</th>
+                                <th>{t('user_type')}</th>
+                                <th>{t('role')}</th>
+                                <th>{t('designation')}</th>
                                 <th>{t('status')}</th>
-                                <th>Employed</th>
                                 <th>{t('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            {users.map(user => (
-                                <tr key={user.id} className='text-slate-500'>
+                            {users.map(item => (
+                                <tr key={item.id} className='text-slate-500'>
                                     <td>
                                         <div className="flex items-center gap-3">
                                             <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
                                                 alt="John Michael" className="relative inline-block h-9 w-9 !rounded-full object-cover object-center" />
                                             <div className="flex flex-col">
                                                 <p className="text-sm font-semibold text-slate-700">
-                                                    {user.name}
+                                                    {item.name}
                                                 </p>
                                                 <p
                                                     className="text-sm text-slate-500">
-                                                    {user.email}
+                                                    {item.email}
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         <div className="flex flex-col">
+                                            <p className="text-sm">
+                                                {item.email}
+                                            </p>
+                                            <p
+                                                className="text-sm ">
+                                                {item.designation}
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td>{item.user_type}</td>
+                                    <td>{item.user_type}</td>
+                                    <td>
+                                        <div className="flex flex-col">
                                             <p className="text-sm font-semibold text-slate-700">
-                                                {user.office}
+                                                {item.office}
                                             </p>
                                             <p
                                                 className="text-sm text-slate-500">
-                                                {user.designation}
+                                                {item.designation}
                                             </p>
                                         </div>
                                     </td>
                                     <td>
-                                        <span className={`badge ${user.is_active ? 'bg-success' : 'bg-danger'}`}> {user.is_active ? t('active') : t('inactive')}</span>
+                                        <span className={`badge ${item.is_active ? 'bg-success' : 'bg-danger'}`}> {item.is_active ? t('active') : t('inactive')}</span>
                                     </td>
                                     <td>
-                                        <p className="text-sm text-slate-500">
-                                            23/04/18
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <button onClick={() => handleOpenEditModal(user)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                        <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
                                             <i className="fa fa-pen"></i>
                                         </button>
-                                        <button onClick={() => deleteData(user)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
+                                        <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
                                             <i className="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -359,4 +370,4 @@ const User = ({ t }) => {
     )
 }
 
-export default withNamespaces()(User)
+export default withNamespaces()(UserList)

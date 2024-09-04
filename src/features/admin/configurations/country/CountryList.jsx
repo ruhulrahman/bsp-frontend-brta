@@ -9,6 +9,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Select from 'react-select';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
+import RestApi from '@/utils/RestApi';
+import { toaster } from '@/utils/helpers.js';
 
 const CountryList = ({ t }) => {
 
@@ -25,9 +27,35 @@ const CountryList = ({ t }) => {
         getListData()
     }, []);
 
-    const getListData = () => {
-        console.log("getListData");
-        setTimeout(() => setLoading(false), 1000)
+    const [listData, setListData] = useState([
+        { id: 1, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-1', designation: 'HR Admin', is_active: true },
+        { id: 2, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-2', designation: 'Software Engineer', is_active: false },
+        { id: 3, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-3', designation: 'Team Lead', is_active: true },
+        { id: 4, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-4', designation: 'Software Engineer', is_active: false },
+    ])
+
+    // setListData([
+    //     { id: 1, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-1', designation: 'HR Admin', is_active: true },
+    //     { id: 2, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-2', designation: 'Software Engineer', is_active: false },
+    //     { id: 3, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-3', designation: 'Team Lead', is_active: true },
+    //     { id: 4, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-4', designation: 'Software Engineer', is_active: false },
+    // ])
+
+
+    
+
+    const getListData = async () => {
+        setLoading(true);
+        try {
+            const result = await RestApi.post('api/v1/admin/configurations/country/list')
+            if (result.status == 200) {
+                setListData(result)
+            }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            setLoading(false);
+        }
     }
 
     const [initialSearchValues, setInitialSearchValues] = useState({
@@ -119,14 +147,6 @@ const CountryList = ({ t }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editData, setEditData] = useState(null);
 
-    // State to manage the list of users
-    const [users, setUsers] = useState([
-        { id: 1, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-1', designation: 'HR Admin', is_active: true },
-        { id: 2, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-2', designation: 'Software Engineer', is_active: false },
-        { id: 3, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-3', designation: 'Team Lead', is_active: true },
-        { id: 4, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-4', designation: 'Software Engineer', is_active: false },
-    ]);
-
 
     const handleOpenAddModal = () => {
         setEditData(null);
@@ -143,17 +163,45 @@ const CountryList = ({ t }) => {
         setEditData(null); // Reset edit data
     };
 
-    const handleSave = (userData) => {
-        if (editData) {
-            // Editing an existing user
-            setUsers(users.map(user => user.id === userData.id ? userData : user));
-        } else {
-            // Adding a new user
-            const newUser = { ...userData, id: users.length + 1 };
-            setUsers([...users, newUser]);
+    // const handleSave = (userData) => {
+    //     if (editData) {
+    //         // Editing an existing user
+    //         setUsers(users.map(user => user.id === userData.id ? userData : user));
+    //     } else {
+    //         // Adding a new user
+    //         const newUser = { ...userData, id: users.length + 1 };
+    //         setUsers([...users, newUser]);
+    //     }
+    //     handleCloseModal();
+    //     getListData()
+    // };
+
+
+    const handleSave = async (values) => {
+        console.log('Form submitted:', values);
+        onSave(values);
+        setLoading(true);
+        let result = ''
+        try {
+            console.log('values', values)
+            if (values.id) {
+                result = await RestApi.post('api/v1/admin/configurations/country/create', values)
+            } else {
+                result = await RestApi.post('api/v1/admin/configurations/country/create', values)
+            }
+    
+            if (result.status == 201) {
+                toaster('Country has been created')
+                handleCloseModal();
+                getListData()
+            }
+    
+        } catch (error) {
+            console.log('error', error)
+            // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
+        } finally {
+            setLoading(false);
         }
-        handleCloseModal();
-        getListData()
     };
 
     const [showFilter, setShowFilter] = useState(false)
@@ -183,10 +231,10 @@ const CountryList = ({ t }) => {
                             <div className="col-md-3">
                                 <div className="flex">
                                     <div className="flex-1">
-                                        <button onClick={searchData} className="btn btn-success btn-sm w-full">Search</button>
+                                        <button onClick={searchData} className="btn btn-success btn-sm w-full">{t('search')}</button>
                                     </div>
                                     <div className="flex-1 ml-2">
-                                        <button onClick={clearSearchFields} className="btn btn-outline-danger btn-sm w-full">Clear</button>
+                                        <button onClick={clearSearchFields} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
                                     </div>
                                 </div>
                             </div>
@@ -198,15 +246,13 @@ const CountryList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('Country List')}</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">{t('country_list')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger
                             overlay={
-                                <Tooltip>
-                                    Toogle {t('search_filter')}
-                                </Tooltip>
+                                <Tooltip>{t('toggle_search_filter')}</Tooltip>
                             }
                         >
                             <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
@@ -235,18 +281,18 @@ const CountryList = ({ t }) => {
                         </thead>
                         <tbody>
 
-                            {users.map(user => (
-                                <tr key={user.id} className='text-slate-500 text-sm'>
-                                    <td>{user.name}</td>
-                                    <td>{user.office}</td>
+                            {listData && listData.map(item => (
+                                <tr key={item.id} className='text-slate-500 text-sm'>
+                                    <td>{item.name}</td>
+                                    <td>{item.office}</td>
                                     <td>
-                                        <span className={`badge ${user.is_active ? 'bg-success' : 'bg-danger'}`}> {user.is_active ? t('active') : t('inactive')}</span>
+                                        <span className={`badge ${item.is_active ? 'bg-success' : 'bg-danger'}`}> {item.is_active ? t('active') : t('inactive')}</span>
                                     </td>
                                     <td>
-                                        <button onClick={() => handleOpenEditModal(user)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                        <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
                                             <i className="fa fa-pen"></i>
                                         </button>
-                                        <button onClick={() => deleteData(user)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
+                                        <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
                                             <i className="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -258,18 +304,18 @@ const CountryList = ({ t }) => {
                 </div>
                 <div className="flex items-center justify-between p-3">
                     <p className="block text-sm text-slate-500">
-                        Page 1 of 10
+                        {t('page')} 1 {t('of')} 10
                     </p>
                     <div className="flex gap-1">
                         <button
                             className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                             type="button">
-                            Previous
+                            {t('previous')}
                         </button>
                         <button
                             className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                             type="button">
-                            Next
+                            {t('next')}
                         </button>
                     </div>
                 </div>

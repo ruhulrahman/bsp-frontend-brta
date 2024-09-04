@@ -59,8 +59,12 @@ const AdminSidebar = ({ openSidebar }) => {
                             <ul id="example-collapse-text" className="pl-10 h-[80px] visible">
                                 <li>
                                     <NavLink to="/admin/user-management/user">
-                                        <i className="bi bi-chevron-right"></i>
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Users</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/admin/user-management/designation">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Designations</span>
                                     </NavLink>
                                 </li>
                             </ul>

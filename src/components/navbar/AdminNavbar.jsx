@@ -81,14 +81,23 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                         </div>
                         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
-                            {preferredLanguage === 'en' &&
+                            {/* {preferredLanguage === 'en' &&
                                 <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
                                     <span className="text-md">BN</span>
                                 </button>}
                             {preferredLanguage === 'bn' &&
                                 <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
                                     <span className="text-md">EN</span>
-                                </button>}
+                                </button>} */}
+
+                                {preferredLanguage === 'en' &&
+                        <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
+                            <span className="text-md">{t('bangla')}</span>
+                        </button>}
+                        {preferredLanguage === 'bn' &&
+                        <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
+                            <span className="text-md">{t('lang')}</span>
+                        </button>}
 
                             <button
                                 type="button"
@@ -128,12 +137,12 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                     </MenuItem>
                                     <MenuItem>
                                         <Link to="/admin/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                            Your Profile
+                                            {t('your_profile')}
                                         </Link>
                                     </MenuItem>
                                     <MenuItem>
                                         <Link to="/admin/change-password" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                            Change Password
+                                        {t('change_password')}
                                         </Link>
                                     </MenuItem>
                                     <MenuItem className="w-full">

@@ -40,11 +40,11 @@ const TopNavbar = ({ t }) => {
                         <NavLink className={({ isActive }) => isActive ? 'text-green-700' : 'rounded-md bg-gradient-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]'} to="/register">Registration</NavLink>
                         {preferredLanguage === 'en' &&
                         <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
-                            <span className="text-md">BN</span>
+                            <span className="text-md">{t('bangla')}</span>
                         </button>}
                         {preferredLanguage === 'bn' &&
                         <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
-                            <span className="text-md">EN</span>
+                            <span className="text-md">{t('lang')}</span>
                         </button>}
                     </div>
                     <div className="relative flex items-center justify-center md:hidden">

@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { toaster } from './helpers.js';
 
-export const baseURL = 'https://api-nuxtgen.nvs.la'
+export const baseURL = 'http://localhost:8080'
 
 const accessToken = localStorage.getItem('token')
 
@@ -10,16 +11,30 @@ const RestApi = axios.create({
   headers: {
     Accept: 'application/json',
     accessMenuName: window.location.href,
-    // 'Content-Type': 'multipart/form-data'
-  },
-  Authorization: {
-    'token': 'token e6865b0c7034527cc56eb7a97007f4d18bbd1c9e'
   }
 });
 
 if (accessToken) {
   RestApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-  // RestApi.defaults.Authorization['token'] = `Bearer ${accessToken}`;
+}
+
+
+RestApi.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  return Promise.reject(errorHandler(error));
+});
+
+// Handling server error
+const errorHandler = (error) => {
+  if (error.response.status === 401) {
+    localStorage.clear();
+    toaster('Unauthorized access.', 'error')
+    window.location.href = '/auth/logout'
+  } else if (error.response.status === 500) {
+    toaster('Internal Server Error.', 'error')
+  }
+  return error
 }
 
 export default RestApi;
