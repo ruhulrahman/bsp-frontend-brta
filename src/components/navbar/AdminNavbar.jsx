@@ -2,7 +2,9 @@ import i18n from '@/i18n';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { withNamespaces } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+ // will print the current language
 
 const navigation = [
     { name: 'Contact', href: '/admin/contact' },
@@ -14,6 +16,7 @@ function classNames(...classes) {
 }
 const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
     const navigate = useNavigate()
+    const currentLanguage = i18n.language;
 
     const setLanguage = (language) => {
         localStorage.setItem('preferredLanguage', language);
@@ -27,6 +30,9 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
 
     let preferredLanguage = localStorage.getItem('preferredLanguage');
     preferredLanguage = preferredLanguage ? preferredLanguage : 'bn'
+
+    
+    const { authUser } = useSelector((state) => state.auth) || {};
 
     return (
         <div className='flex'>
@@ -109,7 +115,8 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                             </button>
 
                             <div className='text-gray-300 flex flex-col'>
-                                <span className='text-[14px]'>Ruhul Amin</span>
+                                {/* <span className='text-[14px]'>Ruhul Amin</span> */}
+                                <span className='text-[14px]'>{currentLanguage === 'en' ? authUser?.name_en : authUser?.name_bn}</span>
                                 <span className='text-[12px] text-green-200 text-right leadin'>Admin</span>
                             </div>
 

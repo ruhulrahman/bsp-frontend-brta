@@ -5,20 +5,26 @@ import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
 import * as Yup from 'yup';
+import { useSelector } from "react-redux";
 
 const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
     const handleClose = () => setFormOpen(false);
     const handleShow = () => setFormOpen(true);
+    const { authUser } = useSelector((state) => state.auth) || {};
 
     const [initialValues, setInitialValues] = useState({
         name_en: '',
         name_bn: '',
-        email: '',
         username: '',
+        mobile: '',
+        email: '',
         password: '',
-        confirmPassword: '',
+        user_type_id: 1,
+        designation_id: 1,
+        profile_completed: true,
         is_active: true,
+        confirmPassword: '',
     })
 
     
@@ -40,8 +46,9 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const validationSchema = Yup.object().shape({
         name_bn: Yup.string().required('Name is required'),
         name_en: Yup.string().required('Name is required'),
+        username: Yup.string().min(3, 'Must be at least 3 characters').required('Username is required'),
+        mobile: Yup.string().length(11, 'Mobile number must be exactly 11 digits').required('Mobile is required'),
         email: Yup.string().email('Invalid email address').required('Email is required'),
-        username: Yup.string().required('Username is required'),
         password: Yup.string().required('Password is required')
             .min(8, 'Must be at least 8 characters')
             .matches(
@@ -134,6 +141,21 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <Form.Label>{t('username')}</Form.Label>
                                     <Field type="text" name="username" className="form-control" placeholder="Enter username" />
                                     <ErrorMessage name="username" component="div" className="text-danger" />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="mobile">
+                                    <Form.Label>{t('mobile')}</Form.Label>
+                                    <Field type="text" name="mobile" className="form-control" placeholder="Enter mobile" />
+                                    <ErrorMessage name="mobile" component="div" className="text-danger" />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="user_type_id">
+                                    <Form.Label>{t('user_type')}</Form.Label>
+                                    <Field type="text" name="user_type_id" className="form-control" placeholder="Enter user_type_id" />
+                                    <ErrorMessage name="user_type_id" component="div" className="text-danger" />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="designation_id">
+                                    <Form.Label>{t('designation')}</Form.Label>
+                                    <Field type="text" name="designation_id" className="form-control" placeholder="Enter designation_id" />
+                                    <ErrorMessage name="designation_id" component="div" className="text-danger" />
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="password">
                                     <Form.Label>{t('password')}</Form.Label>

@@ -10,7 +10,7 @@ import RestApi from '@/utils/RestApi';
 import { toaster } from '@/utils/helpers.js';
 import { ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { userLoggedIn } from '../authSlice';
+import { setAuthUser } from '../authSlice';
 
 const LoginPage = ({ t }) => {
     const navigate = useNavigate();
@@ -31,13 +31,15 @@ const LoginPage = ({ t }) => {
     const onSubmit = async (values) => {
         console.log('Form submitted:', values);
         setLoading(true);
+        
+        navigate('/admin/dashboard');
         try {
             const result = await RestApi.post('api/v1/auth/login', values)
             if (result.status == 200) {
                 toaster('Your are logged in successfully')
                 localStorage.setItem('token', result.data.accessToken)
                 dispatch(
-                    userLoggedIn({
+                    setAuthUser({
                         accessToken: auth.accessToken,
                         user: auth.user,
                     })
@@ -82,7 +84,7 @@ const LoginPage = ({ t }) => {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="password">
                                 <Form.Label>{t('password')}</Form.Label>
-                                <Field type="password" name="password" className="form-control" placeholder="Enter current password" />
+                                <Field type="password" name="password" className="form-control" placeholder="Enter password" />
                                 <ErrorMessage name="password" component="div" className="text-danger" />
                             </Form.Group>
                             <button type='submit' className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">{t('login')}</button>
