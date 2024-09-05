@@ -27,6 +27,8 @@ const UserList = ({ t }) => {
         getListData()
     }, []);
 
+    const [listData, setListData] = useState([])
+
     const getListData = async () => {
 
         setLoading(true);
@@ -215,16 +217,16 @@ const UserList = ({ t }) => {
                         </div>
                         <div className="row mt-1">
                             <div className="col-md-3">
-                                <input type="text" name="name_en" value={initialSearchValues.name_en} onChange={inputOnChange} className="form-control" placeholder="Enter name" autocomplete="off" />
+                                <input type="text" name="name_en" value={initialSearchValues.name_en} onChange={inputOnChange} className="form-control" placeholder="Enter name" />
                             </div>
                             <div className="col-md-3">
                                 <Select options={options} name="office" value={initialSearchValues.office} onChange={selectOnChange} placeholder="Select Office" />
                             </div>
                             <div className="col-md-3">
-                                <input type="text" name="email" value={initialSearchValues.email} onChange={inputOnChange} className="form-control" placeholder="Enter email" autocomplete="off" />
+                                <input type="text" name="email" value={initialSearchValues.email} onChange={inputOnChange} className="form-control" placeholder="Enter email" />
                             </div>
                             <div className="col-md-3">
-                                <input type="text" v-model="search.contact_email" className="form-control" id="contact_email" placeholder="Key contact email" autocomplete="off" />
+                                <input type="text" v-model="search.contact_email" className="form-control" id="contact_email" placeholder="Key contact email" />
                             </div>
                         </div>
                         <div className="row mt-1">

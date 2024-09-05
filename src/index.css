@@ -102,6 +102,7 @@ table td {
   p-2
   !text-slate-500
 }
+
   /* .btn-primary {
       @apply py-1.5 px-3 text-center bg-green-500 rounded-md text-white;
   }
@@ -193,6 +194,11 @@ table td {
   }
 
   input {
+    @apply
+    !py-[2px]
+    !px-[10px]
+  }
+  select {
     @apply
     !py-[2px]
     !px-[10px]

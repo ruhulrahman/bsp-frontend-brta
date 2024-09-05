@@ -3,7 +3,6 @@ import { Button } from 'react-bootstrap';
 import { toaster } from '../../../utils/helpers.js';
 // import SweetAlert from 'react-bootstrap-sweetalert';
 import Select from 'react-select';
-import { ToastContainer } from 'react-toastify';
 import HeroContent from './HeroContent.jsx';
 
 const HomePage = () => {
@@ -38,7 +37,6 @@ const HomePage = () => {
             <span className="badge text-bg-primary ml-2">Tailwind Button</span>
 
             <button className="bg-red-500 text-white px-4 py-2 rounded ml-2" onClick={notify}>Notify!</button>
-            <ToastContainer />
             
             <div className='row'>
                 <div className="col-md-4">

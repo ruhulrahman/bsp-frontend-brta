@@ -9,8 +9,17 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Select from 'react-select';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
+import { MultiSelect } from "react-multi-select-component";
+import Form from 'react-bootstrap/Form';
+import { useSelector } from 'react-redux';
+import i18n from '@/i18n';
+import RestApi from '@/utils/RestApi';
+import { toaster } from '@/utils/helpers.js';
 
 const DesignationList = ({ t }) => {
+
+    const { statusList } = useSelector((state) => state.common)
+    const currentLanguage = i18n.language;
 
     const options = [
         { value: 'Dhaka Metro-1', label: 'Dhaka Metro-1' },
@@ -25,17 +34,28 @@ const DesignationList = ({ t }) => {
         getListData()
     }, []);
 
-    const getListData = () => {
-        console.log("getListData");
-        setTimeout(() => setLoading(false), 1000)
+
+    const [listData, setListData] = useState([])
+    const getListData = async () => {
+
+        setLoading(true);
+        try {
+            // const result = await RestApi.get('api/v1/admin/user-management/designation/list', initialSearchValues)
+            const result = await RestApi.get('api/v1/designation/list', initialSearchValues)
+            console.log('result', result)
+            if (result.status == 200) {
+                setListData(result)
+            }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            setLoading(false);
+        }
     }
 
     const [initialSearchValues, setInitialSearchValues] = useState({
         name_en: '',
         name_bn: '',
-        email: '',
-        office: '',
-        username: '',
         is_active: '',
     })
 
@@ -143,24 +163,141 @@ const DesignationList = ({ t }) => {
         setEditData(null); // Reset edit data
     };
 
-    const handleSave = (userData) => {
-        if (editData) {
-            // Editing an existing user
-            setUsers(users.map(user => user.id === userData.id ? userData : user));
-        } else {
-            // Adding a new user
-            const newUser = { ...userData, id: users.length + 1 };
-            setUsers([...users, newUser]);
+    // const handleSave = (userData) => {
+    //     if (editData) {
+    //         // Editing an existing user
+    //         setUsers(users.map(user => user.id === userData.id ? userData : user));
+    //     } else {
+    //         // Adding a new user
+    //         const newUser = { ...userData, id: users.length + 1 };
+    //         setUsers([...users, newUser]);
+    //     }
+    //     handleCloseModal();
+    //     getListData()
+    // };
+
+    
+    const handleSave = async (values) => {
+        console.log('Form submitted:', values);
+        // onSave(values);
+        setLoading(true);
+        let result = ''
+        try {
+            console.log('values', values)
+            if (values.id) {
+                // result = await RestApi.post('api/v1/admin/configurations/designation/create', values)
+                result = await RestApi.post('api/v1/designations', values)
+            } else {
+                result = await RestApi.post('api/v1/designations', values)
+            }
+
+            if (result.status == 201) {
+                toaster('Country has been created')
+                handleCloseModal();
+                getListData()
+            }
+
+        } catch (error) {
+            console.log('error', error)
+            // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
+        } finally {
+            setLoading(false);
         }
-        handleCloseModal();
-        getListData()
     };
 
-    const [showFilter, setShowFilter] = useState(false)
+    const [showFilter, setShowFilter] = useState(true)
 
     const toggleFilter = () => {
         setShowFilter(!showFilter)
     }
+
+    const targetHeight = 30;
+
+    const styles = {
+        control: (base) => ({
+            ...base,
+            minHeight: 'initial',
+        }),
+        valueContainer: (base) => ({
+            ...base,
+            height: `${targetHeight - 1 - 1}px`,
+            padding: '0 8px',
+        }),
+        clearIndicator: (base) => ({
+            ...base,
+            padding: `${(targetHeight - 20 - 1 - 1) / 2}px`,
+        }),
+        dropdownIndicator: (base) => ({
+            ...base,
+            padding: `${(targetHeight - 20 - 1 - 1) / 2}px`,
+        }),
+    };
+
+    const customControlStyles = base => ({
+        height: 20,
+        minHeight: 20
+    });
+
+    const customThemeFn = (theme) => ({
+        ...theme,
+        spacing: {
+            ...theme.spacing,
+            controlHeight: 30,
+            baseUnit: 1
+        }
+    })
+
+    const customStyles = {
+        container: (provided) => ({
+            ...provided,
+            display: 'inline-block',
+            width: '100%',
+            minHeight: '1px',
+            textAlign: 'left',
+            border: 'none',
+        }),
+        control: (provided) => ({
+            ...provided,
+            border: '1px solid #dee2e6',
+            borderRadius: '0',
+            minHeight: '1px',
+            height: '32px',
+        }),
+        input: (provided) => ({
+            ...provided,
+            minHeight: '1px',
+        }),
+        dropdownIndicator: (provided) => ({
+            ...provided,
+            minHeight: '1px',
+            paddingTop: '0',
+            paddingBottom: '0',
+            color: '#757575',
+        }),
+        indicatorSeparator: (provided) => ({
+            ...provided,
+            minHeight: '1px',
+            height: '24px',
+        }),
+        clearIndicator: (provided) => ({
+            ...provided,
+            minHeight: '1px',
+        }),
+        valueContainer: (provided) => ({
+            ...provided,
+            minHeight: '1px',
+            height: '32px',
+            paddingTop: '0',
+            paddingBottom: '0',
+        }),
+        singleValue: (provided) => ({
+            ...provided,
+            minHeight: '1px',
+            paddingBottom: '2px',
+        }),
+    };
+
+    const [selected, setSelected] = useState([]);
 
     return (
         <>
@@ -175,11 +312,31 @@ const DesignationList = ({ t }) => {
                         </div>
                         <div className="row mt-1">
                             <div className="col-md-3">
-                                <input type="text" name="name_en" value={initialSearchValues.name_en} onChange={inputOnChange} className="form-control" placeholder="Enter name" autocomplete="off" />
+                                <input type="text" name="name_en" value={initialSearchValues.name_en} onChange={inputOnChange} className="form-control" placeholder="Enter name" />
+                            </div>
+                            {/* <div className="col-md-3">
+                                <Select isClearable={true} styles={styles} maxMenuHeight={100} options={options} name="office" value={initialSearchValues.office} onChange={selectOnChange} placeholder="Select Office" />
+                            </div> */}
+                            <div className="col-md-3">
+                                <Form.Select name='is_active'>
+                                    <option selected disabled>Select Office</option>
+                                    {statusList.map((option) => (
+                                        <option value={option.value}>{currentLanguage === 'en' ? option.name_en : option.name_bn}</option>
+                                    ))}
+                                </Form.Select>
+                            </div>
+                            {/* <div className="col-md-3">
+                                <Select theme={customThemeFn} isClearable={true} options={options} name="designation" value={initialSearchValues.designation} onChange={selectOnChange} placeholder="Select Designation" />
                             </div>
                             <div className="col-md-3">
-                                <Select className='!h-[20px]' maxMenuHeight={100} options={options} name="office" value={initialSearchValues.office} onChange={selectOnChange} placeholder="Select Office" />
-                            </div>
+                                <MultiSelect
+                                    options={options}
+                                    name="designation"
+                                    value={selected}
+                                    onChange={setSelected}
+                                    labelledBy="Select Designation"
+                                />
+                            </div> */}
                             <div className="col-md-3">
                                 <div className="flex">
                                     <div className="flex-1">

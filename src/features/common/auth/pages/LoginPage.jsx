@@ -19,12 +19,12 @@ const LoginPage = ({ t }) => {
 
     const [loading, setLoading] = useState(false)
     const [initialValues, setInitialValues] = useState({
-        username: '',
+        usernameOrEmail: '',
         password: '',
     })
 
     const validationSchema = Yup.object().shape({
-        username: Yup.string().required('Username is required'),
+        usernameOrEmail: Yup.string().required('Username Or Email is required'),
         password: Yup.string().required('Password is required'),
     });
 
@@ -34,14 +34,15 @@ const LoginPage = ({ t }) => {
         
         navigate('/admin/dashboard');
         try {
-            const result = await RestApi.post('api/v1/auth/login', values)
+            const result = await RestApi.post('api/auth/v1/login', values)
+            console.log('result', result)
             if (result.status == 200) {
                 toaster('Your are logged in successfully')
                 localStorage.setItem('token', result.data.accessToken)
                 dispatch(
                     setAuthUser({
-                        accessToken: auth.accessToken,
-                        user: auth.user,
+                        accessToken: result.accessToken,
+                        user: result,
                     })
                 );
                 navigate('/admin/dashboard');
@@ -79,8 +80,8 @@ const LoginPage = ({ t }) => {
                         <FormikForm>
                             <Form.Group className="mb-3" controlId="username">
                                 <Form.Label>{t('username')}</Form.Label>
-                                <Field type="text" name="username" className="form-control" placeholder="Enter user" />
-                                <ErrorMessage name="username" component="div" className="text-danger" />
+                                <Field type="text" name="usernameOrEmail" className="form-control" placeholder="Enter username or email" />
+                                <ErrorMessage name="usernameOrEmail" component="div" className="text-danger" />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="password">
                                 <Form.Label>{t('password')}</Form.Label>

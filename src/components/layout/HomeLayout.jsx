@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import HomeTopNavBar from '../navbar/home/TopNavbar';
+import { ToastContainer } from 'react-toastify';
 
 const HomeLayout = () => {
   return (
@@ -17,6 +18,7 @@ const HomeLayout = () => {
 
       <main className="container">
         <Outlet /> {/* Renders nested routes */}
+        <ToastContainer />
       </main>
 
       <footer className="footer text-center bg-gray-200 p-4 mt-4">

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { toaster } from './helpers.js';
 
 export const baseURL = 'http://localhost:8080'
+// export const baseURL = 'https://192.168.122.15'
 
 const accessToken = localStorage.getItem('token')
 
@@ -10,7 +11,9 @@ const RestApi = axios.create({
   timeout: 5000,
   headers: {
     Accept: 'application/json',
-    accessMenuName: window.location.href,
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': `application/json`,
+    // accessMenuName: window.location.href,
   }
 });
 
@@ -30,7 +33,7 @@ const errorHandler = (error) => {
   if (error.response.status === 401) {
     localStorage.clear();
     toaster('Unauthorized access.', 'error')
-    window.location.href = '/auth/logout'
+    window.location.href = '/logout'
   } else if (error.response.status === 500) {
     toaster('Internal Server Error.', 'error')
   }

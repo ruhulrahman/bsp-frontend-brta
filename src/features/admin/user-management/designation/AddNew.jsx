@@ -12,16 +12,12 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const handleShow = () => setFormOpen(true);
 
     const [initialValues, setInitialValues] = useState({
-        name_en: '',
         name_bn: '',
-        email: '',
-        username: '',
-        password: '',
-        confirmPassword: '',
+        name_en: '',
+        level_number: '',
+        parent_designation_id: '',
         is_active: true,
     })
-
-    
 
     useEffect(() => {
         if (editData) {
@@ -40,33 +36,14 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const validationSchema = Yup.object().shape({
         name_bn: Yup.string().required('Name is required'),
         name_en: Yup.string().required('Name is required'),
-        email: Yup.string().email('Invalid email address').required('Email is required'),
-        username: Yup.string().required('Username is required'),
-        password: Yup.string().required('Password is required')
-            .min(8, 'Must be at least 8 characters')
-            .matches(
-                /^(?=.*[a-z])(?=.*[A-Z]).+$/,
-                'Must contain at least one uppercase letter and one lowercase letter'
-            )
-            .matches(
-                /^(?=.*\d)/,
-                'Must contain at least one number'
-            )
-            .matches(
-                /^(?=.*[@$!%*?&]).+$/,
-                'Must contain at least one special character'
-            ),
-        confirmPassword: Yup.string().label('Confirm Password').required().oneOf([Yup.ref('password')], 'Passwords does not match'),
         is_active: Yup.string().required('Is active is required'),
     });
 
     const resetValues = {
         name_bn: '',
         name_en: '',
-        email: '',
-        username: '',
-        password: '',
-        confirmPassword: '',
+        level_number: '',
+        parent_designation_id: '',
         is_active: '',
     };
 
@@ -79,15 +56,6 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     useEffect(() => {
         console.log('initialValues', initialValues)
     }, []);
-
-
-    // console.log('values', values);
-
-    // const onSubmit = (values, { setSubmitting }) => {
-    //     // Perform form submission logic here
-    //     console.log('Form submitted:', values);
-    //     setSubmitting(false);
-    // };
 
     const onSubmit = async (values) => {
         // Perform form submission logic here
@@ -125,25 +93,15 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <Field type="text" name="name_bn" className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="name_bn" component="div" className="text-danger" />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="email">
-                                    <Form.Label>{t('email')}</Form.Label>
-                                    <Field type="email" name="email" className="form-control" placeholder="Enter email" />
-                                    <ErrorMessage name="email" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="level_number">
+                                    <Form.Label>{t('level_number')}</Form.Label>
+                                    <Field type="number" min="1" name="level_number" className="form-control" placeholder="Enter level_number" />
+                                    <ErrorMessage name="level_number" component="div" className="text-danger" />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="username">
-                                    <Form.Label>{t('username')}</Form.Label>
-                                    <Field type="text" name="username" className="form-control" placeholder="Enter username" />
-                                    <ErrorMessage name="username" component="div" className="text-danger" />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="password">
-                                    <Form.Label>{t('password')}</Form.Label>
-                                    <Field type="password" name="password" className="form-control" placeholder="Enter password" />
-                                    <ErrorMessage name="password" component="div" className="text-danger" />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="confirmPassword">
-                                    <Form.Label>{t('confirmPassword')}</Form.Label>
-                                    <Field type="password" name="confirmPassword" className="form-control" placeholder="Enter confirm Password" />
-                                    <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="parent_designation_id">
+                                    <Form.Label>{t('parent_designation')}</Form.Label>
+                                    <Field type="text" name="parent_designation_id" className="form-control" placeholder="Enter parent designation" />
+                                    <ErrorMessage name="parent_designation_id" component="div" className="text-danger" />
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="is_active">
                                     <Checkbox id="custom-switch" name="is_active" className="" label={values.is_active ? t('active') : t('inactive')} />

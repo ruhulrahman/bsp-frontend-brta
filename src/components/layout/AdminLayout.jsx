@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import AdminNavbar from '../navbar/AdminNavbar';
 import AdminSidebar from '../navbar/AdminSidebar';
+import { ToastContainer } from 'react-toastify';
 
 const AdminLayout = () => {
     // Sidebar Toggle State
@@ -23,6 +24,7 @@ const AdminLayout = () => {
                             </div>
                             <div className="w-full m-3.5 ">
                                 <Outlet />
+                                <ToastContainer />
                             </div>
                         </div>
                     </main>
