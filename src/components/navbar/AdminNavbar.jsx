@@ -28,15 +28,16 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
         i18n.changeLanguage(preferredLanguage);
     }
 
+    // let preferredLanguage = localStorage.getItem('preferredLanguage');
+    // preferredLanguage = preferredLanguage ? preferredLanguage : 'bn'
     let preferredLanguage = localStorage.getItem('preferredLanguage');
-    preferredLanguage = preferredLanguage ? preferredLanguage : 'bn'
-
+    preferredLanguage = preferredLanguage !== null && preferredLanguage !== undefined ? preferredLanguage : 'bn';
     
     const { authUser } = useSelector((state) => state.auth) || {};
 
     return (
         <div className='flex'>
-            <div onClick={!openSidebar && onToggleSidebar} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500 ${openSidebar ? 'w-[320px]' : 'w-auto'}`}>
+            <div onClick={!openSidebar ? onToggleSidebar : undefined} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500 ${openSidebar ? 'w-[320px]' : 'w-auto'}`}>
                 {openSidebar && (<h2 className="text-xl font-semibold mr-2">BRTA Service Portal</h2>)}
                 <button onClick={onToggleSidebar} id="menu-button" className="btn btn-dark btn-sm flex-auto">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -116,7 +117,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
 
                             <div className='text-gray-300 flex flex-col'>
                                 {/* <span className='text-[14px]'>Ruhul Amin</span> */}
-                                <span className='text-[14px]'>{currentLanguage === 'en' ? authUser?.name_en : authUser?.name_bn}</span>
+                                <span className='text-[14px]'>{currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}</span>
                                 <span className='text-[12px] text-green-200 text-right leadin'>Admin</span>
                             </div>
 
@@ -139,7 +140,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                 >
                                     <MenuItem>
                                         <Link to="/admin/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                            Ruhul Amin
+                                        {currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}
                                         </Link>
                                     </MenuItem>
                                     <MenuItem>

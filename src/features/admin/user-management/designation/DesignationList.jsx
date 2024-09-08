@@ -28,43 +28,15 @@ const DesignationList = ({ t }) => {
         { value: 'Dhaka Metro-4', label: 'Dhaka Metro-4' }
     ]
 
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        getListData()
-    }, []);
-
-
-    const [listData, setListData] = useState([])
-    const getListData = async () => {
-
-        setLoading(true);
-        try {
-            // const result = await RestApi.get('api/v1/admin/user-management/designation/list', initialSearchValues)
-            const result = await RestApi.get('api/v1/designation/list', initialSearchValues)
-            console.log('result', result)
-            if (result.status == 200) {
-                setListData(result)
-            }
-        } catch (error) {
-            console.log('error', error)
-        } finally {
-            setLoading(false);
-        }
-    }
-
     const [initialSearchValues, setInitialSearchValues] = useState({
-        name_en: '',
-        name_bn: '',
+        nameEn: '',
+        nameBn: '',
         is_active: '',
     })
 
     const resetSearchValues = {
-        name_en: '',
-        name_bn: '',
-        email: '',
-        office: '',
-        username: '',
+        nameEn: '',
+        nameBn: '',
         is_active: '',
     };
 
@@ -96,6 +68,32 @@ const DesignationList = ({ t }) => {
     const clearSearchFields = () => {
         setInitialSearchValues(resetSearchValues)
     };
+    
+
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        getListData()
+    }, []);
+
+    const [listData, setListData] = useState([])
+    const getListData = async () => {
+
+        const params = Object.assign(window.pagination, initialSearchValues)
+
+        setLoading(true);
+        try {
+            const result = await RestApi.get('api/v1/designation/list', { params })
+            console.log('result', result)
+            if (result.status == 200) {
+                setListData(result)
+            }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const deleteData = (data) => {
         console.log("deleteData", data);
@@ -133,8 +131,6 @@ const DesignationList = ({ t }) => {
     const toggleFormOpen = (value) => {
         setFormOpen(value);
     }
-
-
 
     const [modalOpen, setModalOpen] = useState(false);
     const [editData, setEditData] = useState(null);
@@ -186,9 +182,9 @@ const DesignationList = ({ t }) => {
             console.log('values', values)
             if (values.id) {
                 // result = await RestApi.post('api/v1/admin/configurations/designation/create', values)
-                result = await RestApi.post('api/v1/designations', values)
+                result = await RestApi.post('api/v1/designation/create', values)
             } else {
-                result = await RestApi.post('api/v1/designations', values)
+                result = await RestApi.post('api/v1/designation/create', values)
             }
 
             if (result.status == 201) {
@@ -312,16 +308,18 @@ const DesignationList = ({ t }) => {
                         </div>
                         <div className="row mt-1">
                             <div className="col-md-3">
-                                <input type="text" name="name_en" value={initialSearchValues.name_en} onChange={inputOnChange} className="form-control" placeholder="Enter name" />
+                                <input type="text" name="nameEn" value={initialSearchValues.nameEn} onChange={inputOnChange} className="form-control" placeholder="Enter name" />
                             </div>
                             {/* <div className="col-md-3">
                                 <Select isClearable={true} styles={styles} maxMenuHeight={100} options={options} name="office" value={initialSearchValues.office} onChange={selectOnChange} placeholder="Select Office" />
                             </div> */}
                             <div className="col-md-3">
-                                <Form.Select name='is_active'>
-                                    <option selected disabled>Select Office</option>
+                                <Form.Select name='is_active' value={initialSearchValues.is_active} onChange={e => setInitialSearchValues({...initialSearchValues, is_active: e.target.value})}>
+                                    <option value="">Select Office</option>
                                     {statusList.map((option) => (
-                                        <option value={option.value}>{currentLanguage === 'en' ? option.name_en : option.name_bn}</option>
+                                        <option key={option.value} value={option.value}>
+                                            {currentLanguage === 'en' ? option.name_en : option.name_bn}
+                                        </option>
                                     ))}
                                 </Form.Select>
                             </div>

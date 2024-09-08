@@ -10,12 +10,11 @@ import RestApi from '@/utils/RestApi';
 import { toaster } from '@/utils/helpers.js';
 import { ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { setAuthUser } from '../authSlice';
+import { setAuthUser, setTokenInfo } from '../authSlice';
 
 const LoginPage = ({ t }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
-
 
     const [loading, setLoading] = useState(false)
     const [initialValues, setInitialValues] = useState({
@@ -32,13 +31,14 @@ const LoginPage = ({ t }) => {
         console.log('Form submitted:', values);
         setLoading(true);
         
-        navigate('/admin/dashboard');
+        // navigate('/admin/dashboard');
         try {
             const result = await RestApi.post('api/auth/v1/login', values)
             console.log('result', result)
             if (result.status == 200) {
                 toaster('Your are logged in successfully')
                 localStorage.setItem('token', result.data.accessToken)
+                dispatch(setTokenInfo(result.data));
                 dispatch(
                     setAuthUser({
                         accessToken: result.accessToken,

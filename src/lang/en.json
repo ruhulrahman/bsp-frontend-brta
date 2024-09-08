@@ -63,5 +63,8 @@
   "please": "Please",
   "register": "Register",
   "login_to_your_bsp_account": "Login to your BSP Account",
-  "login_to_the_portal_to_access_your_account_and_get_access_to_all_the_services": "Login to the portal to access your account and get access to all the services"
+  "login_to_the_portal_to_access_your_account_and_get_access_to_all_the_services": "Login to the portal to access your account and get access to all the services",
+  "before_register_your_account": "Before register your account, please fill the following information and search",
+  "nid_number": "NID Number",
+  "date_of_birth": "Date of Birth"
 }

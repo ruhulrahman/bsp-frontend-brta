@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { removeAuthUser } from '@/features/common/auth/authSlice';
 import { useDispatch } from 'react-redux';
+import { removeToken, removeTokenInfo } from '../../features/common/auth/authSlice';
 
 const Logout = () => {
     const navigate = useNavigate();
@@ -11,6 +12,8 @@ const Logout = () => {
         // Clear authentication data (e.g., tokens, user info)
         localStorage.removeItem('token');
         dispatch(removeAuthUser());
+        dispatch(removeToken());
+        dispatch(removeTokenInfo());
 
         // Optionally, clear other related data
         // sessionStorage.clear();

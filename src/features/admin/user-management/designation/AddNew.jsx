@@ -12,11 +12,11 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const handleShow = () => setFormOpen(true);
 
     const [initialValues, setInitialValues] = useState({
-        name_bn: '',
-        name_en: '',
-        level_number: '',
-        parent_designation_id: '',
-        is_active: true,
+        nameBn: '',
+        nameEn: '',
+        levelNumber: '',
+        parentDesingationId: '',
+        isActive: true,
     })
 
     useEffect(() => {
@@ -34,17 +34,17 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     // };
 
     const validationSchema = Yup.object().shape({
-        name_bn: Yup.string().required('Name is required'),
-        name_en: Yup.string().required('Name is required'),
-        is_active: Yup.string().required('Is active is required'),
+        nameBn: Yup.string().required('Name is required'),
+        nameEn: Yup.string().required('Name is required'),
+        isActive: Yup.string().required('Is active is required'),
     });
 
     const resetValues = {
-        name_bn: '',
-        name_en: '',
-        level_number: '',
-        parent_designation_id: '',
-        is_active: '',
+        nameBn: '',
+        nameEn: '',
+        levelNumber: '',
+        parentDesingationId: '',
+        isActive: '',
     };
 
     const handleReset = (resetForm) => {
@@ -82,30 +82,30 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                     >
                         {({ values, resetForm }) => (
                             <FormikForm>
-                                <Form.Group className="mb-3" controlId="name_en">
+                                <Form.Group className="mb-3" controlId="nameEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
-                                    <Field type="text" name="name_en" className="form-control" placeholder="Enter name" />
-                                    <ErrorMessage name="name_en" component="div" className="text-danger" />
-                                    {/* {touched.name_en && error.name_en ? <div>{error.name_en}</div> : null} */}
+                                    <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                    <ErrorMessage name="nameEn" component="div" className="text-danger" />
+                                    {/* {touched.nameEn && error.nameEn ? <div>{error.nameEn}</div> : null} */}
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="name_bn">
+                                <Form.Group className="mb-3" controlId="nameBn">
                                     <Form.Label>{t('name')} ({t('bn')})</Form.Label>
-                                    <Field type="text" name="name_bn" className="form-control" placeholder="Enter name" />
-                                    <ErrorMessage name="name_bn" component="div" className="text-danger" />
+                                    <Field type="text" name="nameBn" className="form-control" placeholder="Enter name" />
+                                    <ErrorMessage name="nameBn" component="div" className="text-danger" />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="level_number">
-                                    <Form.Label>{t('level_number')}</Form.Label>
-                                    <Field type="number" min="1" name="level_number" className="form-control" placeholder="Enter level_number" />
-                                    <ErrorMessage name="level_number" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="levelNumber">
+                                    <Form.Label>{t('levelNumber')}</Form.Label>
+                                    <Field type="number" min="1" name="levelNumber" className="form-control" placeholder="Enter levelNumber" />
+                                    <ErrorMessage name="levelNumber" component="div" className="text-danger" />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="parent_designation_id">
+                                <Form.Group className="mb-3" controlId="parentDesingationId">
                                     <Form.Label>{t('parent_designation')}</Form.Label>
-                                    <Field type="text" name="parent_designation_id" className="form-control" placeholder="Enter parent designation" />
-                                    <ErrorMessage name="parent_designation_id" component="div" className="text-danger" />
+                                    <Field type="text" name="parentDesingationId" className="form-control" placeholder="Enter parent designation" />
+                                    <ErrorMessage name="parentDesingationId" component="div" className="text-danger" />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="is_active">
-                                    <Checkbox id="custom-switch" name="is_active" className="" label={values.is_active ? t('active') : t('inactive')} />
-                                    <ErrorMessage name="is_active" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="isActive">
+                                    <Checkbox id="custom-switch" name="isActive" className="" label={values.isActive ? t('active') : t('inactive')} />
+                                    <ErrorMessage name="isActive" component="div" className="text-danger" />
                                 </Form.Group>
                                 <button type='submit' className='btn btn-success btn-rounded btn-xs'>{editData ? t('save_changes') : t('save')}</button>
                                 <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>

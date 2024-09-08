@@ -22,20 +22,26 @@ if (accessToken) {
 }
 
 
-RestApi.interceptors.response.use(function (response) {
-  return response;
-}, function (error) {
-  return Promise.reject(errorHandler(error));
-});
+// RestApi.interceptors.response.use(function (response) {
+//   return response;
+// }, function (error) {
+//   return Promise.reject(errorHandler(error));
+// });
 
 // Handling server error
 const errorHandler = (error) => {
   if (error.response.status === 401) {
     localStorage.clear();
-    toaster('Unauthorized access.', 'error')
-    window.location.href = '/logout'
+    toaster('Unauthorized access', 'error')
+    // window.location.href = '/logout'
+  } else if (error.response.status === 403) {
+    toaster('Forbidden, The client does not have access rights to the content', 'error')
+  } else if (error.response.status === 404) {
+    toaster('Source Not Found', 'error')
   } else if (error.response.status === 500) {
-    toaster('Internal Server Error.', 'error')
+    toaster('Internal Server Error', 'error')
+  } else if (error.response.status === 503) {
+    toaster('Service Unavailable', 'error')
   }
   return error
 }

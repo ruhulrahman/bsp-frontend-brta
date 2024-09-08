@@ -63,5 +63,8 @@
   "please": "দয়া করে",
   "register": "রেজিস্টার",
   "login_to_your_bsp_account": "আপনার BSP অ্যাকাউন্টে লগইন করুন",
-  "login_to_the_portal_to_access_your_account_and_get_access_to_all_the_services": "আপনার অ্যাকাউন্ট এবং সকল সার্ভিস সমুহ সাক্ষাতে লগইন করুন"
+  "login_to_the_portal_to_access_your_account_and_get_access_to_all_the_services": "আপনার অ্যাকাউন্ট এবং সকল সার্ভিস সমুহ সাক্ষাতে লগইন করুন",
+  "before_register_your_account": "আপনার অ্যাকাউন্ট নিবন্ধন করার আগে, নিম্নলিখিত তথ্য পূরণ করুন এবং অনুসন্ধান করুন",
+  "nid_number": "জাতীয় পরিচয়পত্র নম্বর",
+  "date_of_birth": "জন্ম তারিখ"
 }
