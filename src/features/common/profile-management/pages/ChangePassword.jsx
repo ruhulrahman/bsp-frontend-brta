@@ -5,12 +5,22 @@ import React, { useEffect, useState } from 'react'
 import { withNamespaces } from 'react-i18next';
 import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
-import { toaster } from '@/utils/helpers.js';
+import helper, { toaster } from '@/utils/helpers.js';
+import i18n from '@/i18n';
+import { useSelector } from 'react-redux';
 
 const ChangePassword = ({ t }) => {
+
+  const currentLanguage = i18n.language;
+
+  const authStore = useSelector((state) => state.auth)
+  console.log('authStore==========', authStore)
+
   const [loading, setLoading] = useState(false)
 
   const [initialValues, setInitialValues] = useState({
+    // name: currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn,
+    name: currentLanguage === 'en' ? helper.cn(authStore, 'authUser.nameEn') : helper.cn(authStore, 'authUser.nameBn'),
     current_password: '',
     new_password: '',
     confirmPassword: '',
@@ -36,6 +46,7 @@ const ChangePassword = ({ t }) => {
   });
 
   const resetValues = {
+    // name: currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn,
     current_password: '',
     new_password: '',
     confirmPassword: '',
@@ -68,14 +79,14 @@ const ChangePassword = ({ t }) => {
   return (
 
     <div className=" text-slate-700 card bg-white shadow-md rounded-xl card-body">
-      <div class="container">
-        <div class="row">
+      <div className="container">
+        <div className="row">
           <div className="row">
             <div className="col">
               <h5 className='text-dark font-semibold'>{t('change_password')}</h5>
             </div>
           </div>
-          <div class="col-md-6 offset-md-3">
+          <div className="col-md-6 offset-md-3">
             <Loading loading={loading} />
             <Formik
               initialValues={initialValues}

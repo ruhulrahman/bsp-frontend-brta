@@ -21,7 +21,7 @@ const LoginLayout = () => {
   return (
     <div>
 
-      <TopNavbar />
+      {/* <TopNavbar /> */}
 
       <main>
         <div style={{ backgroundImage: `url(${LoginBackground})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0 }} className="w-screen min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800 px-4 sm:px-6 lg:px-8">

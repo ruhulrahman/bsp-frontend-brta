@@ -4,9 +4,17 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
+import RestApi from '@/utils/RestApi';
+import i18n from '@/i18n';
 
 const AddNew = ({ t, show, onHide, onSave, editData }) => {
+    
+    const dispatch = useDispatch();
+    const { statusList, loading, listData } = useSelector((state) => state.common)
+    const currentLanguage = i18n.language;
+    
 
     const handleClose = () => setFormOpen(false);
     const handleShow = () => setFormOpen(true);
@@ -19,11 +27,38 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         isActive: true,
     })
 
+    const [parentDesignationList, setParentDesignationList] = useState([]);
+
     useEffect(() => {
+        getParentDesinationList();
         if (editData) {
             setInitialValues(editData);
+        } else {
+            setInitialValues({
+                nameBn: '',
+                nameEn: '',
+                levelNumber: '',
+                parentDesingationId: '',
+                isActive: true,
+            })
         }
     }, [editData, show]);
+
+    const getParentDesinationList = async () => {
+
+        // dispatch(setListData([]));
+        try {
+            const { data } = await RestApi.get('api/v1/designation/parent-list')
+            console.log('data', data)
+            if (data.success) {
+                setParentDesignationList(data.data)
+            }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            // dispatch(setLoading(false));
+        }
+    }
 
     // const handleInputChange = (e) => {
     //     console.log('Input changed:', e.target.name, e.target.value);
@@ -54,7 +89,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     };
 
     useEffect(() => {
-        console.log('initialValues', initialValues)
+        // console.log('initialValues', initialValues)
     }, []);
 
     const onSubmit = async (values) => {
@@ -67,7 +102,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('designation')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('designation')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik
@@ -82,31 +117,43 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                     >
                         {({ values, resetForm }) => (
                             <FormikForm>
+
                                 <Form.Group className="mb-3" controlId="nameEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
                                     <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="nameEn" component="div" className="text-danger" />
-                                    {/* {touched.nameEn && error.nameEn ? <div>{error.nameEn}</div> : null} */}
                                 </Form.Group>
+
                                 <Form.Group className="mb-3" controlId="nameBn">
                                     <Form.Label>{t('name')} ({t('bn')})</Form.Label>
                                     <Field type="text" name="nameBn" className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="nameBn" component="div" className="text-danger" />
                                 </Form.Group>
+
                                 <Form.Group className="mb-3" controlId="levelNumber">
                                     <Form.Label>{t('levelNumber')}</Form.Label>
-                                    <Field type="number" min="1" name="levelNumber" className="form-control" placeholder="Enter levelNumber" />
+                                    <Field type="number" min="1" name="levelNumber" className="form-control" placeholder="Enter level number" />
                                     <ErrorMessage name="levelNumber" component="div" className="text-danger" />
                                 </Form.Group>
+
                                 <Form.Group className="mb-3" controlId="parentDesingationId">
-                                    <Form.Label>{t('parent_designation')}</Form.Label>
-                                    <Field type="text" name="parentDesingationId" className="form-control" placeholder="Enter parent designation" />
+                                    <Form.Label>{t('parentDesingation')}</Form.Label>
+                                    <Field as="select" name="parentDesingationId" className="form-control">
+                                        <option value="">Select</option>
+                                        {parentDesignationList && parentDesignationList.map((option) => (
+                                            <option key={option.id} value={option.id}>
+                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
+                                            </option>
+                                        ))}
+                                    </Field>
                                     <ErrorMessage name="parentDesingationId" component="div" className="text-danger" />
                                 </Form.Group>
+
                                 <Form.Group className="mb-3" controlId="isActive">
                                     <Checkbox id="custom-switch" name="isActive" className="" label={values.isActive ? t('active') : t('inactive')} />
                                     <ErrorMessage name="isActive" component="div" className="text-danger" />
                                 </Form.Group>
+
                                 <button type='submit' className='btn btn-success btn-rounded btn-xs'>{editData ? t('save_changes') : t('save')}</button>
                                 <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
                             </FormikForm>

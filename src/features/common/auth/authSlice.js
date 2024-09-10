@@ -17,7 +17,7 @@ const authSlice = createSlice({
             state.accessToken = undefined;
         },
         setAuthUser: (state, action) => {
-            console.log('action====', action)
+            // console.log('action====', action)
             // state.accessToken = action.payload.accessToken;
             state.authUser = action.payload;
         },
@@ -26,7 +26,7 @@ const authSlice = createSlice({
             state.authUser = undefined;
         },
         setTokenInfo: (state, action) => {
-            state.tokenInfo = action.payload.tokenInfo;
+            state.tokenInfo = action.payload;
         },
         removeTokenInfo: (state) => {
             state.tokenInfo = undefined;

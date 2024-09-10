@@ -13,10 +13,10 @@ import "flatpickr/dist/themes/material_green.css";
 window.pagination = {
   page: 1,
   size: 10,
-  currentPage: 1,
-  totalRows: 0,
-  perPage: 10,
-  slOffset: 1
+  // currentPage: 1,
+  // totalRows: 0,
+  // perPage: 10,
+  // slOffset: 1
 };
 
 // const preferredLanguage = localStorage.getItem('preferredLanguage');

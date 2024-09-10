@@ -12,7 +12,7 @@ const AdminLayout = () => {
     const dispatch = useDispatch()
     // Sidebar Toggle State
     const [openSidebar, setOpenSidebar] = useState(true);
-    console.log('openSidebar', openSidebar)
+    // console.log('openSidebar', openSidebar)
 
     const [key, setKey] = useState(window.location.pathname);
 
@@ -27,7 +27,6 @@ const AdminLayout = () => {
         setLoading(true);
         try {
             const result = await RestApi.get('api/user/me')
-            console.log('result', result)
             if (result.status == 200) {
                 dispatch(setAuthUser(result.data));
                 dispatch(setToken(localStorage.getItem('token')));

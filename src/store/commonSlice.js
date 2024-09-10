@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+    loading: false,
+    listData: [],
     dropdowns: {
         countries: [],
         genders: [],
@@ -17,14 +19,14 @@ const initialState = {
     statusList: [
         {
             id: 1,
-            name_en: "Active",
-            name_bn: "সক্রিয়",
+            nameEn: "Active",
+            nameBn: "সক্রিয়",
             value: true,
         },
         {
             id: 2,
-            name_en: "Inactive",
-            name_bn: "নিষ্ক্রিয়",
+            nameEn: "Inactive",
+            nameBn: "নিষ্ক্রিয়",
             value: false,
         },
     ],
@@ -34,6 +36,15 @@ const commonSlice = createSlice({
     name: "dropdowns",
     initialState,
     reducers: {
+        setLoading: (state, action) => {
+            state.loading = action.payload;
+        },
+        setListData: (state, action) => {
+            state.listData = action.payload;
+        },
+        removeCommonDropdowns: (state) => {
+            state.dropdowns = undefined;
+        },
         setCommonDropdowns: (state, action) => {
             state.dropdowns = action.payload.dropdowns;
         },
@@ -43,5 +54,5 @@ const commonSlice = createSlice({
     },
 });
 
-export const { setCommonDropdowns, removeCommonDropdowns } = commonSlice.actions;
+export const { setLoading, setListData, setCommonDropdowns, removeCommonDropdowns } = commonSlice.actions;
 export default commonSlice.reducer;

@@ -7,10 +7,10 @@ import React, { useEffect, useState } from 'react'
 import { withNamespaces } from 'react-i18next';
 import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
-import { toaster } from '@/utils/helpers.js';
-import { ToastContainer } from 'react-toastify';
+import helper, { toaster } from '@/utils/helpers.js';
+// import { ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { setAuthUser, setTokenInfo } from '../authSlice';
+import { setAuthUser, setTokenInfo, setToken } from '../authSlice';
 
 const LoginPage = ({ t }) => {
     const navigate = useNavigate();
@@ -27,28 +27,23 @@ const LoginPage = ({ t }) => {
         password: Yup.string().required('Password is required'),
     });
 
+    const [errorMessage, setErrorMessage] = useState(null);
+
     const onSubmit = async (values) => {
-        console.log('Form submitted:', values);
         setLoading(true);
         
-        // navigate('/admin/dashboard');
         try {
             const result = await RestApi.post('api/auth/v1/login', values)
             console.log('result', result)
-            if (result.status == 200) {
-                toaster('Your are logged in successfully')
                 localStorage.setItem('token', result.data.accessToken)
+                dispatch(setToken(result.data.accessToken));
                 dispatch(setTokenInfo(result.data));
-                dispatch(
-                    setAuthUser({
-                        accessToken: result.accessToken,
-                        user: result,
-                    })
-                );
+                toaster('Your are logged in successfully')
                 navigate('/admin/dashboard');
-            }
         } catch (error) {
             console.log('error', error)
+            setErrorMessage(error.response.data)
+            // helper.errorHandler(error)
             // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
         } finally {
             setLoading(false);
@@ -67,6 +62,8 @@ const LoginPage = ({ t }) => {
                         <span className="m-0 text-xs max-w-[90%] text-center text-[#8B8E98]">{t('login_to_the_portal_to_access_your_account_and_get_access_to_all_the_services')}</span>
                     </div>
                 </div>
+
+                {errorMessage && <div className="text-red-500">Username or password not match</div>}
 
                 <Loading loading={loading} />
                 <Formik
@@ -102,7 +99,7 @@ const LoginPage = ({ t }) => {
                 </div> */}
                 <div className="mt-1">
                     {/* <button onClick={handleLogin} className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">Login</button> */}
-                    <ToastContainer />
+                    {/* <ToastContainer /> */}
                     <p className="m-0 mt-2 text-[13px] dark:text-white">{t('dont_have_an_account')} {t('please')} <Link to="/register" className="text-blue-500">{t('register')}</Link></p>
                 </div>
             </div>
