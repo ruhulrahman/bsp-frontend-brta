@@ -49,7 +49,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         // dispatch(setListData([]));
         try {
             const { data } = await RestApi.get('api/v1/designation/parent-list')
-            console.log('data', data)
+            // console.log('data', data)
             if (data.success) {
                 setParentDesignationList(data.data)
             }
@@ -117,7 +117,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                     >
                         {({ values, resetForm }) => (
                             <FormikForm>
-
+Inside Value {values.nameEn}
                                 <Form.Group className="mb-3" controlId="nameEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
                                     <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />

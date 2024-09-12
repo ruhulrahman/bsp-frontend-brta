@@ -14,6 +14,30 @@ import { toaster } from '@/utils/helpers.js';
 
 const UserList = ({ t }) => {
 
+    const [currentPage, setCurrentPage] = useState(0);  // Spring Boot uses 0-based page numbers
+
+    // const handlePageChange = (page) => {
+    //     console.log('page========', page)
+    //     setCurrentPage(page);
+    //     console.log('currentPage===========', currentPage)
+    // };
+
+    const handlePageChange = (page) => {
+        
+        console.log("currentPage function call before", currentPage);
+        setCurrentPage((prevPage) => {
+            console.log("Previous page:", prevPage);
+            return page;
+        });
+        console.log("currentPage function call after", currentPage);
+    };
+
+
+
+    useEffect(() => {
+        console.log("currentPage updated: ", currentPage);
+    }, [currentPage]); // This will log the updated value when `count` changes
+
     const options = [
         { value: 'Dhaka Metro-1', label: 'Dhaka Metro-1' },
         { value: 'Dhaka Metro-2', label: 'Dhaka Metro-2' },
@@ -254,6 +278,7 @@ const UserList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
+                    <button className="btn btn-primary btn-sm" onClick={() => handlePageChange(5)}>Set Pagination</button>
                         <h3 className="text-lg font-semibold text-slate-800">{t('user_list')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>

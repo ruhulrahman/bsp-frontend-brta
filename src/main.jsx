@@ -12,7 +12,7 @@ import "flatpickr/dist/themes/material_green.css";
 
 window.pagination = {
   page: 1,
-  size: 10,
+  size: 4,
   // currentPage: 1,
   // totalRows: 0,
   // perPage: 10,

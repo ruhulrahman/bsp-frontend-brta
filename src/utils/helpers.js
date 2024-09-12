@@ -52,11 +52,11 @@ import moment from 'moment'
 
 
 export const pagination = {
-  currentPage: 1,
-  totalRows: 0,
+  currentPage: 0,
   perPage: 10,
+  totalRows: 0,
+  totalPages: 0,
   slOffset: 1,
-  maxLinksDisplayed: 5,
 }
 
 export function cn(obj, input, if_false = '') {
@@ -137,11 +137,12 @@ export default {
     else return hashids.decode(value)
   },
   paginationData(data) {
-      pagination.currentPage = data.current_page;
-      pagination.totalRows = data.total;
-      pagination.perPage = data.per_page;
-      pagination.slOffset =
-          data.per_page * pagination.currentPage - data.per_page + 1;
+      pagination.currentPage = data.page;
+      pagination.totalRows = data.totalElements;
+      pagination.perPage = data.size;
+      console.log('pagination.perPage', pagination.perPage)
+      console.log('pagination.currentPage', pagination.perPage)
+      pagination.slOffset = pagination.perPage * (pagination.currentPage + 1) - pagination.perPage + 1;
   },
   checkCurrentDateLessThenDate: function (dateValue) {
       const currentDate = this.dDate(new Date(), "YYYY-MM-DD");

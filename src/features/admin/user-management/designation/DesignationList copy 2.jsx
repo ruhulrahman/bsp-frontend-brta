@@ -12,8 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
 import helper, { toaster } from '@/utils/helpers.js';
-import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination } from '@/store/commonSlice';
-import { toBengaliNumber, toBengaliWord } from 'bengali-number'
+import { setLoading, setListData, setCurrentPage, setPaginationData } from '@/store/commonSlice';
 
 const DesignationList = ({ t }) => {
 
@@ -21,40 +20,18 @@ const DesignationList = ({ t }) => {
     const { statusList, loading, listData, pagination } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
-    const [paginationObj, setPaginationObj] = useState({
-        currentPage: 0,
-        perPage: 5,
-        totalRows: 0,
-        totalPages: 0,
-        slOffset: 1,
-    })
-
-    const [currentPage, setCurrentPage] = useState(0);  // Spring Boot uses 0-based page numbers
+    // const [currentPage, setCurrentPage] = useState(0);  // Spring Boot uses 0-based page numbers
     const [pageSize, setPageSize] = useState(5);       // Default page size
     const [totalPages, setTotalPages] = useState(0);    // Total pages from Spring response
     const [totalElements, setTotalElements] = useState(0);  // Total items
-    const [slOffset, setSlOffset] = useState(1);  // Total items
-
-    const setPaginationData = (data) => {
-        setCurrentPage(data.page);
-        setPageSize(data.size);
-        setTotalPages(data.totalPages);
-        setTotalElements(data.totalElements);
-        setSlOffset(data.size * (data.page + 1) - data.size + 1);
-    }
 
     const handlePageChange = (page) => {
-        // dispatch(setCurrentPage(page))
-        setCurrentPage(page)
+        dispatch(setCurrentPage(page))
     };
-
-    // useEffect(() => {
-    //     dispatch(setResetPagination())
-    // }, []);
 
     useEffect(() => {
         getListData()
-    }, [currentPage]);
+    }, [pagination.currentPage]);
 
     // Render pagination using React Bootstrap Pagination
     const renderPagination = () => {
@@ -64,27 +41,27 @@ const DesignationList = ({ t }) => {
             <Pagination.First
                 key="first"
                 onClick={() => handlePageChange(0)}
-                disabled={currentPage === 0}
+                disabled={pagination.currentPage === 0}
             />
         );
 
         items.push(
             <Pagination.Prev
                 key="prev"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
+                onClick={() => handlePageChange(pagination.currentPage - 1)}
+                disabled={pagination.currentPage === 0}
             />
         );
 
         // Ellipsis Logic (similar to previous example)
         const windowSize = 5;
-        const maxLeft = Math.max(currentPage - Math.floor(windowSize / 2), 0);
-        const maxRight = Math.min(currentPage + Math.floor(windowSize / 2), totalPages - 1);
+        const maxLeft = Math.max(pagination.currentPage - Math.floor(windowSize / 2), 0);
+        const maxRight = Math.min(pagination.currentPage + Math.floor(windowSize / 2), pagination.totalPages - 1);
 
         if (maxLeft > 0) {
             items.push(
                 <Pagination.Item key={0} onClick={() => handlePageChange(0)}>
-                    {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}
+                    1
                 </Pagination.Item>
             );
             if (maxLeft > 1) {
@@ -96,24 +73,24 @@ const DesignationList = ({ t }) => {
             items.push(
                 <Pagination.Item
                     key={i}
-                    active={i === currentPage}
+                    active={i === pagination.currentPage}
                     onClick={() => handlePageChange(i)}
                 >
-                    {currentLanguage === 'en' ? i + 1 : toBengaliNumber(i + 1)}
+                    {i + 1}
                 </Pagination.Item>
             );
         }
 
-        if (maxRight < totalPages - 1) {
-            if (maxRight < totalPages - 2) {
+        if (maxRight < pagination.totalPages - 1) {
+            if (maxRight < pagination.totalPages - 2) {
                 items.push(<Pagination.Ellipsis key="right-ellipsis" />);
             }
             items.push(
                 <Pagination.Item
-                    key={totalPages - 1}
-                    onClick={() => handlePageChange(totalPages - 1)}
+                    key={pagination.totalPages - 1}
+                    onClick={() => handlePageChange(pagination.totalPages - 1)}
                 >
-                    {totalPages}
+                    {pagination.totalPages}
                 </Pagination.Item>
             );
         }
@@ -121,16 +98,16 @@ const DesignationList = ({ t }) => {
         items.push(
             <Pagination.Next
                 key="next"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
+                onClick={() => handlePageChange(pagination.currentPage + 1)}
+                disabled={pagination.currentPage === pagination.totalPages - 1}
             />
         );
 
         items.push(
             <Pagination.Last
                 key="last"
-                onClick={() => handlePageChange(totalPages - 1)}
-                disabled={currentPage === totalPages - 1}
+                onClick={() => handlePageChange(pagination.totalPages - 1)}
+                disabled={pagination.currentPage === pagination.totalPages - 1}
             />
         );
 
@@ -147,6 +124,32 @@ const DesignationList = ({ t }) => {
         isActive: '',
     };
 
+    const inputOnChange = (e) => {
+        console.log('e', e)
+        const { name, value } = e.target;
+        setSearchValues((prevValues) => ({
+            ...prevValues,
+            [name]: value, // Update specific field based on name
+        }));
+    }
+
+    const clearSearchFields = () => {
+        setSearchValues({
+            nameEn: '',
+            isActive: ''
+        });
+    };
+
+    // Custom clear method to reset the form
+    const clearData = (resetForm) => {
+        resetForm({
+            values: resetSearchValues, // Reset to initial values
+        }); // Resets the form fields
+        setSearchValues(resetSearchValues); // Resets the search values
+        getListData(); // Re-fetches the data with the cleared search values
+        console.log('Form has been cleared');
+    };
+
     const handleReset = (resetForm) => {
         resetForm({
             values: resetSearchValues, // Reset to initial values
@@ -155,19 +158,27 @@ const DesignationList = ({ t }) => {
     };
 
     const searchData = (values) => {
+        // setSearchValues(values);
         getListData(values)
     }
 
     const getListData = async (values = searchValues) => {
 
-        const params = Object.assign({ page: currentPage, size: pagination.perPage }, values)
+        const params = Object.assign({ page: pagination.currentPage, size: pagination.perPage }, values)
+        console.log('params', params)
 
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
             const { data } = await RestApi.get('api/v1/admin/configurations/designation/list', { params })
+            // console.log('data ==', data)
             dispatch(setListData(data.content));
-            setPaginationData(data)
+            dispatch(setPaginationData(data));
+            helper.paginationData(data)
+            // setCurrentPage(data.page);  // Spring Boot uses 0-based page numbers
+            // setPageSize(data.size);       // Default page size
+            setTotalPages(data.totalPages);    // Total pages from Spring response
+            setTotalElements(data.totalElements);
         } catch (error) {
             console.log('error', error)
         } finally {
@@ -189,6 +200,8 @@ const DesignationList = ({ t }) => {
         }).then(async (result) => {
             if (result.isConfirmed) {
 
+                console.log("deleteData", data);
+                // confirmDeleteData(data.id)
                 dispatch(setLoading(true));
                 try {
                     await RestApi.post(`api/v1/admin/configurations/designation/delete/${data.id}`)
@@ -351,7 +364,13 @@ const DesignationList = ({ t }) => {
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
-                        <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
+                        <OverlayTrigger
+                            overlay={
+                                <Tooltip>
+                                    Toogle {t('search_filter')}
+                                </Tooltip>
+                            }
+                        >
                             <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
 
@@ -381,30 +400,21 @@ const DesignationList = ({ t }) => {
 
                             {listData && listData.map((item, index) => (
                                 <tr key={item.id} className='text-slate-500 text-sm'>
-                                    {/* <td>{slOffset + index}.</td> */}
-                                    {/* <td>{toBengaliNumber(slOffset + index)}.</td> */}
-                                    <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
+                                    {/* <td>{index + 1}</td> */}
+                                    <td>{pagination.slOffset + index}</td>
                                     <td>{item.nameEn}</td>
                                     <td>{item.nameBn}</td>
-                                    <td>
-                                        <span className='badge bg-secondary'>
-                                            {currentLanguage === 'en' ? item.levelNumber : toBengaliNumber(item.levelNumber)}
-                                        </span>
-                                    </td>
+                                    <td>{item.levelNumber}</td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'}`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
                                     <td>
-                                        <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
-                                                <i className="fa fa-pen"></i>
-                                            </button>
-                                        </OverlayTrigger>
-                                        <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
-                                            <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
-                                                <i className="fa fa-trash"></i>
-                                            </button>
-                                        </OverlayTrigger>
+                                        <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                            <i className="fa fa-pen"></i>
+                                        </button>
+                                        <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
+                                            <i className="fa fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
