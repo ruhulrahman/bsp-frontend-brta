@@ -12,14 +12,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
 import helper, { toaster } from '@/utils/helpers.js';
-import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination } from '@/store/commonSlice';
+import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
 const DesignationList = ({ t }) => {
 
     const dispatch = useDispatch();
-    const { statusList, loading, listData, pagination } = useSelector((state) => state.common)
+    const { statusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
+
+    const toggleFilter = () => {
+        dispatch(toggleShowFilter());
+    }
 
     const [paginationObj, setPaginationObj] = useState({
         currentPage: 0,
@@ -77,7 +81,6 @@ const DesignationList = ({ t }) => {
         );
 
         // Ellipsis Logic (similar to previous example)
-        const windowSize = 5;
         const maxLeft = Math.max(currentPage - Math.floor(windowSize / 2), 0);
         const maxRight = Math.min(currentPage + Math.floor(windowSize / 2), totalPages - 1);
 
@@ -178,14 +181,16 @@ const DesignationList = ({ t }) => {
     const deleteData = (data) => {
         console.log("deleteData", data);
         Swal.fire({
-            title: t('are_you_sure_to_delete_this'),
+            title: `${t('are_you_sure_to_delete_this')}`,
             text: t('you_will_not_be_able_to_revert_this'),
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#15803D",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes",
-            cancelButtonText: "No",
+            confirmButtonText: t('yes'),
+            cancelButtonText: t('no'),
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger',
+            },
         }).then(async (result) => {
             if (result.isConfirmed) {
 
@@ -212,7 +217,7 @@ const DesignationList = ({ t }) => {
     const confirmDeleteData = async (id) => {
         dispatch(setLoading(true));
         try {
-            await RestApi.post('api/v1/designation/create', { id })
+            await RestApi.post('api/v1/admin/configurations/designation/delete', { id })
         } catch (error) {
             console.log('error', error)
         } finally {
@@ -259,7 +264,7 @@ const DesignationList = ({ t }) => {
             //     result = await RestApi.post('api/v1/designation/create', values)
             // }
 
-            const { data } = await RestApi.post('api/v1/designation/create', values)
+            const { data } = await RestApi.post('api/v1/admin/configurations/designation/create', values)
             if (data.success) {
                 toaster(data.message)
                 handleCloseModal();
@@ -273,15 +278,6 @@ const DesignationList = ({ t }) => {
             dispatch(setLoading(false));
         }
     };
-
-    const [showFilter, setShowFilter] = useState(true)
-
-    const toggleFilter = () => {
-        setShowFilter(!showFilter)
-    }
-
-
-
 
     return (
         <>
@@ -392,7 +388,7 @@ const DesignationList = ({ t }) => {
                                         </span>
                                     </td>
                                     <td>
-                                        <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'}`}> {item.isActive ? t('active') : t('inactive')}</span>
+                                        <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
                                     <td>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>

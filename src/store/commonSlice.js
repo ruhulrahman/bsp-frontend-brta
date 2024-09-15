@@ -3,6 +3,26 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     loading: false,
     listData: [],
+    windowSize: 10,
+    showFilter: true,
+    selectedRow: null,
+    selectedRows: [],
+    filter: {
+        search: "",
+        dateFrom: null,
+        dateTo: null,
+        countryId: null,
+        genderId: null,
+        bloodId: null,
+        designationId: null,
+        documentTypeId: null,
+        fuelTypeId: null,
+        userTypeId: null,
+        serviceId: null,
+        vehicleTypeId: null,
+        vehicleColorId: null,
+        vehicleColorId: null,
+    },
     pagination: {
         currentPage: 0,
         perPage: 5,
@@ -18,17 +38,16 @@ const initialState = {
         slOffset: 1,
     },
     dropdowns: {
-        countries: [],
-        genders: [],
-        bloods: [],
-        designations: [],
-        documentTypes: [],
-        fuelTypes: [],
-        userTypes: [],
-        services: [],
-        vehicleTypes: [],
-        vehicleColors: [],
-        vehicleColors: [],
+        countryList: [],
+        genderList: [],
+        bloodList: [],
+        designationList: [],
+        documentTypeList: [],
+        fuelTypeList: [],
+        userTypeList: [],
+        serviceList: [],
+        vehicleTypeList: [],
+        vehicleColorList: [],
     },
     statusList: [
         {
@@ -56,11 +75,8 @@ const commonSlice = createSlice({
         setListData: (state, action) => {
             state.listData = action.payload;
         },
-        removeCommonDropdowns: (state) => {
-            state.dropdowns = undefined;
-        },
         setCommonDropdowns: (state, action) => {
-            state.dropdowns = action.payload.dropdowns;
+            state.dropdowns = action.payload;
         },
         removeCommonDropdowns: (state) => {
             state.dropdowns = undefined;
@@ -81,12 +97,19 @@ const commonSlice = createSlice({
             console.log('pagination.currentPage ====', pagination.perPage)
             state.pagination.slOffset = state.pagination.perPage * (state.pagination.currentPage + 1) - state.pagination.perPage + 1;
         },
+        setShowFilter: (state, action) => {
+            state.showFilter = state, action;
+        },
+        toggleShowFilter: (state) => {
+            state.showFilter = !state.showFilter
+        },
     },
 });
 
 export const { 
     setLoading, setListData, 
     setCommonDropdowns, removeCommonDropdowns, 
-    setCurrentPage, setResetPagination, setPaginationData
+    setCurrentPage, setResetPagination, setPaginationData,
+    setShowFilter, toggleShowFilter
  } = commonSlice.actions;
 export default commonSlice.reducer;

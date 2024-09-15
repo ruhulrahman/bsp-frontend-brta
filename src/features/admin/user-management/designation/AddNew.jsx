@@ -10,11 +10,11 @@ import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 
 const AddNew = ({ t, show, onHide, onSave, editData }) => {
-    
+
     const dispatch = useDispatch();
     const { statusList, loading, listData } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
-    
+
 
     const handleClose = () => setFormOpen(false);
     const handleShow = () => setFormOpen(true);
@@ -27,6 +27,14 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         isActive: true,
     })
 
+    const resetValues = {
+        nameBn: '',
+        nameEn: '',
+        levelNumber: '',
+        parentDesingationId: '',
+        isActive: '',
+    };
+
     const [parentDesignationList, setParentDesignationList] = useState([]);
 
     useEffect(() => {
@@ -34,13 +42,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         if (editData) {
             setInitialValues(editData);
         } else {
-            setInitialValues({
-                nameBn: '',
-                nameEn: '',
-                levelNumber: '',
-                parentDesingationId: '',
-                isActive: true,
-            })
+            setInitialValues(resetValues)
         }
     }, [editData, show]);
 
@@ -48,7 +50,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
         // dispatch(setListData([]));
         try {
-            const { data } = await RestApi.get('api/v1/designation/parent-list')
+            const { data } = await RestApi.get('api/v1/admin/configurations/designation/all-list')
             // console.log('data', data)
             if (data.success) {
                 setParentDesignationList(data.data)
@@ -73,14 +75,6 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         nameEn: Yup.string().required('Name is required'),
         isActive: Yup.string().required('Is active is required'),
     });
-
-    const resetValues = {
-        nameBn: '',
-        nameEn: '',
-        levelNumber: '',
-        parentDesingationId: '',
-        isActive: '',
-    };
 
     const handleReset = (resetForm) => {
         resetForm({
@@ -117,7 +111,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                     >
                         {({ values, resetForm }) => (
                             <FormikForm>
-Inside Value {values.nameEn}
+                                {/* Inside Value {values.nameEn} */}
                                 <Form.Group className="mb-3" controlId="nameEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
                                     <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
@@ -138,9 +132,15 @@ Inside Value {values.nameEn}
 
                                 <Form.Group className="mb-3" controlId="parentDesingationId">
                                     <Form.Label>{t('parentDesingation')}</Form.Label>
-                                    <Field as="select" name="parentDesingationId" className="form-control">
-                                        <option value="">Select</option>
-                                        {parentDesignationList && parentDesignationList.map((option) => (
+                                    <Field
+                                        component="select"
+                                        id="location"
+                                        name="parentDesingationId"
+                                        multiple={false}
+                                        className="w-full rounded-md border"
+                                    >
+                                        <option value="">{t('select')}</option>
+                                        {parentDesignationList.map((option) => (
                                             <option key={option.id} value={option.id}>
                                                 {currentLanguage === 'en' ? option.nameEn : option.nameBn}
                                             </option>

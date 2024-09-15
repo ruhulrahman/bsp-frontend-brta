@@ -7,6 +7,7 @@ import RestApi from '@/utils/RestApi';
 import Loading from '@/components/common/Loading';
 import { useDispatch } from 'react-redux';
 import { setAuthUser, setToken } from '../../features/common/auth/authSlice';
+import { setLoading, setCommonDropdowns } from '@/store/commonSlice';
 
 const AdminLayout = () => {
     const dispatch = useDispatch()
@@ -18,6 +19,7 @@ const AdminLayout = () => {
 
     useEffect(() => {
         getAuthData()
+        getCommonDropdownData()
     }, []);
 
     const [listData, setListData] = useState([])
@@ -31,6 +33,19 @@ const AdminLayout = () => {
                 dispatch(setAuthUser(result.data));
                 dispatch(setToken(localStorage.getItem('token')));
             }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            setLoading(false);
+        }
+    }
+    const getCommonDropdownData = async () => {
+
+        setLoading(true);
+        try {
+            const { data } = await RestApi.get('api/v1/admin/configurations/common-dropdown-list')
+            console.log('data', data)
+            dispatch(setCommonDropdowns(data.data));
         } catch (error) {
             console.log('error', error)
         } finally {
