@@ -1,7 +1,7 @@
 import React from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 
-const Loading = ({ loading }) => {
+const Loading = ({ loading, loadingText, showText = true, children }) => {
     return (
         <>
             {loading && (
@@ -19,7 +19,13 @@ const Loading = ({ loading }) => {
                         zIndex: 1,
                     }}
                 >
-                    <Spinner animation="border" variant="primary" />
+                    <div className="d-flex flex-column items-center">
+                        <Spinner animation="border" variant="primary" />
+                        {showText && !children && <p className="text-gray-600 text-sm">
+                            {loadingText ? loadingText : 'Loading...'}
+                        </p>}
+                        {children}
+                    </div>
                 </div>
             )}
         </>

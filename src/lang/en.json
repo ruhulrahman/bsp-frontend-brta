@@ -78,5 +78,14 @@
   "level": "Level",
   "yes": "Yes",
   "no": "No",
-  "no_data_found": "No data found"
+  "ok": "Ok",
+  "no_data_found": "No data found",
+  "statusGroupList": "Status Group List",
+  "statusGroup": "Status Group",
+  "groupCode": "Group Code",
+  "saving": "Saving ...",
+  "submitting": "Submitting ...",
+  "statusList": "Status List",
+  "showSidebar": "Show Sidebar",
+  "hideSidebar": "Hide Sidebar"
 }

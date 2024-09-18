@@ -78,5 +78,14 @@
   "level": "স্তর",
   "yes": "হ্যাঁ",
   "no": "না",
-  "no_data_found": "কোনো ডেটা পাওয়া যায়নি"
+  "ok": "ঠিক আছে",
+  "no_data_found": "কোনো ডেটা পাওয়া যায়নি",
+  "statusGroupList": "অবস্থা গ্রুপ তালিকা",
+  "statusGroup": "অবস্থা গ্রুপ",
+  "groupCode": "গ্রুপ কোড",
+  "saving": "সংরক্ষণ ...",
+  "submitting": "সাবমিট ...",
+  "statusList": "অবস্থা তালিকা",
+  "showSidebar": "সাইডবার দেখুন",
+  "hideSidebar": "সাইডবার লুকান"
 }

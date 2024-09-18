@@ -4,7 +4,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { withNamespaces } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
- // will print the current language
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const navigation = [
     { name: 'Contact', href: '/admin/contact' },
@@ -32,22 +33,27 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
     // preferredLanguage = preferredLanguage ? preferredLanguage : 'bn'
     let preferredLanguage = localStorage.getItem('preferredLanguage');
     preferredLanguage = preferredLanguage !== null && preferredLanguage !== undefined ? preferredLanguage : 'bn';
-    
+
     const { authUser } = useSelector((state) => state.auth) || {};
 
     return (
         <div className='flex'>
             <div onClick={!openSidebar ? onToggleSidebar : undefined} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500 ${openSidebar ? 'w-[320px]' : 'w-auto'}`}>
-                {openSidebar && currentLanguage === 'bn' ? (
-                    <h5 className="font-semibold mr-2">{t('brtaServicePortal')}</h5>
-                ) :
-                (<h2 className="text-xl font-semibold mr-2">{t('brtaServicePortal')}</h2>
+                {openSidebar && currentLanguage === 'bn' && (
+                    <h2 className="font-semibold mr-2">{t('brtaServicePortal')}</h2>
                 )}
-                <button onClick={onToggleSidebar} id="menu-button" className="btn btn-dark btn-sm flex-auto">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
+
+                {openSidebar && currentLanguage === 'en' && (
+                    <h2 className="text-xl font-semibold mr-2">{t('brtaServicePortal')}</h2>
+                )}
+
+                <OverlayTrigger placement="bottom" overlay={<Tooltip>{openSidebar ? t('hideSidebar') : t('showSidebar')}</Tooltip>}>
+                    <button onClick={onToggleSidebar} id="menu-button" className="btn btn-dark btn-sm flex-auto">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </OverlayTrigger>
             </div>
             <Disclosure as="nav" className="bg-gray-800 flex-initial w-full">
                 <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -101,14 +107,14 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                     <span className="text-md">EN</span>
                                 </button>} */}
 
-                                {preferredLanguage === 'en' &&
-                        <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
-                            <span className="text-md">{t('bangla')}</span>
-                        </button>}
-                        {preferredLanguage === 'bn' &&
-                        <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
-                            <span className="text-md">{t('lang')}</span>
-                        </button>}
+                            {preferredLanguage === 'en' &&
+                                <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
+                                    <span className="text-md">{t('bangla')}</span>
+                                </button>}
+                            {preferredLanguage === 'bn' &&
+                                <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
+                                    <span className="text-md">{t('lang')}</span>
+                                </button>}
 
                             <button
                                 type="button"
@@ -144,7 +150,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                 >
                                     <MenuItem>
                                         <Link to="/admin/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                        {currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}
+                                            {currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}
                                         </Link>
                                     </MenuItem>
                                     <MenuItem>
@@ -154,7 +160,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                     </MenuItem>
                                     <MenuItem>
                                         <Link to="/admin/change-password" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                        {t('change_password')}
+                                            {t('change_password')}
                                         </Link>
                                     </MenuItem>
                                     <MenuItem className="w-full">

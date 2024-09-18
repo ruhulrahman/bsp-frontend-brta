@@ -61,10 +61,12 @@ const AdminLayout = () => {
                     {/* Main Content */}
                     <main className="flex-1">
                         <div className='flex'>
-                            <div className='flex-none w-[265px]'>
-                                {/* Sidebar */}
-                                <AdminSidebar openSidebar={openSidebar} />
-                            </div>
+                            {openSidebar &&
+                                <div className='flex-none w-[265px]'>
+                                    {/* Sidebar */}
+                                    <AdminSidebar openSidebar={openSidebar} />
+                                </div>
+                            }
                             <div className="w-full m-3.5 ">
                                 <Loading loading={loading} />
                                 <Outlet />

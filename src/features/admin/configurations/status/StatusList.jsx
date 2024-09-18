@@ -15,7 +15,7 @@ import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const DesignationList = ({ t }) => {
+const StatusGroupList = ({ t }) => {
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
@@ -178,7 +178,7 @@ const DesignationList = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/designation/list', { params })
+            const { data } = await RestApi.get('api/v1/admin/configurations/status/list', { params })
             dispatch(setListData(data.content));
             setPaginationData(data)
         } catch (error) {
@@ -189,6 +189,7 @@ const DesignationList = ({ t }) => {
     }
 
     const deleteData = (data) => {
+        console.log("deleteData", data);
         Swal.fire({
             title: `${t('are_you_sure_to_delete_this')}`,
             text: t('you_will_not_be_able_to_revert_this'),
@@ -205,7 +206,7 @@ const DesignationList = ({ t }) => {
 
                 dispatch(setLoading(true));
                 try {
-                    await RestApi.post(`api/v1/admin/configurations/designation/delete/${data.id}`)
+                    await RestApi.post(`api/v1/admin/configurations/status/delete/${data.id}`)
 
                     Swal.fire({
                         title: t('deleted'),
@@ -224,9 +225,7 @@ const DesignationList = ({ t }) => {
                             setCurrentPage(currentPage - 1);
                         }
                     }
-
                     dispatch(setListData(newListData));
-
                 } catch (error) {
                     console.log('error', error)
                 } finally {
@@ -234,17 +233,6 @@ const DesignationList = ({ t }) => {
                 }
             }
         });
-    }
-
-    const confirmDeleteData = async (id) => {
-        dispatch(setLoading(true));
-        try {
-            await RestApi.post('api/v1/admin/configurations/designation/delete', { id })
-        } catch (error) {
-            console.log('error', error)
-        } finally {
-            dispatch(setLoading(false));
-        }
     }
 
     const [formOpen, setFormOpen] = useState(false)
@@ -273,14 +261,13 @@ const DesignationList = ({ t }) => {
 
 
     const handleSave = async (values, setSubmitting, resetForm) => {
-        try {
-            values.parentDesignationId = parseInt(values.parentDesignationId)
 
+        try {
             let result = ''
             if (values.id) {
-                result = await RestApi.post('api/v1/admin/configurations/designation/update', values)
+                result = await RestApi.post('api/v1/admin/configurations/status/update', values)
             } else {
-                result = await RestApi.post('api/v1/admin/configurations/designation/create', values)
+                result = await RestApi.post('api/v1/admin/configurations/status/create', values)
             }
 
             if (result.data.success) {
@@ -361,7 +348,7 @@ const DesignationList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('designationList')}</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">{t('statusList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
@@ -386,7 +373,9 @@ const DesignationList = ({ t }) => {
                                 <th>{t('sl')}</th>
                                 <th>{t('name') + ` (${t('en')})`}</th>
                                 <th>{t('name') + ` (${t('bn')})`}</th>
-                                <th>{t('level')}</th>
+                                <th>{t('statusCode')}</th>
+                                <th>{t('colorName')}</th>
+                                <th>{t('statusGroup')}</th>
                                 <th>{t('status')}</th>
                                 <th>{t('action')}</th>
                             </tr>
@@ -402,9 +391,11 @@ const DesignationList = ({ t }) => {
                                     <td>{item.nameBn}</td>
                                     <td>
                                         <span className='badge bg-secondary'>
-                                            {currentLanguage === 'en' ? item.levelNumber : toBengaliNumber(item.levelNumber)}
+                                            {item.statusCode}
                                         </span>
                                     </td>
+                                    <td>{item.colorName}</td>
+                                    <td>{item.statusGroupId}</td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
@@ -448,4 +439,4 @@ const DesignationList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(DesignationList)
+export default withNamespaces()(StatusGroupList)

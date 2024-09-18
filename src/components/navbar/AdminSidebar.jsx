@@ -31,17 +31,26 @@ const AdminSidebar = ({ openSidebar }) => {
                             </span>
                         </div>
                         {openConfiguration && (
-                            <ul id="example-collapse-text" className="pl-10" style={{ height: '80px', visibilty: 'visible' }}>
+                            <ul id="example-collapse-text" className="pl-10" style={{ height: 'auto', visibilty: 'visible' }}>
                                 <li>
                                     <NavLink to="/admin/configurations/country-list">
                                         {/* <i className="bi bi-chevron-right"></i> */}
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Countries</span>
                                     </NavLink>
                                 </li>
-                                <li>
+                                {/* <li>
                                     <NavLink to="/admin/configurations/location-list">
-                                        {/* <i className="bi bi-chevron-right"></i> */}
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Locations</span>
+                                    </NavLink>
+                                </li> */}
+                                <li>
+                                    <NavLink to="/admin/configurations/status-group-list">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Status Groups</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/admin/configurations/status-list">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Status</span>
                                     </NavLink>
                                 </li>
                             </ul>
@@ -56,7 +65,7 @@ const AdminSidebar = ({ openSidebar }) => {
                             </span>
                         </div>
                         {openUserManagement && (
-                            <ul id="example-collapse-text" className="pl-10 h-[80px] visible">
+                            <ul id="example-collapse-text" className="pl-10 h-auto visible">
                                 <li>
                                     <NavLink to="/admin/user-management/user">
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Users</span>

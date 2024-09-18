@@ -12,34 +12,25 @@ import Loading from '@/components/common/Loading';
 
 const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
-    const dispatch = useDispatch();
     const { activeStatusList, loading, listData } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
-
-
-    const handleClose = () => setFormOpen(false);
-    const handleShow = () => setFormOpen(true);
 
     const [initialValues, setInitialValues] = useState({
         nameBn: '',
         nameEn: '',
-        levelNumber: '',
-        parentDesignationId: '',
+        statusGroupCode: '',
         isActive: true,
     })
 
     const resetValues = {
         nameBn: '',
         nameEn: '',
-        levelNumber: '',
-        parentDesignationId: '',
+        statusGroupCode: '',
         isActive: true,
     };
 
-    const [parentDesignationList, setParentDesignationList] = useState([]);
-
     useEffect(() => {
-        getParentDesinationList();
+
         if (editData) {
             setInitialValues(editData);
         } else {
@@ -47,33 +38,10 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         }
     }, [editData, show]);
 
-    const getParentDesinationList = async () => {
-
-        // dispatch(setListData([]));
-        try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/designation/all-list')
-            // console.log('data', data)
-            if (data.success) {
-                setParentDesignationList(data.data)
-            }
-        } catch (error) {
-            console.log('error', error)
-        } finally {
-            // dispatch(setLoading(false));
-        }
-    }
-
-    // const handleInputChange = (e) => {
-    //     console.log('Input changed:', e.target.name, e.target.value);
-    //     setInitialValues((prevValues) => ({
-    //         ...prevValues,
-    //         [e.target.name]: e.target.value,
-    //     }));
-    // };
-
     const validationSchema = Yup.object().shape({
         nameBn: Yup.string().required('Name is required'),
         nameEn: Yup.string().required('Name is required'),
+        statusGroupCode: Yup.string().required('Status Code is required'),
         isActive: Yup.string().required('Is active is required'),
     });
 
@@ -83,10 +51,6 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         });
     };
 
-    useEffect(() => {
-        // console.log('initialValues', initialValues)
-    }, []);
-
     const onSubmit = async (values, setSubmitting, resetForm) => {
         onSave(values, setSubmitting, resetForm);
     };
@@ -95,10 +59,9 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('designation')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('statusGroup')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <Loading loading={loading} loadingText={t('submitting')} />
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
@@ -109,11 +72,21 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                             onSubmit(values, setSubmitting, resetForm);
                         }}
                     >
-                        {({ values, resetForm }) => (
+                        {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => (
                             <FormikForm>
+                                <Loading loading={loading} loadingText={t('submitting')} />
                                 <Form.Group className="mb-3" controlId="nameEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
-                                    <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                    <Field type="text" name="nameEn" value={values.nameEn} onChange={(e) => {
+                                        handleChange(e); // This updates Formik's state
+                                        const nameField = e.target.value.trim()
+                                        const nameSplit = nameField.split(' ')
+                                        let result = nameSplit.join("_");
+                                        console.log("nameSplit", nameSplit); // Custom logic here
+                                        if (!values.id) {
+                                            setFieldValue('statusGroupCode', result.toLowerCase());
+                                        }
+                                    }} className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                 </Form.Group>
 
@@ -123,29 +96,10 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <ErrorMessage name="nameBn" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="levelNumber">
-                                    <Form.Label>{t('levelNumber')}</Form.Label>
-                                    <Field type="number" min="1" name="levelNumber" className="form-control" placeholder="Enter level number" />
-                                    <ErrorMessage name="levelNumber" component="div" className="text-danger" />
-                                </Form.Group>
-
-                                <Form.Group className="mb-3" controlId="parentDesignationId">
-                                    <Form.Label>{t('parentDesingation')}</Form.Label>
-                                    <Field
-                                        component="select"
-                                        id="location"
-                                        name="parentDesignationId"
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('select')}</option>
-                                        {parentDesignationList.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                            </option>
-                                        ))}
-                                    </Field>
-                                    <ErrorMessage name="parentDesignationId" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="statusGroupCode">
+                                    <Form.Label>{t('groupCode')}</Form.Label>
+                                    <Field disabled={values.id != null} type="text" name="statusGroupCode" className="form-control" placeholder="Enter status group code" />
+                                    <ErrorMessage name="statusGroupCode" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="isActive">
@@ -153,7 +107,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <ErrorMessage name="isActive" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <button type='submit' className='btn btn-success btn-rounded btn-xs'>{editData ? t('save_changes') : t('save')}</button>
+                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{editData ? t('save_changes') : t('save')}</button>
                                 <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
                             </FormikForm>
                         )}

@@ -49,7 +49,7 @@ const initialState = {
         vehicleTypeList: [],
         vehicleColorList: [],
     },
-    statusList: [
+    activeStatusList: [
         {
             id: 1,
             nameEn: "Active",
