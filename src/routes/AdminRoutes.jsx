@@ -9,6 +9,7 @@ import UserList from '../features/admin/user-management//user/UserList.jsx';
 import DesignationList from '../features/admin/user-management/designation/DesignationList.jsx';
 import StatusGroupList from '../features/admin/configurations/statusGroup/StatusGroupList.jsx';
 import StatusList from '../features/admin/configurations/status/StatusList.jsx';
+import VehicleTypeList from '../features/admin/configurations/vehicleType/VehicleTypeList.jsx';
 
 const adminRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -18,6 +19,7 @@ const adminRoutes = [
     { path: 'configurations/location-list', element: <CountryList /> },
     { path: 'configurations/status-group-list', element: <StatusGroupList /> },
     { path: 'configurations/status-list', element: <StatusList /> },
+    { path: 'configurations/vehicle-type-list', element: <VehicleTypeList /> },
     { path: 'user-management/user', element: <UserList /> },
     { path: 'user-management/designation', element: <DesignationList /> },
   ];

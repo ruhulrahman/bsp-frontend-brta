@@ -249,8 +249,8 @@ const StatusGroupList = ({ t }) => {
         setModalOpen(true);
     };
 
-    const handleOpenEditModal = (user) => {
-        setEditData(user);
+    const handleOpenEditModal = (item) => {
+        setEditData(item);
         setModalOpen(true);
     };
 

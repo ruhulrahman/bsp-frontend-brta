@@ -53,6 +53,11 @@ const AdminSidebar = ({ openSidebar }) => {
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Status</span>
                                     </NavLink>
                                 </li>
+                                <li>
+                                    <NavLink to="/admin/configurations/vehicle-type-list">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Vehicle Types</span>
+                                    </NavLink>
+                                </li>
                             </ul>
                         )}
                     </li>

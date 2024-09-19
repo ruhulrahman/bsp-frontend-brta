@@ -41,7 +41,11 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
         getStatusGroupList();
         if (editData) {
-            setInitialValues(editData);
+            const updatedData = {
+                ...editData,
+                statusGroupId: editData?.statusGroup?.id,
+            }
+            setInitialValues(updatedData);
         } else {
             setInitialValues(resetValues)
         }
@@ -81,6 +85,12 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
     const onSubmit = async (values, setSubmitting, resetForm) => {
         values.statusGroupId = parseInt(values.statusGroupId)
+
+        if (values.id) {
+            // Remove the statusGroup property
+            delete values.statusGroup;
+        }
+
         onSave(values, setSubmitting, resetForm);
     };
 
