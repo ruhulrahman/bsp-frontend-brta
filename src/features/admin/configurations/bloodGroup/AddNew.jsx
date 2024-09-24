@@ -56,7 +56,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('country')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('bloodGroup')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik

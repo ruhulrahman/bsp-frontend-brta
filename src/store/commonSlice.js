@@ -21,7 +21,6 @@ const initialState = {
         serviceId: null,
         vehicleTypeId: null,
         vehicleColorId: null,
-        vehicleColorId: null,
     },
     pagination: {
         currentPage: 0,
@@ -48,6 +47,8 @@ const initialState = {
         serviceList: [],
         vehicleTypeList: [],
         vehicleColorList: [],
+        statusGroupList: [],
+        statusList: [],
     },
     activeStatusList: [
         {

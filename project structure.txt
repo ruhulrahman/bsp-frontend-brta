@@ -40,7 +40,7 @@ my-app/
 │   │   └── ... (other utilities)
 │   ├── routes/
 │   │   └── AppRoutes.js
-│   ├── store/
+│   ├── store/  
 │   │   ├── slices/
 │   │   ├── store.js
 │   │   └── ... (if using Redux or other state management)

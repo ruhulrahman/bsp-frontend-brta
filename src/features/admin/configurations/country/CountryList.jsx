@@ -1,160 +1,256 @@
 import React, { useEffect, useState } from 'react';
-// import Badge from 'react-bootstrap/Badge';
 import { withNamespaces } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
-// import Pagination from 'react-bootstrap/Pagination'
+import Pagination from 'react-bootstrap/Pagination'
 import AddNew from './AddNew';
 import Loading from '@/components/common/Loading';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import Select from 'react-select';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
+import Form from 'react-bootstrap/Form';
+import { useDispatch, useSelector } from 'react-redux';
+import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
-import { toaster } from '@/utils/helpers.js';
+import helper, { toaster } from '@/utils/helpers.js';
+import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
+import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
 const CountryList = ({ t }) => {
 
-    const options = [
-        { value: 'Dhaka Metro-1', label: 'Dhaka Metro-1' },
-        { value: 'Dhaka Metro-2', label: 'Dhaka Metro-2' },
-        { value: 'Dhaka Metro-3', label: 'Dhaka Metro-3' },
-        { value: 'Dhaka Metro-4', label: 'Dhaka Metro-4' }
-    ]
+    const dispatch = useDispatch();
+    const { activeStatusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
+    const currentLanguage = i18n.language;
 
-    const [loading, setLoading] = useState(true)
+    const toggleFilter = () => {
+        dispatch(toggleShowFilter());
+    }
+
+    const [paginationObj, setPaginationObj] = useState({
+        currentPage: 0,
+        perPage: 5,
+        totalRows: 0,
+        totalPages: 0,
+        slOffset: 1,
+    })
+
+    const [currentPage, setCurrentPage] = useState(0);  // Spring Boot uses 0-based page numbers
+    const [pageSize, setPageSize] = useState(5);       // Default page size
+    const [totalPages, setTotalPages] = useState(0);    // Total pages from Spring response
+    const [totalElements, setTotalElements] = useState(0);  // Total items
+    const [slOffset, setSlOffset] = useState(1);  // Total items
+
+    const setPaginationData = (data) => {
+        setCurrentPage(data.page);
+        setPageSize(data.size);
+        setTotalPages(data.totalPages);
+        setTotalElements(data.totalElements);
+        setSlOffset(data.size * (data.page + 1) - data.size + 1);
+    }
+
+    const handlePageChange = (page) => {
+        // dispatch(setCurrentPage(page))
+        setCurrentPage(page)
+    };
+
+    // useEffect(() => {
+    //     dispatch(setResetPagination())
+    // }, []);
 
     useEffect(() => {
         getListData()
-    }, []);
+    }, [currentPage]);
 
-    const [listData, setListData] = useState([
-        { id: 1, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-1', designation: 'HR Admin', is_active: true },
-        { id: 2, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-2', designation: 'Software Engineer', is_active: false },
-        { id: 3, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-3', designation: 'Team Lead', is_active: true },
-        { id: 4, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-4', designation: 'Software Engineer', is_active: false },
-    ])
+    // Render pagination using React Bootstrap Pagination
+    const renderPagination = () => {
+        let items = [];
 
-    // setListData([
-    //     { id: 1, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-1', designation: 'HR Admin', is_active: true },
-    //     { id: 2, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-2', designation: 'Software Engineer', is_active: false },
-    //     { id: 3, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-3', designation: 'Team Lead', is_active: true },
-    //     { id: 4, src: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg', name: 'John Doe', email: 'john@creative-tim.com', office: 'Dhaka Metro-4', designation: 'Software Engineer', is_active: false },
-    // ])
+        items.push(
+            <Pagination.First
+                key="first"
+                onClick={() => handlePageChange(0)}
+                disabled={currentPage === 0}
+            />
+        );
 
+        items.push(
+            <Pagination.Prev
+                key="prev"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 0}
+            />
+        );
 
-    
+        // Ellipsis Logic (similar to previous example)
+        const maxLeft = Math.max(currentPage - Math.floor(windowSize / 2), 0);
+        const maxRight = Math.min(currentPage + Math.floor(windowSize / 2), totalPages - 1);
 
-    const getListData = async () => {
-        setLoading(true);
-        try {
-            const result = await RestApi.post('api/v1/admin/configurations/country/list')
-            if (result.status == 200) {
-                setListData(result)
+        if (maxLeft > 0) {
+            items.push(
+                <Pagination.Item key={0} onClick={() => handlePageChange(0)}>
+                    {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}
+                </Pagination.Item>
+            );
+            if (maxLeft > 1) {
+                items.push(<Pagination.Ellipsis key="left-ellipsis" />);
             }
-        } catch (error) {
-            console.log('error', error)
-        } finally {
-            setLoading(false);
+        }
+
+        for (let i = maxLeft; i <= maxRight; i++) {
+            items.push(
+                <Pagination.Item
+                    key={i}
+                    active={i === currentPage}
+                    onClick={() => handlePageChange(i)}
+                >
+                    {currentLanguage === 'en' ? i + 1 : toBengaliNumber(i + 1)}
+                </Pagination.Item>
+            );
+        }
+
+        if (maxRight < totalPages - 1) {
+            if (maxRight < totalPages - 2) {
+                items.push(<Pagination.Ellipsis key="right-ellipsis" />);
+            }
+            items.push(
+                <Pagination.Item
+                    key={totalPages - 1}
+                    onClick={() => handlePageChange(totalPages - 1)}
+                >
+                    {totalPages}
+                </Pagination.Item>
+            );
+        }
+
+        items.push(
+            <Pagination.Next
+                key="next"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages - 1}
+            />
+        );
+
+        items.push(
+            <Pagination.Last
+                key="last"
+                onClick={() => handlePageChange(totalPages - 1)}
+                disabled={currentPage === totalPages - 1}
+            />
+        );
+
+        return items;
+    };
+
+    const [searchValues, setSearchValues] = useState({
+        nameEn: '',
+        isActive: '',
+    });
+
+    const resetSearchValues = {
+        nameEn: '',
+        isActive: '',
+    };
+
+    const handleReset = (resetForm) => {
+        resetForm({
+            values: resetSearchValues, // Reset to initial values
+        });
+
+        if (currentPage != 0) {
+            setCurrentPage(0)
+        } else {
+            getListData()
+        }
+    };
+
+    const searchData = (values) => {
+        if (currentPage != 0) {
+            setCurrentPage(0)
+            getListData(values)
+        } else {
+            getListData(values)
         }
     }
 
-    const [initialSearchValues, setInitialSearchValues] = useState({
-        name_en: '',
-        name_bn: '',
-        email: '',
-        office: '',
-        username: '',
-        is_active: '',
-    })
+    const getListData = async (values = searchValues) => {
 
-    const resetSearchValues = {
-        name_en: '',
-        name_bn: '',
-        email: '',
-        office: '',
-        username: '',
-        is_active: '',
-    };
+        const params = Object.assign({ page: currentPage, size: pagination.perPage }, values)
 
-    const inputOnChange = (e) => {
-        console.log('e', e)
-        const { name, value } = e.target;
-        // console.log('name', value)
-        setInitialSearchValues({
-            ...initialSearchValues,
-            [name]: value
-        })
+        dispatch(setLoading(true));
+        dispatch(setListData([]));
+        try {
+            const { data } = await RestApi.get('api/v1/admin/configurations/country/list', { params })
+            dispatch(setListData(data.content));
+            setPaginationData(data)
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            dispatch(setLoading(false));
+        }
     }
-
-    // const [selectedOption, setSelectedOption] = useState(null);
-
-    const selectOnChange = (selectedOption) => {
-        console.log('selectedOption', selectedOption);
-        setInitialSearchValues({
-            ...initialSearchValues,
-            office: selectedOption ? selectedOption.value : ''
-        });
-    };
-
-    const searchData = () => {
-        console.log("searchData", initialSearchValues);
-        getListData()
-    }
-
-    const clearSearchFields = () => {
-        setInitialSearchValues(resetSearchValues)
-    };
 
     const deleteData = (data) => {
         console.log("deleteData", data);
         Swal.fire({
-            title: t('are_you_sure_to_delete_this'),
+            title: `${t('are_you_sure_to_delete_this')}`,
             text: t('you_will_not_be_able_to_revert_this'),
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#15803D",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes",
-            cancelButtonText: "No",
-        }).then((result) => {
+            confirmButtonText: t('yes'),
+            cancelButtonText: t('no'),
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger',
+            },
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                const updatedUsers = users.filter(user => user.id !== data.id);
-                setUsers(updatedUsers);
 
-                Swal.fire({
-                    title: t('deleted'),
-                    text: t('your_data_has_been_deleted'),
-                    icon: "success"
-                });
+                dispatch(setLoading(true));
+                try {
+                    await RestApi.delete(`api/v1/admin/configurations/country/delete/${data.id}`)
+
+                    Swal.fire({
+                        title: t('deleted'),
+                        text: t('your_data_has_been_deleted'),
+                        icon: "success",
+                        confirmButtonText: t('ok'),
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+
+                    const newListData = listData.filter(item => item.id != data.id);
+
+                    if (newListData.length === 0) {
+                        if (currentPage != 0) {
+                            setCurrentPage(currentPage - 1);
+                        }
+                    }
+                    dispatch(setListData(newListData));
+                } catch (error) {
+                    console.log('error', error)
+                } finally {
+                    dispatch(setLoading(false));
+                }
             }
         });
     }
 
     const [formOpen, setFormOpen] = useState(false)
-    const editItem = ''
-    // const editData = (data) => {
-    //     this.editItem = data
-    //     console.log("editData", data);
-    //     setFormOpen(true);
-    // }
 
     const toggleFormOpen = (value) => {
         setFormOpen(value);
     }
 
-
-
     const [modalOpen, setModalOpen] = useState(false);
     const [editData, setEditData] = useState(null);
-
 
     const handleOpenAddModal = () => {
         setEditData(null);
         setModalOpen(true);
     };
 
-    const handleOpenEditModal = (user) => {
-        setEditData(user);
+    const handleOpenEditModal = (item) => {
+        setEditData(item);
         setModalOpen(true);
     };
 
@@ -163,103 +259,104 @@ const CountryList = ({ t }) => {
         setEditData(null); // Reset edit data
     };
 
-    // const handleSave = (userData) => {
-    //     if (editData) {
-    //         // Editing an existing user
-    //         setUsers(users.map(user => user.id === userData.id ? userData : user));
-    //     } else {
-    //         // Adding a new user
-    //         const newUser = { ...userData, id: users.length + 1 };
-    //         setUsers([...users, newUser]);
-    //     }
-    //     handleCloseModal();
-    //     getListData()
-    // };
 
+    const handleSave = async (values, setSubmitting, resetForm) => {
 
-    const handleSave = async (values) => {
-        console.log('Form submitted:', values);
-        onSave(values);
-        setLoading(true);
-        let result = ''
         try {
-            console.log('values', values)
+            let result = ''
             if (values.id) {
-                result = await RestApi.post('api/v1/admin/configurations/country/create', values)
+                result = await RestApi.put(`api/v1/admin/configurations/country/update/${values.id}`, values)
             } else {
                 result = await RestApi.post('api/v1/admin/configurations/country/create', values)
             }
-    
-            if (result.status == 201) {
-                toaster('Country has been created')
+
+            if (result.data.success) {
+                toaster(result.data.message)
                 handleCloseModal();
                 getListData()
             }
-    
+
         } catch (error) {
             console.log('error', error)
             // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
         } finally {
-            setLoading(false);
+            setSubmitting(false)
         }
     };
-
-    const [showFilter, setShowFilter] = useState(false)
-
-    const toggleFilter = () => {
-        setShowFilter(!showFilter)
-    }
 
     return (
         <>
             {showFilter &&
                 <div className="card bg-gray-300 mb-3">
                     <div className="card-body p-2">
-
-                        <div className="row">
+                        <div className="row mb-1">
                             <div className="col">
                                 <h5 className='text-dark font-semibold'>{t('search_filter')}</h5>
                             </div>
                         </div>
-                        <div className="row mt-1">
-                            <div className="col-md-3">
-                                <input type="text" name="name_en" value={initialSearchValues.name_en} onChange={inputOnChange} className="form-control" placeholder="Enter name" autocomplete="off" />
-                            </div>
-                            <div className="col-md-3">
-                                <Select className='!h-[20px]' maxMenuHeight={100} options={options} name="office" value={initialSearchValues.office} onChange={selectOnChange} placeholder="Select Office" />
-                            </div>
-                            <div className="col-md-3">
-                                <div className="flex">
-                                    <div className="flex-1">
-                                        <button onClick={searchData} className="btn btn-success btn-sm w-full">{t('search')}</button>
+                        <Formik
+                            initialValues={searchValues}
+                            onSubmit={(values, { resetForm }) => {
+                                // console.log('Form Submitted', values);
+                                searchData(values);
+                            }}
+                        >
+                            {({ values, resetForm }) => (
+                                <FormikForm>
+                                    <div className="row">
+                                        <div className="col-md-3 col-sm-12">
+                                            <Form.Group className="mb-3" controlId="nameEn">
+                                                <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                                <ErrorMessage name="nameEn" component="div" className="text-danger" />
+                                            </Form.Group>
+                                        </div>
+                                        <div className="col-md-3 col-sm-12">
+                                            <Form.Group className="mb-3" controlId="nameEn">
+                                                <Field
+                                                    component="select"
+                                                    id="location"
+                                                    name="isActive"
+                                                    multiple={false}
+                                                    className="w-full rounded-md"
+                                                >
+                                                    <option value="">{t('selectActiveStatus')}</option>
+                                                    {activeStatusList.map((option) => (
+                                                        <option key={option.value} value={option.value}>
+                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
+                                                        </option>
+                                                    ))}
+                                                </Field>
+                                            </Form.Group>
+                                        </div>
+                                        <div className="col-md-3 col-sm-12">
+                                            <div className="flex">
+                                                <div className="flex-1">
+                                                    <button type='submit' className="btn btn-success btn-sm w-full">{t('search')}</button>
+                                                </div>
+                                                <div className="flex-1 ml-2">
+                                                    <button type='reset' onClick={() => handleReset(resetForm)} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex-1 ml-2">
-                                        <button onClick={clearSearchFields} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                                </FormikForm>
+                            )}
+                        </Formik>
                     </div>
                 </div>
             }
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('country_list')}</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">{t('countryList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
-                        <OverlayTrigger
-                            overlay={
-                                <Tooltip>{t('toggle_search_filter')}</Tooltip>
-                            }
-                        >
+                        <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
                             <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
 
                         <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button>
-                        {/* <AddNew formOpen={formOpen} setFormOpen={toggleFormOpen} editItem={editItem} /> */}
                         <AddNew
                             show={modalOpen}
                             onHide={handleCloseModal}
@@ -273,6 +370,7 @@ const CountryList = ({ t }) => {
                     <table className="mt-2 text-left table table-responsive min-w-max">
                         <thead>
                             <tr>
+                                <th>{t('sl')}</th>
                                 <th>{t('name') + ` (${t('en')})`}</th>
                                 <th>{t('name') + ` (${t('bn')})`}</th>
                                 <th>{t('status')}</th>
@@ -281,42 +379,49 @@ const CountryList = ({ t }) => {
                         </thead>
                         <tbody>
 
-                            {listData && listData.map(item => (
+                            {listData && listData.map((item, index) => (
                                 <tr key={item.id} className='text-slate-500 text-sm'>
-                                    <td>{item.name}</td>
-                                    <td>{item.office}</td>
+                                    {/* <td>{slOffset + index}.</td> */}
+                                    {/* <td>{toBengaliNumber(slOffset + index)}.</td> */}
+                                    <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
+                                    <td>{item.nameEn}</td>
+                                    <td>{item.nameBn}</td>
                                     <td>
-                                        <span className={`badge ${item.is_active ? 'bg-success' : 'bg-danger'}`}> {item.is_active ? t('active') : t('inactive')}</span>
+                                        <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
                                     <td>
-                                        <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
-                                            <i className="fa fa-pen"></i>
-                                        </button>
-                                        <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
-                                            <i className="fa fa-trash"></i>
-                                        </button>
+                                        <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
+                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                                <i className="fa fa-pen"></i>
+                                            </button>
+                                        </OverlayTrigger>
+                                        <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
+                                            <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
+                                                <i className="fa fa-trash"></i>
+                                            </button>
+                                        </OverlayTrigger>
                                     </td>
                                 </tr>
                             ))}
 
+                            {listData && listData.length === 0 && (
+                                <tr>
+                                    <td colSpan={5} className="text-center text-danger text-slate-500">
+                                        <i className="fa fa-exclamation-circle"></i> {t('no_data_found')}
+                                    </td>
+                                </tr>
+                            )}
+
                         </tbody>
                     </table>
                 </div>
-                <div className="flex items-center justify-between p-3">
-                    <p className="block text-sm text-slate-500">
-                        {t('page')} 1 {t('of')} 10
-                    </p>
-                    <div className="flex gap-1">
-                        <button
-                            className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                            type="button">
-                            {t('previous')}
-                        </button>
-                        <button
-                            className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                            type="button">
-                            {t('next')}
-                        </button>
+                <div className='row m-2.5'>
+                    <div className="col-md-12 text-right">
+                        <div className="flex items-center justify-end">
+                            <div className="flex">
+                                <Pagination size='sm'>{renderPagination()}</Pagination>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

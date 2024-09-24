@@ -18,17 +18,28 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const [initialValues, setInitialValues] = useState({
         nameBn: '',
         nameEn: '',
+        serviceCode: '',
+        parentServiceId: '',
         isActive: true,
     })
 
     const resetValues = {
         nameBn: '',
         nameEn: '',
+        serviceCode: '',
+        parentServiceId: '',
         isActive: true,
     };
 
-    useEffect(() => {
+    const validationSchema = Yup.object().shape({
+        nameBn: Yup.string().required('Name is required'),
+        nameEn: Yup.string().required('Name is required'),
+        // serviceCode: Yup.string().required('Service Code is required'),
+        isActive: Yup.string().required('Is active is required'),
+    });
 
+    useEffect(() => {
+        getAllServiceList()
         if (editData) {
             setInitialValues(editData);
         } else {
@@ -36,11 +47,21 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         }
     }, [editData, show]);
 
-    const validationSchema = Yup.object().shape({
-        nameBn: Yup.string().required('Name is required'),
-        nameEn: Yup.string().required('Name is required'),
-        isActive: Yup.string().required('Is active is required'),
-    });
+
+    const [allServiceList, setAllServiceList] = useState([]);
+    const getAllServiceList = async () => {
+
+        try {
+            const { data } = await RestApi.get('api/v1/admin/configurations/service/all-list')
+            if (data.success) {
+                setAllServiceList(data.data)
+            }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            // dispatch(setLoading(false));
+        }
+    }
 
     const handleReset = (resetForm) => {
         resetForm({
@@ -56,7 +77,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('country')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('service')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik
@@ -74,7 +95,16 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                 <Loading loading={loading} loadingText={t('submitting')} />
                                 <Form.Group className="mb-3" controlId="nameEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
-                                    <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                    <Field type="text" name="nameEn" onChange={(e) => {
+                                        handleChange(e); // This updates Formik's state
+                                        const nameField = e.target.value.trim()
+                                        const nameSplit = nameField.split(' ')
+                                        let result = nameSplit.join("_");
+                                        console.log("nameSplit", nameSplit); // Custom logic here
+                                        if (!values.id) {
+                                            setFieldValue('serviceCode', result.toLowerCase());
+                                        }
+                                    }} className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                 </Form.Group>
 
@@ -82,6 +112,31 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <Form.Label>{t('name')} ({t('bn')})</Form.Label>
                                     <Field type="text" name="nameBn" className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="nameBn" component="div" className="text-danger" />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="serviceCode">
+                                    <Form.Label>{t('serviceCode')}</Form.Label>
+                                    <Field disabled={values.id != null} type="text" name="serviceCode" className="form-control" placeholder="Enter service code" />
+                                    <ErrorMessage name="serviceCode" component="div" className="text-danger" />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="parentServiceId">
+                                    <Form.Label>{t('parentService')}</Form.Label>
+                                    <Field
+                                        component="select"
+                                        id="location"
+                                        name="parentServiceId"
+                                        multiple={false}
+                                        className="w-full rounded-md border"
+                                    >
+                                        <option value="">{t('select')}</option>
+                                        {allServiceList.map((option) => (
+                                            <option key={option.id} value={option.id}>
+                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
+                                            </option>
+                                        ))}
+                                    </Field>
+                                    <ErrorMessage name="parentServiceId" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="isActive">

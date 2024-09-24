@@ -38,11 +38,11 @@ const AdminSidebar = ({ openSidebar }) => {
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Countries</span>
                                     </NavLink>
                                 </li>
-                                {/* <li>
-                                    <NavLink to="/admin/configurations/location-list">
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Locations</span>
+                                <li>
+                                    <NavLink to="/admin/configurations/blood-group-list">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Blood Groups</span>
                                     </NavLink>
-                                </li> */}
+                                </li>
                                 <li>
                                     <NavLink to="/admin/configurations/status-group-list">
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Status Groups</span>
@@ -56,6 +56,26 @@ const AdminSidebar = ({ openSidebar }) => {
                                 <li>
                                     <NavLink to="/admin/configurations/vehicle-type-list">
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Vehicle Types</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/admin/configurations/vehicle-color-list">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Vehicle Colors</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/admin/configurations/fuel-type-list">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Fuel Types</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/admin/configurations/service-list">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Services</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/admin/configurations/notification-template-list">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Notification Templates</span>
                                     </NavLink>
                                 </li>
                             </ul>

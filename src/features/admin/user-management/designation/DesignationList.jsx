@@ -332,7 +332,7 @@ const DesignationList = ({ t }) => {
                                                     multiple={false}
                                                     className="w-full rounded-md"
                                                 >
-                                                    <option value="">{t('select')}</option>
+                                                    <option value="">{t('selectActiveStatus')}</option>
                                                     {activeStatusList.map((option) => (
                                                         <option key={option.value} value={option.value}>
                                                             {currentLanguage === 'en' ? option.nameEn : option.nameBn}

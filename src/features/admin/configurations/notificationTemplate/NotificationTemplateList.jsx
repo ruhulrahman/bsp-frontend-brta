@@ -15,7 +15,7 @@ import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const StatusGroupList = ({ t }) => {
+const NotificationTemplateList = ({ t }) => {
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns } = useSelector((state) => state.common)
@@ -141,14 +141,14 @@ const StatusGroupList = ({ t }) => {
     };
 
     const [searchValues, setSearchValues] = useState({
-        nameEn: '',
-        statusGroupId: '',
+        titleEn: '',
+        serviceId: '',
         isActive: '',
     });
 
     const resetSearchValues = {
-        nameEn: '',
-        statusGroupId: '',
+        titleEn: '',
+        serviceId: '',
         isActive: '',
     };
 
@@ -180,7 +180,7 @@ const StatusGroupList = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/status/list', { params })
+            const { data } = await RestApi.get('api/v1/admin/configurations/notification-template/list', { params })
             dispatch(setListData(data.content));
             setPaginationData(data)
         } catch (error) {
@@ -208,7 +208,7 @@ const StatusGroupList = ({ t }) => {
 
                 dispatch(setLoading(true));
                 try {
-                    await RestApi.post(`api/v1/admin/configurations/status/delete/${data.id}`)
+                    await RestApi.delete(`api/v1/admin/configurations/notification-template/delete/${data.id}`)
 
                     Swal.fire({
                         title: t('deleted'),
@@ -267,9 +267,9 @@ const StatusGroupList = ({ t }) => {
         try {
             let result = ''
             if (values.id) {
-                result = await RestApi.post('api/v1/admin/configurations/status/update', values)
+                result = await RestApi.put(`api/v1/admin/configurations/notification-template/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/configurations/status/create', values)
+                result = await RestApi.post('api/v1/admin/configurations/notification-template/create', values)
             }
 
             if (result.data.success) {
@@ -307,22 +307,22 @@ const StatusGroupList = ({ t }) => {
                                 <FormikForm>
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
-                                                <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
-                                                <ErrorMessage name="nameEn" component="div" className="text-danger" />
+                                            <Form.Group className="mb-3" controlId="titleEn">
+                                                <Field type="text" name="titleEn" className="form-control" placeholder="Enter Title" />
+                                                <ErrorMessage name="titleEn" component="div" className="text-danger" />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
                                             <Form.Group className="mb-3" controlId="nameEn">
                                                 <Field
                                                     component="select"
-                                                    id="statusGroupId"
-                                                    name="statusGroupId"
+                                                    id="serviceId"
+                                                    name="serviceId"
                                                     multiple={false}
                                                     className="w-full rounded-md"
                                                 >
-                                                    <option value="">{t('selectStatusGroup')}</option>
-                                                    {dropdowns.statusGroupList && dropdowns.statusGroupList.map((option) => (
+                                                    <option value="">{t('selectService')}</option>
+                                                    {dropdowns.serviceList && dropdowns.serviceList.map((option) => (
                                                         <option key={option.id} value={option.id}>
                                                             {currentLanguage === 'en' ? option.nameEn : option.nameBn}
                                                         </option>
@@ -368,7 +368,7 @@ const StatusGroupList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('statusList')}</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">{t('notificationTemplateList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
@@ -391,12 +391,11 @@ const StatusGroupList = ({ t }) => {
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>
-                                <th>{t('name') + ` (${t('en')})`}</th>
-                                <th>{t('name') + ` (${t('bn')})`}</th>
-                                <th>{t('statusCode')}</th>
-                                <th className='text-center'>{t('priority')}</th>
-                                <th>{t('colorName')}</th>
-                                <th>{t('statusGroup')}</th>
+                                <th>{t('title') + ` (${t('en')})`}</th>
+                                <th>{t('title') + ` (${t('bn')})`}</th>
+                                <th>{t('messageEn')}</th>
+                                <th>{t('messageBn')}</th>
+                                <th>{t('service')}</th>
                                 <th>{t('status')}</th>
                                 <th className='text-center'>{t('action')}</th>
                             </tr>
@@ -408,19 +407,12 @@ const StatusGroupList = ({ t }) => {
                                     {/* <td>{slOffset + index}.</td> */}
                                     {/* <td>{toBengaliNumber(slOffset + index)}.</td> */}
                                     <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
-                                    <td>{item.nameEn}</td>
-                                    <td>{item.nameBn}</td>
+                                    <td>{item.titleEn}</td>
+                                    <td>{item.titleBn}</td>
+                                    <td>{item.messageEn}</td>
+                                    <td>{item.messageBn}</td>
                                     <td>
-                                        <span className='badge bg-secondary'>
-                                            {item.statusCode}
-                                        </span>
-                                    </td>
-                                    <td className='text-center'>
-                                        <span className='badge bg-secondary'> {item.priority}</span>
-                                    </td>
-                                    <td>{item.colorName}</td>
-                                    <td>
-                                        {currentLanguage === 'en' ? item?.statusGroup?.nameEn : item?.statusGroup?.nameBn}
+                                        {currentLanguage === 'en' ? item?.service?.nameEn : item?.service?.nameBn}
                                     </td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
@@ -465,4 +457,4 @@ const StatusGroupList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(StatusGroupList)
+export default withNamespaces()(NotificationTemplateList)

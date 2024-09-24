@@ -39,7 +39,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const [parentDesignationList, setParentDesignationList] = useState([]);
 
     useEffect(() => {
-        getParentDesinationList();
+        getAllDesinationList();
         if (editData) {
             setInitialValues(editData);
         } else {
@@ -47,7 +47,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         }
     }, [editData, show]);
 
-    const getParentDesinationList = async () => {
+    const getAllDesinationList = async () => {
 
         // dispatch(setListData([]));
         try {

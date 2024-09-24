@@ -46,11 +46,13 @@
   hover:text-white
   block
   p-2
+  rounded-l-md
 }
 
 .admin-sidebar-ul li a.active {
   @apply
   bg-green-700
+  rounded-l-md
 }
 
 .form-check-input:checked {

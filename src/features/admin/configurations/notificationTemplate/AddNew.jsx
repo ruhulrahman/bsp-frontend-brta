@@ -16,22 +16,20 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const currentLanguage = i18n.language;
 
     const [initialValues, setInitialValues] = useState({
-        nameBn: '',
-        nameEn: '',
-        statusGroupId: '',
-        statusCode: '',
-        colorName: '',
-        priority: '',
+        titleEn: '',
+        titleBn: '',
+        serviceId: '',
+        messageEn: '',
+        messageBn: '',
         isActive: true,
     })
 
     const resetValues = {
-        nameBn: '',
-        nameEn: '',
-        statusGroupId: '',
-        statusCode: '',
-        colorName: '',
-        priority: '',
+        titleEn: '',
+        titleBn: '',
+        serviceId: '',
+        messageEn: '',
+        messageBn: '',
         isActive: true,
     };
 
@@ -43,7 +41,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         if (editData) {
             const updatedData = {
                 ...editData,
-                statusGroupId: editData?.statusGroupId,
+                serviceId: editData?.serviceId,
             }
             setInitialValues(updatedData);
         } else {
@@ -66,10 +64,10 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
 
     const validationSchema = Yup.object().shape({
-        nameBn: Yup.string().required('Name is required'),
-        nameEn: Yup.string().required('Name is required'),
-        statusGroupId: Yup.string().required('Status Group Id is required'),
-        statusCode: Yup.string().required('Status Code is required'),
+        titleEn: Yup.string().required('Name is required'),
+        titleBn: Yup.string().required('Name is required'),
+        serviceId: Yup.string().required('Status Group Id is required'),
+        messageEn: Yup.string().required('Status Code is required'),
         isActive: Yup.string().required('Is active is required'),
     });
 
@@ -84,7 +82,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     }, []);
 
     const onSubmit = async (values, setSubmitting, resetForm) => {
-        values.statusGroupId = parseInt(values.statusGroupId)
+        values.serviceId = parseInt(values.serviceId)
 
         if (values.id) {
             // Remove the statusGroup property
@@ -98,7 +96,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('status')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('notificationTemplate')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik
@@ -115,62 +113,47 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                             <FormikForm>
                                 <Loading loading={loading} loadingText={t('submitting')} />
 
-                                <Form.Group className="mb-3" controlId="statusGroupId">
-                                    <Form.Label>{t('statusGroup')}</Form.Label>
+                                <Form.Group className="mb-3" controlId="serviceId">
+                                    <Form.Label>{t('Service')}</Form.Label>
                                     <Field
                                         component="select"
-                                        id="location"
-                                        name="statusGroupId"
+                                        id="serviceId"
+                                        name="serviceId"
                                         multiple={false}
                                         className="w-full rounded-md border"
                                     >
-                                        <option value="">{t('select')}</option>
-                                        {dropdowns.statusGroupList && dropdowns.statusGroupList.map((option) => (
+                                        <option value="">{t('selectService')}</option>
+                                        {dropdowns.serviceList && dropdowns.serviceList.map((option) => (
                                             <option key={option.id} value={option.id}>
                                                 {currentLanguage === 'en' ? option.nameEn : option.nameBn}
                                             </option>
                                         ))}
                                     </Field>
-                                    <ErrorMessage name="statusGroupId" component="div" className="text-danger" />
+                                    <ErrorMessage name="serviceId" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="nameEn">
+                                <Form.Group className="mb-3" controlId="titleEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
-                                    <Field type="text" name="nameEn" value={values.nameEn} onChange={(e) => {
-                                        handleChange(e); // This updates Formik's state
-                                        const nameField = e.target.value.trim()
-                                        const nameSplit = nameField.split(' ')
-                                        let result = nameSplit.join("_");
-                                        console.log("nameSplit", nameSplit); // Custom logic here
-                                        if (!values.id) {
-                                            setFieldValue('statusCode', result.toLowerCase());
-                                        }
-                                    }} className="form-control" placeholder="Enter name" />
-                                    <ErrorMessage name="nameEn" component="div" className="text-danger" />
+                                    <Field type="text" name="titleEn" className="form-control" placeholder="Enter Title" />
+                                    <ErrorMessage name="titleEn" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="nameBn">
+                                <Form.Group className="mb-3" controlId="titleBn">
                                     <Form.Label>{t('name')} ({t('bn')})</Form.Label>
-                                    <Field type="text" name="nameBn" className="form-control" placeholder="Enter name" />
-                                    <ErrorMessage name="nameBn" component="div" className="text-danger" />
+                                    <Field type="text" name="titleBn" className="form-control" placeholder="Enter Title" />
+                                    <ErrorMessage name="titleBn" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="statusCode">
-                                    <Form.Label>{t('statusCode')}</Form.Label>
-                                    <Field disabled={values.id != null} type="text" name="statusCode" className="form-control" placeholder="Enter status group code" />
-                                    <ErrorMessage name="statusCode" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="messageEn">
+                                    <Form.Label>{t('messageEn')}</Form.Label>
+                                    <Field as="textarea" name="messageEn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
+                                    <ErrorMessage name="messageEn" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="colorName">
-                                    <Form.Label>{t('colorName')}</Form.Label>
-                                    <Field type="text" name="colorName" className="form-control" placeholder="Enter status group code" />
-                                    <ErrorMessage name="colorName" component="div" className="text-danger" />
-                                </Form.Group>
-
-                                <Form.Group className="mb-3" controlId="priority">
-                                    <Form.Label>{t('priority')}</Form.Label>
-                                    <Field type="number" min="1" name="priority" className="form-control" placeholder="Enter status group code" />
-                                    <ErrorMessage name="priority" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="messageBn">
+                                    <Form.Label>{t('messageBn')}</Form.Label>
+                                    <Field as="textarea" name="messageBn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
+                                    <ErrorMessage name="messageBn" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="isActive">
