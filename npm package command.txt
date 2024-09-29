@@ -18,3 +18,4 @@ npm install @headlessui/react
 npm install @heroicons/react
 npm i formik
 npm i yup
+npm install react-quill --save

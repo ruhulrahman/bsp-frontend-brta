@@ -15,6 +15,15 @@ import ServiceList from '../features/admin/configurations/brtaService/ServiceLis
 import VehicleColorList from '../features/admin/configurations/vehicleColor/VehicleColorList.jsx';
 import BloodGroupList from '../features/admin/configurations/bloodGroup/BloodGroupList.jsx';
 import NotificationTemplateList from '../features/admin/configurations/notificationTemplate/NotificationTemplateList.jsx';
+import EmailTemplateList from '../features/admin/configurations/emailTemplate/EmailTemplateList.jsx';
+import AddOrUpdateEmailTemplate from '../features/admin/configurations/emailTemplate/AddOrUpdateEmailTemplate.jsx';
+import AppointmentTimeslotList from '../features/admin/configurations/appointmentTimeslot/AppointmentTimeslotList.jsx';
+import FiscalYearList from '../features/admin/configurations/fiscalYear/FiscalYearList.jsx';
+import VehicleRouteList from '../features/admin/configurations/vehicleRoute/VehicleRouteList.jsx';
+import VehicleMakerList from '../features/admin/configurations/vehicleMaker/VehicleMakerList.jsx';
+import VehicleClassList from '../features/admin/configurations/vehicleClass/VehicleClassList.jsx';
+import VehicleBrandList from '../features/admin/configurations/vehicleBrand/VehicleBrandList.jsx';
+import PermissionList from '../features/admin/configurations/permission/PermissionList.jsx';
 
 const adminRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -30,6 +39,15 @@ const adminRoutes = [
     { path: 'configurations/fuel-type-list', element: <FuelTypeList /> },
     { path: 'configurations/service-list', element: <ServiceList /> },
     { path: 'configurations/notification-template-list', element: <NotificationTemplateList /> },
+    { path: 'configurations/email-template-list', element: <EmailTemplateList /> },
+    { path: 'configurations/add-or-update-email-template/:id?', element: <AddOrUpdateEmailTemplate /> },
+    { path: 'configurations/appointment-timeslot-list', element: <AppointmentTimeslotList /> },
+    { path: 'configurations/fiscal-year-list', element: <FiscalYearList /> },
+    { path: 'configurations/vehicle-route-list', element: <VehicleRouteList /> },
+    { path: 'configurations/vehicle-maker-list', element: <VehicleMakerList /> },
+    { path: 'configurations/vehicle-brand-list', element: <VehicleBrandList /> },
+    { path: 'configurations/vehicle-class-list', element: <VehicleClassList /> },
+    { path: 'configurations/permission-list', element: <PermissionList /> },
 
     { path: 'user-management/user', element: <UserList /> },
     { path: 'user-management/designation', element: <DesignationList /> },

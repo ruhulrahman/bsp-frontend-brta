@@ -38,7 +38,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
 
     return (
         <div className='flex'>
-            <div onClick={!openSidebar ? onToggleSidebar : undefined} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500 ${openSidebar ? 'w-[320px]' : 'w-auto'}`}>
+            <div onClick={!openSidebar ? onToggleSidebar : undefined} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500w-auto`}>
                 {/* {openSidebar && currentLanguage === 'bn' && (
                     <h2 className="font-semibold mr-2">{t('brtaServicePortal')}</h2>
                 )}

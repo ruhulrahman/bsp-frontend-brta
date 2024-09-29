@@ -1,4 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from 'axios';
+import RestApi from '@/utils/RestApi';
+
+// 1. Create an async thunk for the API call
+export const fetchCommonDropdowns = createAsyncThunk(
+    'common/fetchCommonDropdowns', // name the action type
+    async ({ rejectWithValue }) => {
+      try {
+          console.log('clicked =====')
+        const response = await RestApi.get(`/api/v1/admin/configurations/common-dropdown-list`);
+        console.log('response =========', response)
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response.data); // return error message if failed
+      }
+    }
+  );
 
 const initialState = {
     loading: false,
@@ -49,25 +66,40 @@ const initialState = {
         vehicleColorList: [],
         statusGroupList: [],
         statusList: [],
+        fiscalYearList: [],
+        appointmentTimeSlotList: [],
+        locationTypeList: [],
+        routePermitTypes: [],
+        paymentStatusList: [],
     },
     activeStatusList: [
         {
             id: 1,
             nameEn: "Active",
             nameBn: "সক্রিয়",
-            value: true,
         },
         {
             id: 2,
             nameEn: "Inactive",
             nameBn: "নিষ্ক্রিয়",
-            value: false,
+        },
+    ],
+    permissionTypeList: [
+        {
+            id: 1,
+            nameEn: "Page",
+            nameBn: "পৃষ্ঠা",
+        },
+        {
+            id: 2,
+            nameEn: "Feature",
+            nameBn: "ফিচার",
         },
     ],
 };
 
 const commonSlice = createSlice({
-    name: "dropdowns",
+    name: "common",
     initialState,
     reducers: {
         setLoading: (state, action) => {
@@ -104,6 +136,21 @@ const commonSlice = createSlice({
         toggleShowFilter: (state) => {
             state.showFilter = !state.showFilter
         },
+    },
+    extraReducers: (builder) => {
+        builder
+        .addCase(fetchCommonDropdowns.pending, (state) => {
+            state.loading = true;
+            state.error = null; // clear any existing errors
+        })
+        .addCase(fetchCommonDropdowns.fulfilled, (state, action) => {
+            state.loading = false;
+            state.dropdowns = action.payload; // store the fetched user data
+        })
+        .addCase(fetchCommonDropdowns.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload; // store error message
+        });
     },
 });
 

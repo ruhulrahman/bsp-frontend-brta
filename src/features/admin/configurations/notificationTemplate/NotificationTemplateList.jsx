@@ -14,6 +14,7 @@ import RestApi from '@/utils/RestApi';
 import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
+import ViewDetails from './ViewDetails';
 
 const NotificationTemplateList = ({ t }) => {
 
@@ -261,6 +262,18 @@ const NotificationTemplateList = ({ t }) => {
         setEditData(null); // Reset edit data
     };
 
+    
+    const [viewModalOpen, setViewModalOpen] = useState(false);
+    const [viewData, setViewData] = useState(null);
+    const handleOpenViewDetailsModal = (item) => {
+        setViewData(item);
+        setViewModalOpen(true);
+    };
+
+    const handleCloseViewDetailsModal = () => {
+        setViewModalOpen(false);
+        setViewData(null); // Reset edit data
+    }
 
     const handleSave = async (values, setSubmitting, resetForm) => {
 
@@ -308,12 +321,12 @@ const NotificationTemplateList = ({ t }) => {
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
                                             <Form.Group className="mb-3" controlId="titleEn">
-                                                <Field type="text" name="titleEn" className="form-control" placeholder="Enter Title" />
+                                                <Field type="text" name="titleEn" className="form-control" placeholder={t('enterTitle')} />
                                                 <ErrorMessage name="titleEn" component="div" className="text-danger" />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
+                                            <Form.Group className="mb-3" controlId="serviceId">
                                                 <Field
                                                     component="select"
                                                     id="serviceId"
@@ -383,18 +396,23 @@ const NotificationTemplateList = ({ t }) => {
                             onSave={handleSave}
                             editData={editData}
                         />
+
+                        <ViewDetails
+                            show={viewModalOpen}
+                            onHide={handleCloseViewDetailsModal}
+                            onSave={handleSave}
+                            viewData={viewData}
+                        />
                     </div>
                 </div>
-                <div className="p-0 overflow-scroll relative min-h-[300px]">
+                <div className="p-0 table-responsive">
                     <Loading loading={loading} />
-                    <table className="mt-2 text-left table table-responsive min-w-max">
+                    <table className="mt-2 text-left table">
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>
                                 <th>{t('title') + ` (${t('en')})`}</th>
                                 <th>{t('title') + ` (${t('bn')})`}</th>
-                                <th>{t('messageEn')}</th>
-                                <th>{t('messageBn')}</th>
                                 <th>{t('service')}</th>
                                 <th>{t('status')}</th>
                                 <th className='text-center'>{t('action')}</th>
@@ -409,8 +427,6 @@ const NotificationTemplateList = ({ t }) => {
                                     <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
                                     <td>{item.titleEn}</td>
                                     <td>{item.titleBn}</td>
-                                    <td>{item.messageEn}</td>
-                                    <td>{item.messageBn}</td>
                                     <td>
                                         {currentLanguage === 'en' ? item?.service?.nameEn : item?.service?.nameBn}
                                     </td>
@@ -418,6 +434,11 @@ const NotificationTemplateList = ({ t }) => {
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
                                     <td className='text-center'>
+                                        <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                            <button onClick={() => handleOpenViewDetailsModal(item)} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
+                                                <i className="fa fa-eye"></i>
+                                            </button>
+                                        </OverlayTrigger>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
                                             <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>

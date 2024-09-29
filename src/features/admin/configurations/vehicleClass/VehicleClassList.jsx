@@ -15,10 +15,10 @@ import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const StatusGroupList = ({ t }) => {
+const VehicleClassList = ({ t }) => {
 
     const dispatch = useDispatch();
-    const { activeStatusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
+    const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
     const toggleFilter = () => {
@@ -142,11 +142,13 @@ const StatusGroupList = ({ t }) => {
 
     const [searchValues, setSearchValues] = useState({
         nameEn: '',
+        vehicleTypeId: '',
         isActive: '',
     });
 
     const resetSearchValues = {
         nameEn: '',
+        vehicleTypeId: '',
         isActive: '',
     };
 
@@ -178,7 +180,7 @@ const StatusGroupList = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/status-group/list', { params })
+            const { data } = await RestApi.get('api/v1/admin/configurations/vehicle-class/list', { params })
             dispatch(setListData(data.content));
             setPaginationData(data)
         } catch (error) {
@@ -206,7 +208,7 @@ const StatusGroupList = ({ t }) => {
 
                 dispatch(setLoading(true));
                 try {
-                    await RestApi.post(`api/v1/admin/configurations/status-group/delete/${data.id}`)
+                    await RestApi.delete(`api/v1/admin/configurations/vehicle-class/delete/${data.id}`)
 
                     Swal.fire({
                         title: t('deleted'),
@@ -265,9 +267,9 @@ const StatusGroupList = ({ t }) => {
         try {
             let result = ''
             if (values.id) {
-                result = await RestApi.post('api/v1/admin/configurations/status-group/update', values)
+                result = await RestApi.put(`api/v1/admin/configurations/vehicle-class/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/configurations/status-group/create', values)
+                result = await RestApi.post('api/v1/admin/configurations/vehicle-class/create', values)
             }
 
             if (result.data.success) {
@@ -311,6 +313,24 @@ const StatusGroupList = ({ t }) => {
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
+                                            <Form.Group className="mb-3" controlId="vehicleTypeId">
+                                                <Field
+                                                    component="select"
+                                                    id="vehicleTypeId"
+                                                    name="vehicleTypeId"
+                                                    multiple={false}
+                                                    className="w-full rounded-md"
+                                                >
+                                                    <option value="">{t('selectVehicleType')}</option>
+                                                    {dropdowns.routePermitTypes && dropdowns.routePermitTypes.map((option) => (
+                                                        <option key={option.id} value={option.id}>
+                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
+                                                        </option>
+                                                    ))}
+                                                </Field>
+                                            </Form.Group>
+                                        </div>
+                                        <div className="col-md-3 col-sm-12">
                                             <Form.Group className="mb-3" controlId="nameEn">
                                                 <Field
                                                     component="select"
@@ -348,7 +368,7 @@ const StatusGroupList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('statusGroupList')}</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">{t('vehicleClassList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
@@ -371,11 +391,13 @@ const StatusGroupList = ({ t }) => {
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>
-                                <th>{t('name') + ` (${t('en')})`}</th>
-                                <th>{t('name') + ` (${t('bn')})`}</th>
-                                <th>{t('groupCode')}</th>
+                                <th>{t('routeName') + ` (${t('en')})`}</th>
+                                <th>{t('routeName') + ` (${t('bn')})`}</th>
+                                <th className='text-center'>{t('minDistrictNo')}</th>
+                                <th className='text-center'>{t('maxDistrictNo')}</th>
+                                <th>{t('routePermitType')}</th>
                                 <th>{t('status')}</th>
-                                <th>{t('action')}</th>
+                                <th className='text-center'>{t('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -387,15 +409,15 @@ const StatusGroupList = ({ t }) => {
                                     <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
                                     <td>{item.nameEn}</td>
                                     <td>{item.nameBn}</td>
+                                    <td className='text-center'>{item.minDistrict}</td>
+                                    <td className='text-center'>{item.maxDistrict}</td>
                                     <td>
-                                        <span className='badge bg-secondary'>
-                                            {item.statusGroupCode}
-                                        </span>
+                                        {currentLanguage === 'en' ? item?.routePermitType?.nameEn : item?.routePermitType?.nameBn}
                                     </td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
-                                    <td>
+                                    <td className='text-center'>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
                                             <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
@@ -412,7 +434,7 @@ const StatusGroupList = ({ t }) => {
 
                             {listData && listData.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="text-center text-danger text-slate-500">
+                                    <td colSpan={8} className="text-center text-danger text-slate-500">
                                         <i className="fa fa-exclamation-circle"></i> {t('no_data_found')}
                                     </td>
                                 </tr>
@@ -435,4 +457,4 @@ const StatusGroupList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(StatusGroupList)
+export default withNamespaces()(VehicleClassList)

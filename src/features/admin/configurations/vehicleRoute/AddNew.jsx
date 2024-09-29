@@ -16,20 +16,20 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const currentLanguage = i18n.language;
 
     const [initialValues, setInitialValues] = useState({
-        serviceId: '',
-        titleEn: '',
-        titleBn: '',
-        messageEn: '',
-        messageBn: '',
+        nameBn: '',
+        nameEn: '',
+        routePermitTypeId: '',
+        minDistrict: '',
+        maxDistrict: '',
         isActive: true,
     })
 
     const resetValues = {
-        serviceId: '',
-        titleEn: '',
-        titleBn: '',
-        messageEn: '',
-        messageBn: '',
+        nameBn: '',
+        nameEn: '',
+        routePermitTypeId: '',
+        minDistrict: '',
+        maxDistrict: '',
         isActive: true,
     };
 
@@ -41,7 +41,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         if (editData) {
             const updatedData = {
                 ...editData,
-                serviceId: editData?.serviceId,
+                routePermitTypeId: editData?.routePermitTypeId,
             }
             setInitialValues(updatedData);
         } else {
@@ -62,12 +62,13 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         }
     }
 
+
     const validationSchema = Yup.object().shape({
-        serviceId: Yup.string().required('Service Id is required'),
-        titleEn: Yup.string().required('Title (English) is required'),
-        titleBn: Yup.string().required('Title (Bangla) is required'),
-        messageEn: Yup.string().required('Message (English) is required'),
-        messageBn: Yup.string().required('Message (Bangla) is required'),
+        nameBn: Yup.string().required('Route Name is required'),
+        nameEn: Yup.string().required('Route Name is required'),
+        routePermitTypeId: Yup.string().required('Route Permit Type is required'),
+        minDistrict: Yup.number().required('Minimum District is required'),
+        maxDistrict: Yup.number().required('Maximum District is required'),
         isActive: Yup.string().required('Is active is required'),
     });
 
@@ -82,7 +83,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     }, []);
 
     const onSubmit = async (values, setSubmitting, resetForm) => {
-        values.serviceId = parseInt(values.serviceId)
+        values.routePermitTypeId = parseInt(values.routePermitTypeId)
 
         if (values.id) {
             // Remove the statusGroup property
@@ -96,7 +97,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('notificationTemplate')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('vehicleRoute')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik
@@ -113,47 +114,47 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                             <FormikForm>
                                 <Loading loading={loading} loadingText={t('submitting')} />
 
-                                <Form.Group className="mb-3" controlId="serviceId">
-                                    <Form.Label>{t('Service')}</Form.Label>
+                                <Form.Group className="mb-3" controlId="routePermitTypeId">
+                                    <Form.Label>{t('routePermitType')}</Form.Label>
                                     <Field
                                         component="select"
-                                        id="serviceId"
-                                        name="serviceId"
+                                        id="location"
+                                        name="routePermitTypeId"
                                         multiple={false}
                                         className="w-full rounded-md border"
                                     >
-                                        <option value="">{t('selectService')}</option>
-                                        {dropdowns.serviceList && dropdowns.serviceList.map((option) => (
+                                        <option value="">{t('select')}</option>
+                                        {dropdowns.routePermitTypes && dropdowns.routePermitTypes.map((option) => (
                                             <option key={option.id} value={option.id}>
                                                 {currentLanguage === 'en' ? option.nameEn : option.nameBn}
                                             </option>
                                         ))}
                                     </Field>
-                                    <ErrorMessage name="serviceId" component="div" className="text-danger" />
+                                    <ErrorMessage name="routePermitTypeId" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="titleEn">
-                                    <Form.Label>{t('title')} ({t('en')})</Form.Label>
-                                    <Field type="text" name="titleEn" className="form-control" placeholder="Enter Title" />
-                                    <ErrorMessage name="titleEn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="nameEn">
+                                    <Form.Label>{t('name')} ({t('en')})</Form.Label>
+                                    <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                    <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="titleBn">
-                                    <Form.Label>{t('title')} ({t('bn')})</Form.Label>
-                                    <Field type="text" name="titleBn" className="form-control" placeholder="Enter Title" />
-                                    <ErrorMessage name="titleBn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="nameBn">
+                                    <Form.Label>{t('name')} ({t('bn')})</Form.Label>
+                                    <Field type="text" name="nameBn" className="form-control" placeholder="Enter name" />
+                                    <ErrorMessage name="nameBn" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="messageEn">
-                                    <Form.Label>{t('messageEn')}</Form.Label>
-                                    <Field as="textarea" name="messageEn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
-                                    <ErrorMessage name="messageEn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="minDistrict">
+                                    <Form.Label>{t('minDistrict')}</Form.Label>
+                                    <Field type="number" min="1" name="minDistrict" className="form-control" placeholder="Enter status group code" />
+                                    <ErrorMessage name="minDistrict" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="messageBn">
-                                    <Form.Label>{t('messageBn')}</Form.Label>
-                                    <Field as="textarea" name="messageBn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
-                                    <ErrorMessage name="messageBn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="maxDistrict">
+                                    <Form.Label>{t('maxDistrict')}</Form.Label>
+                                    <Field type="number" min="1" name="maxDistrict" className="form-control" placeholder="Enter status group code" />
+                                    <ErrorMessage name="maxDistrict" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="isActive">

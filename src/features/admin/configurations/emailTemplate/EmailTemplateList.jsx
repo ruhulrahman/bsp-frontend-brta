@@ -14,11 +14,15 @@ import RestApi from '@/utils/RestApi';
 import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
+import { useNavigate } from 'react-router-dom';
+import ViewDetails from './ViewDetails';
 
-const StatusGroupList = ({ t }) => {
+const EmailTemplateList = ({ t }) => {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { activeStatusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
+
+    const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
     const toggleFilter = () => {
@@ -141,12 +145,14 @@ const StatusGroupList = ({ t }) => {
     };
 
     const [searchValues, setSearchValues] = useState({
-        nameEn: '',
+        templateName: '',
+        serviceId: '',
         isActive: '',
     });
 
     const resetSearchValues = {
-        nameEn: '',
+        templateName: '',
+        serviceId: '',
         isActive: '',
     };
 
@@ -178,7 +184,7 @@ const StatusGroupList = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/status-group/list', { params })
+            const { data } = await RestApi.get('api/v1/admin/configurations/email-template/list', { params })
             dispatch(setListData(data.content));
             setPaginationData(data)
         } catch (error) {
@@ -206,7 +212,7 @@ const StatusGroupList = ({ t }) => {
 
                 dispatch(setLoading(true));
                 try {
-                    await RestApi.post(`api/v1/admin/configurations/status-group/delete/${data.id}`)
+                    await RestApi.delete(`api/v1/admin/configurations/email-template/delete/${data.id}`)
 
                     Swal.fire({
                         title: t('deleted'),
@@ -244,12 +250,7 @@ const StatusGroupList = ({ t }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editData, setEditData] = useState(null);
 
-    const handleOpenAddModal = () => {
-        setEditData(null);
-        setModalOpen(true);
-    };
-
-    const handleOpenEditModal = (item) => {
+    const handleOpenViewDetailsModal = (item) => {
         setEditData(item);
         setModalOpen(true);
     };
@@ -265,9 +266,9 @@ const StatusGroupList = ({ t }) => {
         try {
             let result = ''
             if (values.id) {
-                result = await RestApi.post('api/v1/admin/configurations/status-group/update', values)
+                result = await RestApi.put(`api/v1/admin/configurations/email-template/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/configurations/status-group/create', values)
+                result = await RestApi.post('api/v1/admin/configurations/email-template/create', values)
             }
 
             if (result.data.success) {
@@ -305,16 +306,34 @@ const StatusGroupList = ({ t }) => {
                                 <FormikForm>
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
-                                                <Field type="text" name="nameEn" className="form-control" placeholder={t('enterName')} />
-                                                <ErrorMessage name="nameEn" component="div" className="text-danger" />
+                                            <Form.Group className="mb-3" controlId="templateName">
+                                                <Field type="text" name="templateName" className="form-control" placeholder={t('enterTemplateName')} />
+                                                <ErrorMessage name="templateName" component="div" className="text-danger" />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
+                                            <Form.Group className="mb-3" controlId="serviceId">
                                                 <Field
                                                     component="select"
-                                                    id="location"
+                                                    id="serviceId"
+                                                    name="serviceId"
+                                                    multiple={false}
+                                                    className="w-full rounded-md"
+                                                >
+                                                    <option value="">{t('selectService')}</option>
+                                                    {dropdowns.serviceList && dropdowns.serviceList.map((option) => (
+                                                        <option key={option.id} value={option.id}>
+                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
+                                                        </option>
+                                                    ))}
+                                                </Field>
+                                            </Form.Group>
+                                        </div>
+                                        <div className="col-md-3 col-sm-12">
+                                            <Form.Group className="mb-3" controlId="isActive">
+                                                <Field
+                                                    component="select"
+                                                    id="isActive"
                                                     name="isActive"
                                                     multiple={false}
                                                     className="w-full rounded-md"
@@ -348,7 +367,7 @@ const StatusGroupList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('statusGroupList')}</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">{t('emailTemplateList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
@@ -356,8 +375,9 @@ const StatusGroupList = ({ t }) => {
                             <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
 
-                        <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button>
-                        <AddNew
+                        {/* <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button> */}
+                        <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate('/admin/configurations/add-or-update-email-template')}>{t('add_new')}</button>
+                        <ViewDetails
                             show={modalOpen}
                             onHide={handleCloseModal}
                             onSave={handleSave}
@@ -365,62 +385,67 @@ const StatusGroupList = ({ t }) => {
                         />
                     </div>
                 </div>
-                <div className="p-0 overflow-scroll relative min-h-[300px]">
-                    <Loading loading={loading} />
-                    <table className="mt-2 text-left table table-responsive min-w-max">
-                        <thead>
-                            <tr>
-                                <th>{t('sl')}</th>
-                                <th>{t('name') + ` (${t('en')})`}</th>
-                                <th>{t('name') + ` (${t('bn')})`}</th>
-                                <th>{t('groupCode')}</th>
-                                <th>{t('status')}</th>
-                                <th>{t('action')}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
 
-                            {listData && listData.map((item, index) => (
-                                <tr key={item.id} className='text-slate-500 text-sm'>
-                                    {/* <td>{slOffset + index}.</td> */}
-                                    {/* <td>{toBengaliNumber(slOffset + index)}.</td> */}
-                                    <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
-                                    <td>{item.nameEn}</td>
-                                    <td>{item.nameBn}</td>
-                                    <td>
-                                        <span className='badge bg-secondary'>
-                                            {item.statusGroupCode}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
-                                    </td>
-                                    <td>
-                                        <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
-                                                <i className="fa fa-pen"></i>
-                                            </button>
-                                        </OverlayTrigger>
-                                        <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
-                                            <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
-                                                <i className="fa fa-trash"></i>
-                                            </button>
-                                        </OverlayTrigger>
-                                    </td>
-                                </tr>
-                            ))}
+                <div className="row">
+                    <div className="col-lg-12">
+                        <div className="p-0 table-responsive">
+                            <Loading loading={loading} />
+                            <table className="mt-2 text-left table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{t('sl')}</th>
+                                        <th scope="col">{t('templateName')}</th>
+                                        <th scope="col">{t('service')}</th>
+                                        <th scope="col">{t('status')}</th>
+                                        <th className='text-center'>{t('action')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                            {listData && listData.length === 0 && (
-                                <tr>
-                                    <td colSpan={6} className="text-center text-danger text-slate-500">
-                                        <i className="fa fa-exclamation-circle"></i> {t('no_data_found')}
-                                    </td>
-                                </tr>
-                            )}
+                                    {listData && listData.map((item, index) => (
+                                        <tr key={item.id} className='text-slate-500 text-sm'>
+                                            <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
+                                            <td>{item.templateName}</td>
+                                            <td>
+                                                {currentLanguage === 'en' ? item?.service?.nameEn : item?.service?.nameBn}
+                                            </td>
+                                            <td>
+                                                <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
+                                            </td>
+                                            <td className='text-center'>
+                                                <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                                    <button onClick={() => handleOpenViewDetailsModal(item)} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
+                                                        <i className="fa fa-eye"></i>
+                                                    </button>
+                                                </OverlayTrigger>
+                                                <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
+                                                    <button onClick={() => navigate(`/admin/configurations/add-or-update-email-template/${item.id}`)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                                        <i className="fa fa-pen"></i>
+                                                    </button>
+                                                </OverlayTrigger>
+                                                <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
+                                                    <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
+                                                        <i className="fa fa-trash"></i>
+                                                    </button>
+                                                </OverlayTrigger>
+                                            </td>
+                                        </tr>
+                                    ))}
 
-                        </tbody>
-                    </table>
+                                    {listData && listData.length === 0 && (
+                                        <tr>
+                                            <td colSpan={8} className="text-center text-danger text-slate-500">
+                                                <i className="fa fa-exclamation-circle"></i> {t('no_data_found')}
+                                            </td>
+                                        </tr>
+                                    )}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+
                 <div className='row m-2.5'>
                     <div className="col-md-12 text-right">
                         <div className="flex items-center justify-end">
@@ -435,4 +460,4 @@ const StatusGroupList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(StatusGroupList)
+export default withNamespaces()(EmailTemplateList)

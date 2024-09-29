@@ -319,7 +319,7 @@ const DesignationList = ({ t }) => {
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
                                             <Form.Group className="mb-3" controlId="nameEn">
-                                                <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                                <Field type="text" name="nameEn" className="form-control" placeholder={t('enterName')} />
                                                 <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                             </Form.Group>
                                         </div>

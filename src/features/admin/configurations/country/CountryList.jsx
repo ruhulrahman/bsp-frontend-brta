@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
+import { fetchCommonDropdowns } from '@/store/commonSlice';
 import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
@@ -274,6 +275,7 @@ const CountryList = ({ t }) => {
                 toaster(result.data.message)
                 handleCloseModal();
                 getListData()
+                dispatch(fetchCommonDropdowns())
             }
 
         } catch (error) {
@@ -306,7 +308,7 @@ const CountryList = ({ t }) => {
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
                                             <Form.Group className="mb-3" controlId="nameEn">
-                                                <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                                <Field type="text" name="nameEn" className="form-control" placeholder={t('enterName')} />
                                                 <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                             </Form.Group>
                                         </div>

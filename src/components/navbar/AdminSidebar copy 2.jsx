@@ -8,8 +8,8 @@ const AdminSidebar = ({ openSidebar }) => {
 
     return (
         <>
-            <nav className={`bg-gray-800 text-white w-full`}>
-                <ul className='admin-sidebar-ul w-full'>
+            <nav className={`bg-gray-800 text-white ${openSidebar ? 'w-[265px] min-h-screen' : 'w-0 h-0 hidden'}`}>
+                <ul className='admin-sidebar-ul'>
                     <li>
                         <NavLink to="/admin/dashboard">
                             <i className="bi bi-house-door-fill"></i>
@@ -74,36 +74,6 @@ const AdminSidebar = ({ openSidebar }) => {
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/admin/configurations/appointment-timeslot-list">
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Appointment Timeslots</span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/admin/configurations/fiscal-year-list">
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Fiscal Year</span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/admin/configurations/vehicle-route-list">
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Vehicle Routes</span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/admin/configurations/vehicle-maker-list">
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Vehicle Makers</span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/admin/configurations/vehicle-brand-list">
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Vehicle Brands</span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/admin/configurations/vehicle-class-list">
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Vehicle Classes</span>
-                                    </NavLink>
-                                </li>
-                                <li>
                                     <NavLink to="/admin/configurations/notification-template-list">
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Notification Templates</span>
                                     </NavLink>
@@ -111,11 +81,6 @@ const AdminSidebar = ({ openSidebar }) => {
                                 <li>
                                     <NavLink to="/admin/configurations/email-template-list">
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">Email Templates</span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/admin/configurations/permission-list">
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">Permissions</span>
                                     </NavLink>
                                 </li>
                             </ul>

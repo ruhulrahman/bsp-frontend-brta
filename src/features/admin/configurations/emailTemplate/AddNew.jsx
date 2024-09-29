@@ -17,8 +17,9 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
     const [initialValues, setInitialValues] = useState({
         serviceId: '',
-        titleEn: '',
-        titleBn: '',
+        templateName: '',
+        subjectEn: '',
+        subjectBn: '',
         messageEn: '',
         messageBn: '',
         isActive: true,
@@ -26,11 +27,29 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
     const resetValues = {
         serviceId: '',
-        titleEn: '',
-        titleBn: '',
+        templateName: '',
+        subjectEn: '',
+        subjectBn: '',
         messageEn: '',
         messageBn: '',
         isActive: true,
+    };
+
+
+    const validationSchema = Yup.object().shape({
+        serviceId: Yup.string().required('Service Id is required'),
+        templateName: Yup.string().required('Template Name is required'),
+        subjectEn: Yup.string().required('Subject (English) is required'),
+        subjectBn: Yup.string().required('Subject (Bangla) is required'),
+        messageEn: Yup.string().required('Message (English) is required'),
+        messageBn: Yup.string().required('Message (Bangla) is required'),
+        isActive: Yup.string().required('Is active is required'),
+    });
+
+    const handleReset = (resetForm) => {
+        resetForm({
+            values: resetValues, // Reset to initial values
+        });
     };
 
     const [statusGroupList, setStatusGroupList] = useState([]);
@@ -62,21 +81,6 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         }
     }
 
-    const validationSchema = Yup.object().shape({
-        serviceId: Yup.string().required('Service Id is required'),
-        titleEn: Yup.string().required('Title (English) is required'),
-        titleBn: Yup.string().required('Title (Bangla) is required'),
-        messageEn: Yup.string().required('Message (English) is required'),
-        messageBn: Yup.string().required('Message (Bangla) is required'),
-        isActive: Yup.string().required('Is active is required'),
-    });
-
-    const handleReset = (resetForm) => {
-        resetForm({
-            values: resetValues, // Reset to initial values
-        });
-    };
-
     useEffect(() => {
         // console.log('initialValues', initialValues)
     }, []);
@@ -96,7 +100,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('notificationTemplate')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('emailTemplate')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik
@@ -132,26 +136,32 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <ErrorMessage name="serviceId" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="titleEn">
-                                    <Form.Label>{t('title')} ({t('en')})</Form.Label>
-                                    <Field type="text" name="titleEn" className="form-control" placeholder="Enter Title" />
-                                    <ErrorMessage name="titleEn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="templateName">
+                                    <Form.Label>{t('templateName')}</Form.Label>
+                                    <Field type="text" name="templateName" className="form-control" placeholder="Enter Title" />
+                                    <ErrorMessage name="templateName" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="titleBn">
-                                    <Form.Label>{t('title')} ({t('bn')})</Form.Label>
-                                    <Field type="text" name="titleBn" className="form-control" placeholder="Enter Title" />
-                                    <ErrorMessage name="titleBn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="subjectEn">
+                                    <Form.Label>{t('subject')} ({t('en')})</Form.Label>
+                                    <Field type="text" name="subjectEn" className="form-control" placeholder="Enter Title" />
+                                    <ErrorMessage name="subjectEn" component="div" className="text-danger" />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="subjectBn">
+                                    <Form.Label>{t('subject')} ({t('bn')})</Form.Label>
+                                    <Field type="text" name="subjectBn" className="form-control" placeholder="Enter Title" />
+                                    <ErrorMessage name="subjectBn" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="messageEn">
-                                    <Form.Label>{t('messageEn')}</Form.Label>
+                                    <Form.Label>{t('emailBody')} ({t('en')})</Form.Label>
                                     <Field as="textarea" name="messageEn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
                                     <ErrorMessage name="messageEn" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="messageBn">
-                                    <Form.Label>{t('messageBn')}</Form.Label>
+                                    <Form.Label>{t('emailBody')} ({t('bn')})</Form.Label>
                                     <Field as="textarea" name="messageBn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
                                     <ErrorMessage name="messageBn" component="div" className="text-danger" />
                                 </Form.Group>

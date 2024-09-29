@@ -15,10 +15,10 @@ import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const StatusGroupList = ({ t }) => {
+const AppointmentTimeslotList = ({ t }) => {
 
     const dispatch = useDispatch();
-    const { activeStatusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
+    const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
     const toggleFilter = () => {
@@ -141,12 +141,12 @@ const StatusGroupList = ({ t }) => {
     };
 
     const [searchValues, setSearchValues] = useState({
-        nameEn: '',
+        slotNameEn: '',
         isActive: '',
     });
 
     const resetSearchValues = {
-        nameEn: '',
+        slotNameEn: '',
         isActive: '',
     };
 
@@ -178,7 +178,7 @@ const StatusGroupList = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/status-group/list', { params })
+            const { data } = await RestApi.get('api/v1/admin/configurations/appointment-timeslot/list', { params })
             dispatch(setListData(data.content));
             setPaginationData(data)
         } catch (error) {
@@ -206,7 +206,7 @@ const StatusGroupList = ({ t }) => {
 
                 dispatch(setLoading(true));
                 try {
-                    await RestApi.post(`api/v1/admin/configurations/status-group/delete/${data.id}`)
+                    await RestApi.delete(`api/v1/admin/configurations/appointment-timeslot/delete/${data.id}`)
 
                     Swal.fire({
                         title: t('deleted'),
@@ -259,15 +259,14 @@ const StatusGroupList = ({ t }) => {
         setEditData(null); // Reset edit data
     };
 
-
     const handleSave = async (values, setSubmitting, resetForm) => {
 
         try {
             let result = ''
             if (values.id) {
-                result = await RestApi.post('api/v1/admin/configurations/status-group/update', values)
+                result = await RestApi.put(`api/v1/admin/configurations/appointment-timeslot/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/configurations/status-group/create', values)
+                result = await RestApi.post('api/v1/admin/configurations/appointment-timeslot/create', values)
             }
 
             if (result.data.success) {
@@ -305,9 +304,9 @@ const StatusGroupList = ({ t }) => {
                                 <FormikForm>
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
-                                                <Field type="text" name="nameEn" className="form-control" placeholder={t('enterName')} />
-                                                <ErrorMessage name="nameEn" component="div" className="text-danger" />
+                                            <Form.Group className="mb-3" controlId="slotNameEn">
+                                                <Field type="text" name="slotNameEn" className="form-control" placeholder={t('enterslotName')} />
+                                                <ErrorMessage name="slotNameEn" component="div" className="text-danger" />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
@@ -348,7 +347,7 @@ const StatusGroupList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('statusGroupList')}</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">{t('appointmentTimeslotList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
@@ -365,17 +364,18 @@ const StatusGroupList = ({ t }) => {
                         />
                     </div>
                 </div>
-                <div className="p-0 overflow-scroll relative min-h-[300px]">
+                <div className="p-0 table-responsive">
                     <Loading loading={loading} />
-                    <table className="mt-2 text-left table table-responsive min-w-max">
+                    <table className="mt-2 text-left table">
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>
-                                <th>{t('name') + ` (${t('en')})`}</th>
-                                <th>{t('name') + ` (${t('bn')})`}</th>
-                                <th>{t('groupCode')}</th>
+                                <th>{t('slotName') + ` (${t('en')})`}</th>
+                                <th>{t('slotName') + ` (${t('bn')})`}</th>
+                                <th>{t('startTime')}</th>
+                                <th>{t('endTime')}</th>
                                 <th>{t('status')}</th>
-                                <th>{t('action')}</th>
+                                <th className='text-center'>{t('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -385,17 +385,14 @@ const StatusGroupList = ({ t }) => {
                                     {/* <td>{slOffset + index}.</td> */}
                                     {/* <td>{toBengaliNumber(slOffset + index)}.</td> */}
                                     <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
-                                    <td>{item.nameEn}</td>
-                                    <td>{item.nameBn}</td>
-                                    <td>
-                                        <span className='badge bg-secondary'>
-                                            {item.statusGroupCode}
-                                        </span>
-                                    </td>
+                                    <td>{item.slotNameEn}</td>
+                                    <td>{item.slotNameBn}</td>
+                                    <td>{helper.dTime(item.slotStartTime)}</td>
+                                    <td>{helper.dTime(item.slotEndTime)}</td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
-                                    <td>
+                                    <td className='text-center'>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
                                             <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
@@ -412,7 +409,7 @@ const StatusGroupList = ({ t }) => {
 
                             {listData && listData.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="text-center text-danger text-slate-500">
+                                    <td colSpan={8} className="text-center text-danger text-slate-500">
                                         <i className="fa fa-exclamation-circle"></i> {t('no_data_found')}
                                     </td>
                                 </tr>
@@ -435,4 +432,4 @@ const StatusGroupList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(StatusGroupList)
+export default withNamespaces()(AppointmentTimeslotList)

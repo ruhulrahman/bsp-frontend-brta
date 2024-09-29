@@ -16,32 +16,29 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const currentLanguage = i18n.language;
 
     const [initialValues, setInitialValues] = useState({
-        serviceId: '',
-        titleEn: '',
-        titleBn: '',
-        messageEn: '',
-        messageBn: '',
+        nameBn: '',
+        nameEn: '',
+        parentId: '',
+        permissionCode: '',
+        type: '',
         isActive: true,
     })
 
     const resetValues = {
-        serviceId: '',
-        titleEn: '',
-        titleBn: '',
-        messageEn: '',
-        messageBn: '',
+        nameBn: '',
+        nameEn: '',
+        parentId: '',
+        permissionCode: '',
+        type: '',
         isActive: true,
     };
-
-    const [statusGroupList, setStatusGroupList] = useState([]);
 
     useEffect(() => {
 
         // getStatusGroupList();
         if (editData) {
             const updatedData = {
-                ...editData,
-                serviceId: editData?.serviceId,
+                ...editData
             }
             setInitialValues(updatedData);
         } else {
@@ -49,25 +46,12 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         }
     }, [editData, show]);
 
-    const getStatusGroupList = async () => {
-
-        try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/status-group/active-list')
-            // console.log('data', data)
-            if (data.success) {
-                setStatusGroupList(data.data)
-            }
-        } catch (error) {
-            console.log('error', error)
-        }
-    }
 
     const validationSchema = Yup.object().shape({
-        serviceId: Yup.string().required('Service Id is required'),
-        titleEn: Yup.string().required('Title (English) is required'),
-        titleBn: Yup.string().required('Title (Bangla) is required'),
-        messageEn: Yup.string().required('Message (English) is required'),
-        messageBn: Yup.string().required('Message (Bangla) is required'),
+        nameBn: Yup.string().required('Name is required'),
+        nameEn: Yup.string().required('Name is required'),
+        permissionCode: Yup.string().required('Permission Code is required'),
+        type: Yup.string().required('Type is required'),
         isActive: Yup.string().required('Is active is required'),
     });
 
@@ -82,13 +66,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     }, []);
 
     const onSubmit = async (values, setSubmitting, resetForm) => {
-        values.serviceId = parseInt(values.serviceId)
-
-        if (values.id) {
-            // Remove the statusGroup property
-            delete values.statusGroup;
-        }
-
+        values.parentId = parseInt(values.parentId)
         onSave(values, setSubmitting, resetForm);
     };
 
@@ -96,7 +74,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('notificationTemplate')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('permission')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik
@@ -113,47 +91,54 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                             <FormikForm>
                                 <Loading loading={loading} loadingText={t('submitting')} />
 
-                                <Form.Group className="mb-3" controlId="serviceId">
-                                    <Form.Label>{t('Service')}</Form.Label>
+                                <Form.Group className="mb-3" controlId="type">
+                                    <Form.Label>{t('permissionType')}</Form.Label>
                                     <Field
                                         component="select"
-                                        id="serviceId"
-                                        name="serviceId"
+                                        id="type"
+                                        name="type"
                                         multiple={false}
                                         className="w-full rounded-md border"
                                     >
-                                        <option value="">{t('selectService')}</option>
-                                        {dropdowns.serviceList && dropdowns.serviceList.map((option) => (
+                                        <option value="">{t('select')}</option>
+                                        {dropdowns.permissionTypeList && dropdowns.permissionTypeList.map((option) => (
                                             <option key={option.id} value={option.id}>
                                                 {currentLanguage === 'en' ? option.nameEn : option.nameBn}
                                             </option>
                                         ))}
                                     </Field>
-                                    <ErrorMessage name="serviceId" component="div" className="text-danger" />
+                                    <ErrorMessage name="makerId" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="titleEn">
-                                    <Form.Label>{t('title')} ({t('en')})</Form.Label>
-                                    <Field type="text" name="titleEn" className="form-control" placeholder="Enter Title" />
-                                    <ErrorMessage name="titleEn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="nameEn">
+                                    <Form.Label>{t('name')} ({t('en')})</Form.Label>
+                                    <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                    <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="titleBn">
-                                    <Form.Label>{t('title')} ({t('bn')})</Form.Label>
-                                    <Field type="text" name="titleBn" className="form-control" placeholder="Enter Title" />
-                                    <ErrorMessage name="titleBn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="permissionCode">
+                                    <Form.Label>{t('permissionCode')} ({t('bn')})</Form.Label>
+                                    <Field type="text" name="permissionCode" className="form-control" placeholder="Enter permission code" />
+                                    <ErrorMessage name="permissionCode" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="messageEn">
-                                    <Form.Label>{t('messageEn')}</Form.Label>
-                                    <Field as="textarea" name="messageEn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
-                                    <ErrorMessage name="messageEn" component="div" className="text-danger" />
-                                </Form.Group>
-
-                                <Form.Group className="mb-3" controlId="messageBn">
-                                    <Form.Label>{t('messageBn')}</Form.Label>
-                                    <Field as="textarea" name="messageBn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
-                                    <ErrorMessage name="messageBn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="parentId">
+                                    <Form.Label>{t('parentPermission')}</Form.Label>
+                                    <Field
+                                        component="select"
+                                        id="parentId"
+                                        name="parentId"
+                                        multiple={false}
+                                        className="w-full rounded-md border"
+                                    >
+                                        <option value="">{t('select')}</option>
+                                        {dropdowns.permissionTypeList && dropdowns.permissionTypeList.map((option) => (
+                                            <option key={option.id} value={option.id}>
+                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
+                                            </option>
+                                        ))}
+                                    </Field>
+                                    <ErrorMessage name="parentId" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="isActive">
