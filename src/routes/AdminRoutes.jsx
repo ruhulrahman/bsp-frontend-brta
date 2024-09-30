@@ -23,7 +23,9 @@ import VehicleRouteList from '../features/admin/configurations/vehicleRoute/Vehi
 import VehicleMakerList from '../features/admin/configurations/vehicleMaker/VehicleMakerList.jsx';
 import VehicleClassList from '../features/admin/configurations/vehicleClass/VehicleClassList.jsx';
 import VehicleBrandList from '../features/admin/configurations/vehicleBrand/VehicleBrandList.jsx';
-import PermissionList from '../features/admin/configurations/permission/PermissionList.jsx';
+import PermissionList from '../features/admin/user-management/permission/PermissionList.jsx';
+import RoleListPage from '../features/admin/user-management/role/RoleListPage.jsx';
+import AddOrUpdateRole from '../features/admin/user-management/role/AddOrUpdateRole.jsx';
 
 const adminRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -47,8 +49,10 @@ const adminRoutes = [
     { path: 'configurations/vehicle-maker-list', element: <VehicleMakerList /> },
     { path: 'configurations/vehicle-brand-list', element: <VehicleBrandList /> },
     { path: 'configurations/vehicle-class-list', element: <VehicleClassList /> },
-    { path: 'configurations/permission-list', element: <PermissionList /> },
 
+    { path: 'user-management/permission-list', element: <PermissionList /> },
+    { path: 'user-management/role-list', element: <RoleListPage /> },
+    { path: 'user-management/add-or-update-role/:id?', element: <AddOrUpdateRole /> },
     { path: 'user-management/user', element: <UserList /> },
     { path: 'user-management/designation', element: <DesignationList /> },
   ];

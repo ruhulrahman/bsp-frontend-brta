@@ -77,11 +77,13 @@ const initialState = {
             id: 1,
             nameEn: "Active",
             nameBn: "সক্রিয়",
+            value: true,
         },
         {
             id: 2,
             nameEn: "Inactive",
             nameBn: "নিষ্ক্রিয়",
+            value: false,
         },
     ],
     permissionTypeList: [
