@@ -1,99 +1,203 @@
-import React from 'react'
+import i18n from '@/i18n';
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { withNamespaces } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
-const AdminNavbar = () => {
-  return (
-<nav className="bg-gray-800">
-  <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-    <div className="relative flex h-16 items-center justify-between">
-      <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-        {/* <!-- Mobile menu button--> */}
-        <button type="button" className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
-          <span className="absolute -inset-0.5"></span>
-          <span className="sr-only">Open main menu</span>
-          {/* <!--
-            Icon when menu is closed.
+const navigation = [
+    { name: 'Contact', href: '/admin/contact' },
+    { name: 'Help', href: '/admin/help' },
+]
 
-            Menu open: "hidden", Menu closed: "block"
-          --> */}
-          <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
-          {/* <!--
-            Icon when menu is open.
+function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+}
+const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
+    const navigate = useNavigate()
+    const currentLanguage = i18n.language;
 
-            Menu open: "block", Menu closed: "hidden"
-          --> */}
-          <svg className="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-        <div className="flex flex-shrink-0 items-center">
-          <img className="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
+    const setLanguage = (language) => {
+        localStorage.setItem('preferredLanguage', language);
+    }
+
+    const changeLanguage = (lng) => {
+        setLanguage(lng)
+        const preferredLanguage = localStorage.getItem('preferredLanguage');
+        i18n.changeLanguage(preferredLanguage);
+    }
+
+    // let preferredLanguage = localStorage.getItem('preferredLanguage');
+    // preferredLanguage = preferredLanguage ? preferredLanguage : 'bn'
+    let preferredLanguage = localStorage.getItem('preferredLanguage');
+    preferredLanguage = preferredLanguage !== null && preferredLanguage !== undefined ? preferredLanguage : 'bn';
+
+    const { authUser } = useSelector((state) => state.auth) || {};
+
+    return (
+        <div className='flex'>
+            <div onClick={!openSidebar ? onToggleSidebar : undefined} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500w-auto`}>
+                {/* {openSidebar && currentLanguage === 'bn' && (
+                    <h2 className="font-semibold mr-2">{t('brtaServicePortal')}</h2>
+                )}
+
+                {openSidebar && currentLanguage === 'en' && (
+                    <h2 className="text-xl font-semibold mr-2">{t('brtaServicePortal')}</h2>
+                )} */}
+
+                <OverlayTrigger placement="bottom" overlay={<Tooltip>{openSidebar ? t('hideSidebar') : t('showSidebar')}</Tooltip>}>
+                    <button onClick={onToggleSidebar} id="menu-button" className="btn btn-dark btn-sm flex-auto">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </OverlayTrigger>
+            </div>
+            <Disclosure as="nav" className="bg-gray-800 flex-initial w-full">
+                <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                    <div className="relative flex h-16 items-center justify-between">
+                        <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                            {/* Mobile menu button*/}
+                            <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                                <span className="absolute -inset-0.5" />
+                                <span className="sr-only">Open main menu</span>
+                                <Bars3Icon aria-hidden="true" className="block h-6 w-6 group-data-[open]:hidden" />
+                                <XMarkIcon aria-hidden="true" className="hidden h-6 w-6 group-data-[open]:block" />
+                            </DisclosureButton>
+                        </div>
+                        <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                            <div className="flex flex-shrink-0 items-center">
+                                <img
+                                    alt="Your Company"
+                                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                                    className="h-8 w-auto"
+                                />
+                            </div>
+                            <div className="hidden sm:ml-6 sm:block">
+                                <div className="flex space-x-4">
+                                    {navigation.map((item) => (
+                                        // <a
+                                        //     key={item.name}
+                                        //     href={item.href}
+                                        //     aria-current={item.current ? 'page' : undefined}
+                                        //     className={classNames(
+                                        //         item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                        //         'rounded-md px-3 py-2 text-sm font-medium',
+                                        //     )}
+                                        // >
+                                        //     {item.name}
+                                        // </a>
+                                        <NavLink key={item.name} className={({ isActive }) => isActive ? 'bg-green-700 rounded-md px-3 py-2 text-sm font-medium text-gray-100' : 'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium'} to={item.href}>
+                                            {item.name}
+                                        </NavLink>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+
+                            {/* {preferredLanguage === 'en' &&
+                                <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
+                                    <span className="text-md">BN</span>
+                                </button>}
+                            {preferredLanguage === 'bn' &&
+                                <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
+                                    <span className="text-md">EN</span>
+                                </button>} */}
+
+                            {preferredLanguage === 'en' &&
+                                <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
+                                    <span className="text-md">{t('bangla')}</span>
+                                </button>}
+                            {preferredLanguage === 'bn' &&
+                                <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
+                                    <span className="text-md">{t('lang')}</span>
+                                </button>}
+
+                            <button
+                                type="button"
+                                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                            >
+                                <span className="absolute -inset-1.5" />
+                                <span className="sr-only">View notifications</span>
+                                <BellIcon aria-hidden="true" className="h-6 w-6" />
+                            </button>
+
+                            <div className='text-gray-300 flex flex-col'>
+                                {/* <span className='text-[14px]'>Ruhul Amin</span> */}
+                                <span className='text-[14px]'>{currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}</span>
+                                <span className='text-[12px] text-green-200 text-right leadin'>Admin</span>
+                            </div>
+
+                            {/* Profile dropdown */}
+                            <Menu as="div" className="relative ml-3">
+                                <div>
+                                    <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                        <span className="absolute -inset-1.5" />
+                                        <span className="sr-only">Open user menu</span>
+                                        <img
+                                            alt=""
+                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                            className="h-8 w-8 rounded-full"
+                                        />
+                                    </MenuButton>
+                                </div>
+                                <MenuItems
+                                    transition
+                                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                                >
+                                    <MenuItem>
+                                        <Link to="/admin/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                                            {currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Link to="/admin/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                                            {t('your_profile')}
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Link to="/admin/change-password" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                                            {t('change_password')}
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem className="w-full">
+                                        <Link to={"/logout"} className="px-4 py-2 text-sm text-red-500 text-gray-700 data-[focus]:bg-gray-100 flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                                            </svg>
+                                            Logout
+                                        </Link>
+                                    </MenuItem>
+                                </MenuItems>
+                            </Menu>
+                        </div>
+                    </div>
+                </div>
+
+                <DisclosurePanel className="sm:hidden">
+                    <div className="space-y-1 px-2 pb-3 pt-2">
+                        {navigation.map((item) => (
+                            <DisclosureButton
+                                key={item.name}
+                                as="a"
+                                href={item.href}
+                                aria-current={item.current ? 'page' : undefined}
+                                className={classNames(
+                                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                    'block rounded-md px-3 py-2 text-base font-medium',
+                                )}
+                            >
+                                {item.name}
+                            </DisclosureButton>
+                        ))}
+                    </div>
+                </DisclosurePanel>
+            </Disclosure>
         </div>
-        <div className="hidden sm:ml-6 sm:block">
-          <div className="flex space-x-4">
-            {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
-            <a href="#" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Dashboard</a>
-            <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
-            <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
-            <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
-          </div>
-        </div>
-      </div>
-      <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-        <button type="button" className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-          <span className="absolute -inset-1.5"></span>
-          <span className="sr-only">View notifications</span>
-          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-          </svg>
-        </button>
-
-        {/* <!-- Profile dropdown --> */}
-        <div className="relative ml-3">
-          <div>
-            <button type="button" className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-              <span className="absolute -inset-1.5"></span>
-              <span className="sr-only">Open user menu</span>
-              <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-            </button>
-          </div>
-
-          {/* <!--
-            Dropdown menu, show/hide based on menu state.
-
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          --> */}
-          <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-            {/* <!-- Active: "bg-gray-100", Not Active: "" --> */}
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {/* <!-- Mobile menu, show/hide based on menu state. --> */}
-  <div className="sm:hidden" id="mobile-menu">
-    <div className="space-y-1 px-2 pb-3 pt-2">
-      {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
-      <a href="#" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a>
-      <a href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
-      <a href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
-      <a href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
-    </div>
-  </div>
-</nav>
-  )
+    )
 }
 
-export default AdminNavbar
+export default withNamespaces()(AdminNavbar)

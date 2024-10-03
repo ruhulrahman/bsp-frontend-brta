@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import logoBrta from '@/assets/images/logo-brta.png';
 
 const navigation = [
     { name: 'Contact', href: '/admin/contact' },
@@ -37,7 +38,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
     const { authUser } = useSelector((state) => state.auth) || {};
 
     return (
-        <div className='flex'>
+        <div className={`flex ${openSidebar ? 'ml-[265px]' : 'ml-[0px]'}`}>
             <div onClick={!openSidebar ? onToggleSidebar : undefined} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500w-auto`}>
                 {/* {openSidebar && currentLanguage === 'bn' && (
                     <h2 className="font-semibold mr-2">{t('brtaServicePortal')}</h2>
@@ -69,11 +70,12 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                         </div>
                         <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                             <div className="flex flex-shrink-0 items-center">
-                                <img
+                                {!openSidebar && logoBrta && <img className="h-8 w-auto" src={logoBrta} alt="BRTA" />}
+                                {/* <img
                                     alt="Your Company"
                                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                                     className="h-8 w-auto"
-                                />
+                                /> */}
                             </div>
                             <div className="hidden sm:ml-6 sm:block">
                                 <div className="flex space-x-4">

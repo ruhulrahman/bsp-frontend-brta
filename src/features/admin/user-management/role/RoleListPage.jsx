@@ -406,12 +406,12 @@ const RoleListPage = ({ t }) => {
                                     </td>
                                     <td className='text-center'>
                                         <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
-                                            <button onClick={() => handleOpenViewDetailsModal(item)} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
+                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-role/${true}/${item.id}`)} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
                                                 <i className="fa fa-eye"></i>
                                             </button>
                                         </OverlayTrigger>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-role/${item.id}`)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-role/${false}/${item.id}`)} className='btn btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>

@@ -276,7 +276,8 @@ const PermissionList = ({ t }) => {
 
             if (result.data.success) {
                 toaster(result.data.message)
-                handleCloseModal();
+                handleCloseModal()
+                getParentPermissionList();
                 getListData()
             }
 
@@ -295,10 +296,10 @@ const PermissionList = ({ t }) => {
     const [parentPermissionList, setParentPermissionList] = useState([]);
 
     useEffect(() => {
-        getMakerList()
+        getParentPermissionList()
     }, [])
 
-    const getMakerList = async () => {
+    const getParentPermissionList = async () => {
 
         try {
             const { data } = await RestApi.get('api/v1/admin/user-management/permission/parent-list')

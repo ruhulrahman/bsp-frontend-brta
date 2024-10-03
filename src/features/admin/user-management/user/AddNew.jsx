@@ -4,78 +4,55 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { useSelector } from "react-redux";
+import RestApi from '@/utils/RestApi';
+import i18n from '@/i18n';
+import Loading from '@/components/common/Loading';
 
-const AddNew = ({ t, show, onHide, onSave, editData }) => {
+const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
 
-    const handleClose = () => setFormOpen(false);
-    const handleShow = () => setFormOpen(true);
-    const { authUser } = useSelector((state) => state.auth) || {};
+    const { activeStatusList, loading, listData, dropdowns, permissionTypeList } = useSelector((state) => state.common)
+    const currentLanguage = i18n.language;
 
     const [initialValues, setInitialValues] = useState({
-        name_en: '',
-        name_bn: '',
-        username: '',
-        mobile: '',
-        email: '',
-        password: '',
-        user_type_id: 1,
-        designation_id: 1,
-        profile_completed: true,
-        is_active: true,
-        confirmPassword: '',
+        // nameBn: '',
+        nameEn: '',
+        parentId: '',
+        permissionCode: '',
+        type: '',
+        isActive: true,
     })
 
-    
+    const resetValues = {
+        // nameBn: '',
+        nameEn: '',
+        parentId: '',
+        permissionCode: '',
+        type: '',
+        isActive: true,
+    };
 
     useEffect(() => {
+
         if (editData) {
-            setInitialValues(editData);
+            const updatedData = {
+                ...editData
+            }
+            setInitialValues(updatedData);
+        } else {
+            setInitialValues(resetValues)
         }
     }, [editData, show]);
 
-    // const handleInputChange = (e) => {
-    //     console.log('Input changed:', e.target.name, e.target.value);
-    //     setInitialValues((prevValues) => ({
-    //         ...prevValues,
-    //         [e.target.name]: e.target.value,
-    //     }));
-    // };
 
     const validationSchema = Yup.object().shape({
-        name_bn: Yup.string().required('Name is required'),
-        name_en: Yup.string().required('Name is required'),
-        username: Yup.string().min(3, 'Must be at least 3 characters').required('Username is required'),
-        mobile: Yup.string().length(11, 'Mobile number must be exactly 11 digits').required('Mobile is required'),
-        email: Yup.string().email('Invalid email address').required('Email is required'),
-        password: Yup.string().required('Password is required')
-            .min(8, 'Must be at least 8 characters')
-            .matches(
-                /^(?=.*[a-z])(?=.*[A-Z]).+$/,
-                'Must contain at least one uppercase letter and one lowercase letter'
-            )
-            .matches(
-                /^(?=.*\d)/,
-                'Must contain at least one number'
-            )
-            .matches(
-                /^(?=.*[@$!%*?&]).+$/,
-                'Must contain at least one special character'
-            ),
-        confirmPassword: Yup.string().label('Confirm Password').required().oneOf([Yup.ref('password')], 'Passwords does not match'),
-        is_active: Yup.string().required('Is active is required'),
+        // nameBn: Yup.string().required('Name is required'),
+        nameEn: Yup.string().required('Name is required'),
+        permissionCode: Yup.string().required('Permission Code is required'),
+        type: Yup.string().required('Type is required'),
+        isActive: Yup.string().required('Is active is required'),
     });
-
-    const resetValues = {
-        name_bn: '',
-        name_en: '',
-        email: '',
-        username: '',
-        password: '',
-        confirmPassword: '',
-        is_active: '',
-    };
 
     const handleReset = (resetForm) => {
         resetForm({
@@ -84,94 +61,108 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     };
 
     useEffect(() => {
-        console.log('initialValues', initialValues)
+        // console.log('initialValues', initialValues)
     }, []);
 
-
-    // console.log('values', values);
-
-    // const onSubmit = (values, { setSubmitting }) => {
-    //     // Perform form submission logic here
-    //     console.log('Form submitted:', values);
-    //     setSubmitting(false);
-    // };
-
-    const onSubmit = async (values) => {
-        // Perform form submission logic here
-        console.log('Form submitted:', values);
-        onSave(values);
+    const onSubmit = async (values, setSubmitting, resetForm) => {
+        values.parentId = parseInt(values.parentId)
+        // values.type = parseInt(values.type)
+        onSave(values, setSubmitting, resetForm);
     };
 
     return (
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('user')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('user')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { resetForm }) => {
+                        onSubmit={(values, { setSubmitting, resetForm }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
-                            onSubmit(values);
+                            onSubmit(values, setSubmitting, resetForm);
                         }}
                     >
-                        {({ values, resetForm }) => (
+                        {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => (
                             <FormikForm>
-                                <Form.Group className="mb-3" controlId="name_en">
+                                <Loading loading={loading} loadingText={t('submitting')} />
+
+                                <Form.Group className="mb-3" controlId="type">
+                                    <Form.Label>{t('permissionType')}</Form.Label>
+                                    <Field
+                                        component="select"
+                                        id="type"
+                                        name="type"
+                                        value={values.type} onChange={(e) => {
+                                            handleChange(e); // This updates Formik's state
+                                            setFieldValue('type', parseInt(e.target.value));
+                                        }}
+                                        multiple={false}
+                                        className="w-full rounded-md border"
+                                    >
+                                        <option value="">{t('select')}</option>
+                                        {permissionTypeList && permissionTypeList.map((option) => (
+                                            <option key={option.id} value={option.id}>
+                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
+                                            </option>
+                                        ))}
+                                    </Field>
+                                    <ErrorMessage name="type" component="div" className="text-danger" />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="nameEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
-                                    <Field type="text" name="name_en" className="form-control" placeholder="Enter name" />
-                                    <ErrorMessage name="name_en" component="div" className="text-danger" />
-                                    {/* {touched.name_en && error.name_en ? <div>{error.name_en}</div> : null} */}
+                                    <Field type="text" name="nameEn" value={values.nameEn} onChange={(e) => {
+                                        handleChange(e); // This updates Formik's state
+                                        const nameField = e.target.value.trim()
+                                        const nameSplit = nameField.split(' ')
+                                        let result = nameSplit.join("_");
+                                        if (!values.id) {
+                                            setFieldValue('permissionCode', result.toLowerCase());
+                                        }
+                                    }} className="form-control" placeholder="Enter name" />
+                                    <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="name_bn">
-                                    <Form.Label>{t('name')} ({t('bn')})</Form.Label>
-                                    <Field type="text" name="name_bn" className="form-control" placeholder="Enter name" />
-                                    <ErrorMessage name="name_bn" component="div" className="text-danger" />
+
+                                <Form.Group className="mb-3" controlId="permissionCode">
+                                    <Form.Label>{t('permissionCode')}</Form.Label>
+                                    <Field disabled={values.id != null} type="text" name="permissionCode" className="form-control" placeholder="Enter permission code" />
+                                    <ErrorMessage name="permissionCode" component="div" className="text-danger" />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="email">
-                                    <Form.Label>{t('email')}</Form.Label>
-                                    <Field type="email" name="email" className="form-control" placeholder="Enter email" />
-                                    <ErrorMessage name="email" component="div" className="text-danger" />
+
+                                <Form.Group className="mb-3" controlId="parentId">
+                                    <Form.Label>{t('parentPermission')}</Form.Label>
+                                    <Field
+                                        component="select"
+                                        id="parentId"
+                                        name="parentId"
+                                        value={values.parentId} onChange={(e) => {
+                                            handleChange(e); // This updates Formik's state
+                                            setFieldValue('parentId', parseInt(e.target.value));
+                                        }}
+                                        multiple={false}
+                                        className="w-full rounded-md border"
+                                    >
+                                        <option value="">{t('select')}</option>
+                                        {props.parentPermissionList && props.parentPermissionList.map((option) => (
+                                            <option key={option.id} value={option.id}>
+                                                {currentLanguage === 'en' ? option.nameEn : option.nameEn}
+                                            </option>
+                                        ))}
+                                    </Field>
+                                    <ErrorMessage name="parentId" component="div" className="text-danger" />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="username">
-                                    <Form.Label>{t('username')}</Form.Label>
-                                    <Field type="text" name="username" className="form-control" placeholder="Enter username" />
-                                    <ErrorMessage name="username" component="div" className="text-danger" />
+
+                                <Form.Group className="mb-3" controlId="isActive">
+                                    <Checkbox id="custom-switch" name="isActive" className="" label={values.isActive ? t('active') : t('inactive')} />
+                                    <ErrorMessage name="isActive" component="div" className="text-danger" />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="mobile">
-                                    <Form.Label>{t('mobile')}</Form.Label>
-                                    <Field type="text" name="mobile" className="form-control" placeholder="Enter mobile" />
-                                    <ErrorMessage name="mobile" component="div" className="text-danger" />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="user_type_id">
-                                    <Form.Label>{t('user_type')}</Form.Label>
-                                    <Field type="text" name="user_type_id" className="form-control" placeholder="Enter user_type_id" />
-                                    <ErrorMessage name="user_type_id" component="div" className="text-danger" />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="designation_id">
-                                    <Form.Label>{t('designation')}</Form.Label>
-                                    <Field type="text" name="designation_id" className="form-control" placeholder="Enter designation_id" />
-                                    <ErrorMessage name="designation_id" component="div" className="text-danger" />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="password">
-                                    <Form.Label>{t('password')}</Form.Label>
-                                    <Field type="password" name="password" className="form-control" placeholder="Enter password" />
-                                    <ErrorMessage name="password" component="div" className="text-danger" />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="confirmPassword">
-                                    <Form.Label>{t('confirmPassword')}</Form.Label>
-                                    <Field type="password" name="confirmPassword" className="form-control" placeholder="Enter confirm Password" />
-                                    <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="is_active">
-                                    <Checkbox id="custom-switch" name="is_active" className="" label={values.is_active ? t('active') : t('inactive')} />
-                                    <ErrorMessage name="is_active" component="div" className="text-danger" />
-                                </Form.Group>
-                                <button type='submit' className='btn btn-success btn-rounded btn-xs'>{editData ? t('save_changes') : t('save')}</button>
+
+                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{editData ? t('save_changes') : t('save')}</button>
                                 <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
                             </FormikForm>
                         )}

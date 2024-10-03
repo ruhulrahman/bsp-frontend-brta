@@ -52,7 +52,7 @@ const adminRoutes = [
 
     { path: 'user-management/permission-list', element: <PermissionList /> },
     { path: 'user-management/role-list', element: <RoleListPage /> },
-    { path: 'user-management/add-or-update-role/:id?', element: <AddOrUpdateRole /> },
+    { path: 'user-management/add-or-update-role/:isViewable/:id?', element: <AddOrUpdateRole /> },
     { path: 'user-management/user', element: <UserList /> },
     { path: 'user-management/designation', element: <DesignationList /> },
   ];

@@ -10,7 +10,7 @@ const AdminSidebar = ({ t, openSidebar }) => {
     return (
         <>
             <nav className={`bg-gray-800 text-white w-full`}>
-                <ul className='admin-sidebar-ul w-full'>
+                <ul className='admin-sidebar-ul w-full mb-[50px]'>
                     <li>
                         <NavLink to="/admin/dashboard">
                             <i className="bi bi-house-door-fill"></i>
@@ -128,6 +128,11 @@ const AdminSidebar = ({ t, openSidebar }) => {
                         {openUserManagement && (
                             <ul id="example-collapse-text" className="pl-10 h-auto visible">
                                 <li>
+                                    <NavLink to="/admin/user-management/designation">
+                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('designations')}</span>
+                                    </NavLink>
+                                </li>
+                                <li>
                                     <NavLink to="/admin/user-management/permission-list">
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('permissions')}</span>
                                     </NavLink>
@@ -140,11 +145,6 @@ const AdminSidebar = ({ t, openSidebar }) => {
                                 <li>
                                     <NavLink to="/admin/user-management/user">
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('users')}</span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/admin/user-management/designation">
-                                        <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('designations')}</span>
                                     </NavLink>
                                 </li>
                             </ul>

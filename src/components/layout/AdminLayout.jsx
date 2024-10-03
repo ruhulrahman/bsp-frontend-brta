@@ -1,6 +1,6 @@
 import i18n from '@/i18n';
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import AdminNavbar from '../navbar/AdminNavbar';
 import AdminSidebar from '../navbar/AdminSidebar';
 import { ToastContainer } from 'react-toastify';
@@ -10,9 +10,10 @@ import Loading from '@/components/common/Loading';
 import { useDispatch } from 'react-redux';
 import { setAuthUser, setToken } from '../../features/common/auth/authSlice';
 import { setLoading, setCommonDropdowns } from '@/store/commonSlice';
+import logoBrta from '@/assets/images/logo-brta.png';
 
 const AdminLayout = ({ t }) => {
-    
+
     const currentLanguage = i18n.language;
 
     const dispatch = useDispatch()
@@ -58,21 +59,39 @@ const AdminLayout = ({ t }) => {
         }
     }
 
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => setScreenWidth(window.innerWidth);
+        window.addEventListener("resize", handleResize);
+        // Cleanup function to remove the event listener
+        if (screenWidth < 768) {
+            setOpenSidebar(false)
+        } else if (screenWidth > 768) {
+            setOpenSidebar(true)
+        }
+        return () => window.removeEventListener("resize", handleResize);
+    }, [window.innerWidth])
+
     return (
         <>
             <div className="d-flex">
                 {/* <!-- Sidebar --> */}
-                {openSidebar &&  
-                <div className="flex-grow-2 bg-gray-800  text-white sidebar w-[265px] lg:w-[265px]  md:w-[265px] sm:w-[265px] min-h-screen">
-                    {currentLanguage === 'bn' && (
-                    <h2 className="font-semibold m-2 text-green-500">{t('brtaServicePortal')}</h2>
-                )}
 
-                {currentLanguage === 'en' && (
-                    <h2 className="text-xl font-semibold m-2 text-green-500">{t('brtaServicePortal')}</h2>
-                )}
+                <div className={`flex-grow-2 bg-gray-800  text-white sidebar ${openSidebar ? 'open' : 'hide'} scrollbar-design-2 w-[265px] lg:w-[265px]  md:w-[265px] sm:w-[265px] min-h-screen`}>
+                    <div className="sidebar-brand d-flex align-items-center justify-between">
+                    {currentLanguage === 'bn' && (
+                        <span className="font-semibold m-2 text-green-500">{t('brtaServicePortal')}</span>
+                    )}
+                    {currentLanguage === 'en' && (
+                        <span className="text-xl font-semibold m-2 text-green-500">{t('brtaServicePortal')}</span>
+                    )}
+                        <Link to="/">
+                            <img className="h-8 w-auto mr-2" src={logoBrta} alt="BRTA" />
+                        </Link>
+                    </div>
                     <AdminSidebar openSidebar={openSidebar} />
-                </div>}
+                </div>
 
                 {/* <!-- Main Content Area --> */}
                 <div className="flex-grow-1">
@@ -100,10 +119,12 @@ const AdminLayout = ({ t }) => {
                     </nav> */}
                     <AdminNavbar openSidebar={openSidebar} onToggleSidebar={() => setOpenSidebar(!openSidebar)} />
 
-                    <div className="container-fluid p-3">
-                        <Loading loading={loading} />
-                        <Outlet />
-                        <ToastContainer />
+                    <div className={`${openSidebar ? 'ml-[265px]' : 'ml-[0px]'}`}>
+                        <div className="container-fluid p-3">
+                            <Loading loading={loading} />
+                            <Outlet />
+                            <ToastContainer />
+                        </div>
                     </div>
                 </div>
             </div>
