@@ -5,6 +5,38 @@ import { toaster } from '../../../utils/helpers.js';
 import Select from 'react-select';
 import HeroContent from './HeroContent.jsx';
 
+const customStyles = {
+    control: (provided, state) => ({
+        ...provided,
+        minHeight: '30px', // Set the minimum height of the input
+        height: '30px',    // Set the overall height of the control
+        padding: '0',      // Remove any extra padding
+    }),
+    valueContainer: (provided, state) => ({
+        ...provided,
+        height: '30px',    // Adjust the container height
+        padding: '0 6px',  // Adjust padding inside the value container
+    }),
+    input: (provided, state) => ({
+        ...provided,
+        margin: '0px',     // Adjust input margin
+        padding: '0px',    // Adjust input padding
+    }),
+    indicatorsContainer: (provided, state) => ({
+        ...provided,
+        height: '30px',    // Adjust the height of the indicators (like the dropdown arrow)
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        padding: '5px 10px',  // Adjust padding inside each dropdown option
+    }),
+    menu: (provided, state) => ({
+        ...provided,
+        marginTop: '0px',   // Adjust the margin between the input box and the dropdown
+    }),
+};
+
+
 const HomePage = () => {
 
     const notify = () => toaster('Ok')
@@ -41,7 +73,7 @@ const HomePage = () => {
             <div className='row'>
                 <div className="col-md-4">
                     <h6 className="text-sm mb-1 font-semibold">Select your size</h6>
-                    <Select options={options} />
+                    <Select options={options} styles={customStyles}/>
                 </div>
             </div>
 

@@ -198,12 +198,12 @@ table td {
     !p-20
   }
 
-  input {
+  input.form-control {
     @apply
     !py-[2px]
     !px-[10px]
   }
-  select {
+  select.form-control {
     @apply
     !py-[2px]
     !px-[10px]
@@ -221,6 +221,19 @@ table td {
     @apply
     !text-green-500
     !bg-green-500
+  }
+
+  .react-select-container {
+    
+  }
+  .react-select-container > .react-select__control {
+
+  }
+  .react-select-container > .react-select__control > .react-select__value-container {
+
+  }
+  .react-select-container > .react-select__control > .react-select__indicators {
+
   }
  
 }
