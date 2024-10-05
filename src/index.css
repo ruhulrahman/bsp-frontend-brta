@@ -203,7 +203,8 @@ table td {
     !py-[2px]
     !px-[10px]
   }
-  select.form-control {
+  
+  select {
     @apply
     !py-[2px]
     !px-[10px]

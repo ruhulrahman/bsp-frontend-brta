@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import SelectField from '@/components/ui/SelectField';
+import ReactSelect from '@/components/ui/ReactSelect';
 import { withNamespaces } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
@@ -16,6 +18,7 @@ import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPag
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
 const DesignationList = ({ t }) => {
+    // const { setFieldValue } = useFormikContext();
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
@@ -142,18 +145,21 @@ const DesignationList = ({ t }) => {
 
     const [searchValues, setSearchValues] = useState({
         nameEn: '',
-        isActive: '',
+        isActive: null,
     });
 
     const resetSearchValues = {
         nameEn: '',
-        isActive: '',
+        isActive: null,
     };
 
     const handleReset = (resetForm) => {
-        resetForm({
-            values: resetSearchValues, // Reset to initial values
-        });
+        // resetForm({
+        //     values: resetSearchValues, // Reset to initial values
+        // });
+
+        resetForm({ values: { isActive: null } });
+        resetForm({ values: resetSearchValues });
 
         if (currentPage != 0) {
             setCurrentPage(0)
@@ -314,7 +320,7 @@ const DesignationList = ({ t }) => {
                                 searchData(values);
                             }}
                         >
-                            {({ values, resetForm }) => (
+                            {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
@@ -324,21 +330,17 @@ const DesignationList = ({ t }) => {
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
+                                            <Form.Group className="mb-3" controlId="isActive">
                                                 <Field
-                                                    component="select"
-                                                    id="location"
                                                     name="isActive"
-                                                    multiple={false}
-                                                    className="w-full rounded-md"
-                                                >
-                                                    <option value="">{t('selectActiveStatus')}</option>
-                                                    {activeStatusList.map((option) => (
-                                                        <option key={option.value} value={option.value}>
-                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                                        </option>
-                                                    ))}
-                                                </Field>
+                                                    component={ReactSelect}
+                                                    options={activeStatusList}
+                                                    placeholder={t('selectActiveStatus')}
+                                                    value={values.isActive}
+                                                    onChange={(option) => {
+                                                        setFieldValue('isActive', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
@@ -347,7 +349,10 @@ const DesignationList = ({ t }) => {
                                                     <button type='submit' className="btn btn-success btn-sm w-full">{t('search')}</button>
                                                 </div>
                                                 <div className="flex-1 ml-2">
-                                                    <button type='reset' onClick={() => handleReset(resetForm)} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
+                                                    <button type='reset' onClick={() => {
+                                                        setFieldValue('isActive', null)
+                                                        handleReset(resetForm)
+                                                    }} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -356,7 +361,7 @@ const DesignationList = ({ t }) => {
                             )}
                         </Formik>
                     </div>
-                </div>
+                </div >
             }
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>

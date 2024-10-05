@@ -74,13 +74,13 @@ const initialState = {
     },
     activeStatusList: [
         {
-            id: 1,
+            id: true,
             nameEn: "Active",
             nameBn: "সক্রিয়",
             value: true,
         },
         {
-            id: 2,
+            id: false,
             nameEn: "Inactive",
             nameBn: "নিষ্ক্রিয়",
             value: false,
@@ -89,11 +89,13 @@ const initialState = {
     permissionTypeList: [
         {
             id: 1,
+            value: 1,
             nameEn: "Page",
             nameBn: "পৃষ্ঠা",
         },
         {
             id: 2,
+            value: 2,
             nameEn: "Feature",
             nameBn: "ফিচার",
         },
