@@ -1,4 +1,5 @@
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
@@ -117,20 +118,17 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
                                 <Form.Group className="mb-3" controlId="statusGroupId">
                                     <Form.Label>{t('statusGroup')}</Form.Label>
+
                                     <Field
-                                        component="select"
-                                        id="location"
                                         name="statusGroupId"
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('select')}</option>
-                                        {dropdowns.statusGroupList && dropdowns.statusGroupList.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                            </option>
-                                        ))}
-                                    </Field>
+                                        component={ReactSelect}
+                                        options={dropdowns.statusGroupList}
+                                        placeholder={t('selectStatusGroup')}
+                                        value={values.statusGroupId}
+                                        onChange={(option) => {
+                                            setFieldValue('statusGroupId', option ? option.value : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="statusGroupId" component="div" className="text-danger" />
                                 </Form.Group>
 

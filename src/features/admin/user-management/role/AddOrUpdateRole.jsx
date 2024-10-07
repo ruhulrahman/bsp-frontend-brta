@@ -17,8 +17,8 @@ import 'react-quill/dist/quill.snow.css';
 
 const AddOrUpdateRole = ({ t }) => {
 
-    const { id, isViewable } = useParams()
-    console.log('isViewable', isViewable)
+    let { id, isViewable } = useParams()
+    isViewable = isViewable === 'true' ? true : false
     const navigate = useNavigate();
 
     const { activeStatusList, loading, listData, dropdowns } = useSelector((state) => state.common)
@@ -88,8 +88,6 @@ const AddOrUpdateRole = ({ t }) => {
             const { data } = await RestApi.get(`api/v1/admin/configurations/role/${id}`)
             setInitialValues(data);
 
-            // console.log('parentChildPermissionList =====', parentChildPermissionList)
-
             // Make sure parentChildPermissionList is available
             parentChildPermissionList.map((item) => {
                 let newIds = [];
@@ -112,24 +110,14 @@ const AddOrUpdateRole = ({ t }) => {
                     item.checkedAll = true;
                 }
 
-                console.log('newIds:', newIds);
-                console.log('checkedIds:', checkedIds);
-
                 // Update item with checked status
                 return Object.assign(item);
             });
-
-
-            console.log('parentChildPermissionList =====', parentChildPermissionList)
 
         } catch (error) {
             console.log('error', error)
         }
     }
-
-    useEffect(() => {
-        console.log('initialValues', initialValues)
-    }, [initialValues]);
 
     const onSubmit = async (values, setSubmitting, resetForm) => {
         handleSave(values, setSubmitting, resetForm);
@@ -177,38 +165,6 @@ const AddOrUpdateRole = ({ t }) => {
             );
         }
     }
-
-    // Common change handler to update form values
-    const handleFieldChange2 = (setFieldValue) => (e) => {
-        const { name, value, type, checked } = e.target;
-        console.log('name=', name, 'value=', value, 'type=', type, 'checked=', checked)
-        const newValue = type === 'checkbox' ? checked : value; // Handle checkbox and other inputs
-        setFieldValue(name, newValue); // Update the Formik state
-    };
-
-    const handleFieldChange = (setFieldValue, id) => (e, id) => {
-        const { name, value, type, checked } = e.target;
-        console.log('name=', name, 'value=', value, 'type=', type, 'checked=', checked)
-        if (type === 'checkbox') {
-            if (checked) {
-                // Add the checkbox ID to permissionIds array
-                setFieldValue('permissionIds', [
-                    ...initialValues.permissionIds,
-                    id,
-                ]);
-            } else {
-                // Remove the checkbox ID from permissionIds array
-                setFieldValue(
-                    'permissionIds',
-                    initialValues.permissionIds.filter(
-                        (selectedId) => selectedId !== id
-                    )
-                );
-            }
-        }
-        const newValue = type === 'checkbox' ? checked : value; // Handle checkbox and other inputs
-        setFieldValue(name, newValue); // Update the Formik state
-    };
 
     return (
         <div>
@@ -279,7 +235,7 @@ const AddOrUpdateRole = ({ t }) => {
 
                                     <Card className='mb-3'>
                                         <CardBody>
-                                            <div className="row bg-label-success my-3">
+                                            <div className="row bg-label-success">
                                                 <div className="col">
                                                     {/* <div className="custom-control custom-checkbox">
                                                             <Field type="checkbox" id={`parent-${index}`} name="permissionIds" value={item.id} />
@@ -315,7 +271,7 @@ const AddOrUpdateRole = ({ t }) => {
                                                                     );
                                                                 }
                                                             }} />
-                                                        <Form.Label for={`parent-${index}`} className="ml-1.5">{item.nameEn}</Form.Label>
+                                                        <Form.Label for={`parent-${index}`} className="ml-1.5 font-semibold">{item.nameEn}</Form.Label>
                                                     </Form.Group>
                                                 </div>
                                                 <div className="text-right col">
@@ -329,7 +285,6 @@ const AddOrUpdateRole = ({ t }) => {
                                                                 onChange={(e) => {
                                                                     item.checkedAll = !item.checkedAll
                                                                     const id = item.id
-                                                                    console.log('e.target.checked', e.target.checked)
                                                                     if (e.target.checked) {
                                                                         // Add the checkbox ID to permissionIds array
 
@@ -339,7 +294,6 @@ const AddOrUpdateRole = ({ t }) => {
                                                                         newIds.push(item.id);
                                                                         item.pageList.forEach((page) => newIds.push(page.id));
                                                                         item.featureList.forEach((feature) => newIds.push(feature.id));
-                                                                        console.log('newIds', newIds)
 
                                                                         setFieldValue('permissionIds', [
                                                                             ...values.permissionIds,
@@ -354,7 +308,6 @@ const AddOrUpdateRole = ({ t }) => {
                                                                         newIds.push(item.id);
                                                                         item.pageList.forEach((page) => newIds.push(page.id));
                                                                         item.featureList.forEach((feature) => newIds.push(feature.id));
-                                                                        console.log('newIds', newIds)
 
                                                                         setFieldValue(
                                                                             'permissionIds',
@@ -369,9 +322,9 @@ const AddOrUpdateRole = ({ t }) => {
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div className="row">
                                                 <div className="col">
-
                                                     <hr />
                                                     <h4 className="my-2 font-bold text-green-900">{t('pages')}</h4>
                                                     <div className="row ml-[10px] mb-2">
@@ -408,8 +361,8 @@ const AddOrUpdateRole = ({ t }) => {
                                                             </div>
                                                         ))}
                                                     </div>
-
                                                     <hr />
+
                                                     <h4 className="my-2 font-bold text-blue-900">{t('features')}</h4>
                                                     <div className="row ml-[10px]">
                                                         {item.featureList.length > 0 && item.featureList.map((childItem, featureIndex) => (
@@ -513,9 +466,14 @@ const AddOrUpdateRole = ({ t }) => {
                                 </div> */}
 
 
-
-                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{id ? t('save_changes') : t('save')}</button>
-                                <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                {isViewable ? (
+                                    <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/role-list`)}>{t('back')}</button>
+                                ) : (
+                                    <>
+                                        <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{id ? t('save_changes') : t('save')}</button>
+                                        <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                    </>
+                                )}
                             </FormikForm>
                         )}
                     </Formik>

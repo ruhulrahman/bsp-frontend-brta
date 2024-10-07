@@ -143,7 +143,7 @@ const AdminSidebar = ({ t, openSidebar }) => {
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/admin/user-management/user">
+                                    <NavLink to="/admin/user-management/user-list">
                                         <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('users')}</span>
                                     </NavLink>
                                 </li>

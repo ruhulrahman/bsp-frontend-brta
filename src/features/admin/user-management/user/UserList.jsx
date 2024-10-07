@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReactSelect from '@/components/ui/ReactSelect';
 import { withNamespaces } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
@@ -14,8 +15,11 @@ import RestApi from '@/utils/RestApi';
 import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
+import { useNavigate } from 'react-router-dom';
 
 const UserList = ({ t }) => {
+
+    const navigate = useNavigate()
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns, permissionTypeList } = useSelector((state) => state.common)
@@ -143,18 +147,18 @@ const UserList = ({ t }) => {
     const [searchValues, setSearchValues] = useState({
         nameEn: '',
         email: '',
-        // mobile: '',
-        // userTypeId: '',
-        // designationId: '',
+        mobile: '',
+        userTypeId: '',
+        designationId: '',
         isActive: '',
     });
 
     const resetSearchValues = {
         nameEn: '',
         email: '',
-        // mobile: '',
-        // userTypeId: '',
-        // designationId: '',
+        mobile: '',
+        userTypeId: '',
+        designationId: '',
         isActive: '',
     };
 
@@ -281,7 +285,6 @@ const UserList = ({ t }) => {
             if (result.data.success) {
                 toaster(result.data.message)
                 handleCloseModal()
-                getParentPermissionList();
                 getListData()
             }
 
@@ -297,22 +300,7 @@ const UserList = ({ t }) => {
     //     setSearchValues({...searchValues, makerId: e.target.value });
     // }
 
-    const [parentPermissionList, setParentPermissionList] = useState([]);
 
-    // useEffect(() => {
-    //     getParentPermissionList()
-    // }, [])
-
-    // const getParentPermissionList = async () => {
-
-    //     try {
-    //         const { data } = await RestApi.get('api/v1/admin/user-management/user/parent-list')
-    //         setParentPermissionList(data)
-    //         console.log('parentPermissionList', parentPermissionList)
-    //     } catch (error) {
-    //         console.log('error', error)
-    //     }
-    // }
 
     return (
         <>
@@ -331,7 +319,7 @@ const UserList = ({ t }) => {
                                 searchData(values);
                             }}
                         >
-                            {({ values, resetForm }) => (
+                            {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
                                     <div className="row">
                                         <div className="col-md-4 col-lg-3 col-sm-12">
@@ -348,71 +336,59 @@ const UserList = ({ t }) => {
                                             </Form.Group>
                                         </div>
 
-                                        {/* <div className="col-md-4 col-lg-3 col-sm-12">
+                                        <div className="col-md-4 col-lg-3 col-sm-12">
                                             <Form.Group className="mb-3" controlId="mobile">
                                                 <Field type="text" name="mobile" className="form-control" placeholder={t('enterMobile')} />
                                                 <ErrorMessage name="mobile" component="div" className="text-danger" />
                                             </Form.Group>
-                                        </div> */}
-
-                                        {/* <div className="col-md-4 col-lg-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="userTypeId">
-                                                <Field
-                                                    component="select"
-                                                    id="userTypeId"
-                                                    name="userTypeId"
-                                                    multiple={false}
-                                                    className="w-full rounded-md"
-                                                >
-                                                    <option value="">{t('selectUserType')}</option>
-                                                    {dropdowns.userTypeList && dropdowns.userTypeList.map((option) => (
-                                                        <option key={option.id} value={option.id}>
-                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                                        </option>
-                                                    ))}
-                                                </Field>
-                                            </Form.Group>
-                                        </div> */}
-
-                                        {/* <div className="col-md-4 col-lg-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="designationId">
-                                                <Field
-                                                    component="select"
-                                                    id="designationId"
-                                                    name="designationId"
-                                                    multiple={false}
-                                                    className="w-full rounded-md"
-                                                >
-                                                    <option value="">{t('selectDesignation')}</option>
-                                                    {dropdowns.designationList && dropdowns.designationList.map((option) => (
-                                                        <option key={option.id} value={option.id}>
-                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                                        </option>
-                                                    ))}
-                                                </Field>
-                                            </Form.Group>
-                                        </div> */}
+                                        </div>
 
                                         <div className="col-md-4 col-lg-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
+                                            <Form.Group className="mb-3" controlId="userTypeId">
                                                 <Field
-                                                    component="select"
-                                                    id="location"
+                                                    name="userTypeId"
+                                                    component={ReactSelect}
+                                                    options={dropdowns.userTypeList}
+                                                    placeholder={t('selectUserType')}
+                                                    value={values.userTypeId}
+                                                    onChange={(option) => {
+                                                        setFieldValue('userTypeId', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
+                                            </Form.Group>
+                                        </div>
+
+                                        <div className="col-md-4 col-lg-3 col-sm-12">
+                                            <Form.Group className="mb-3" controlId="designationId">
+                                                <Field
+                                                    name="designationId"
+                                                    component={ReactSelect}
+                                                    options={dropdowns.designationList}
+                                                    placeholder={t('selectDesignation')}
+                                                    value={values.designationId}
+                                                    onChange={(option) => {
+                                                        setFieldValue('designationId', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
+                                            </Form.Group>
+                                        </div>
+
+                                        <div className="col-md-4 col-lg-3 col-sm-12">
+                                            <Form.Group className="mb-3" controlId="isActive">
+                                                <Field
                                                     name="isActive"
-                                                    multiple={false}
-                                                    className="w-full rounded-md"
-                                                >
-                                                    <option value="">{t('selectActiveStatus')}</option>
-                                                    {activeStatusList.map((option) => (
-                                                        <option key={option.value} value={option.value}>
-                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                                        </option>
-                                                    ))}
-                                                </Field>
+                                                    component={ReactSelect}
+                                                    options={activeStatusList}
+                                                    placeholder={t('selectActiveStatus')}
+                                                    value={values.isActive}
+                                                    onChange={(option) => {
+                                                        setFieldValue('isActive', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
                                             </Form.Group>
                                         </div>
                                     </div>
-                                    
+
                                     <div className="row">
                                         <div className="col-md-4 col-lg-3 col-sm-12"></div>
                                         <div className="col-md-4 col-lg-3 col-sm-12"></div>
@@ -441,13 +417,13 @@ const UserList = ({ t }) => {
                             <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
 
-                        <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button>
+                        {/* <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button> */}
+                        <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate(`/admin/user-management/add-or-update-user/${false}`)}>{t('add_new')}</button>
                         <AddNew
                             show={modalOpen}
                             onHide={handleCloseModal}
                             onSave={handleSave}
                             editData={editData}
-                            parentPermissionList={parentPermissionList}
                         />
                     </div>
                 </div>
@@ -488,8 +464,18 @@ const UserList = ({ t }) => {
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
                                     <td className='text-center'>
-                                        <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
+                                        {/* <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
                                             <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                                <i className="fa fa-pen"></i>
+                                            </button>
+                                        </OverlayTrigger> */}
+                                        <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-user/${true}/${item.id}`)} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
+                                                <i className="fa fa-eye"></i>
+                                            </button>
+                                        </OverlayTrigger>
+                                        <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
+                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-user/${false}/${item.id}`)} className='btn btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>

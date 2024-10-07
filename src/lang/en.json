@@ -218,5 +218,10 @@
   "enterConfirmPassword": "Enter Confirm Password",
   "enterOldPassword": "Enter Old Password",
   "enterNewPassword": "Enter New Password",
-  "enterConfirmNewPassword": "Enter Confirm New Password"
+  "enterConfirmNewPassword": "Enter Confirm New Password",
+  "organizationWiseRole": "Organization Wise Role",
+  "selectOrganization": "Select Organization",
+  "organization": "Organization",
+  "add": "Add",
+  "remove": "Remove"
 }

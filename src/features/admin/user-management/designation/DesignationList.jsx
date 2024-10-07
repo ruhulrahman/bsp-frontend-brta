@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import SelectField from '@/components/ui/SelectField';
 import ReactSelect from '@/components/ui/ReactSelect';
 import { withNamespaces } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
@@ -392,6 +391,7 @@ const DesignationList = ({ t }) => {
                                 <th>{t('name') + ` (${t('en')})`}</th>
                                 <th>{t('name') + ` (${t('bn')})`}</th>
                                 <th>{t('level')}</th>
+                                <th>{t('parentDesignation')}</th>
                                 <th>{t('status')}</th>
                                 <th>{t('action')}</th>
                             </tr>
@@ -409,6 +409,9 @@ const DesignationList = ({ t }) => {
                                         <span className='badge bg-secondary'>
                                             {currentLanguage === 'en' ? item.levelNumber : toBengaliNumber(item.levelNumber)}
                                         </span>
+                                    </td>
+                                    <td>
+                                        {currentLanguage === 'en' ? item.parentDesignation?.nameEn : item.parentDesignation?.nameBn}
                                     </td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReactSelect from '@/components/ui/ReactSelect';
 import { withNamespaces } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
@@ -303,7 +304,7 @@ const StatusGroupList = ({ t }) => {
                                 searchData(values);
                             }}
                         >
-                            {({ values, resetForm }) => (
+                            {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
@@ -313,39 +314,31 @@ const StatusGroupList = ({ t }) => {
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
+                                            <Form.Group className="mb-3" controlId="statusGroupId">
                                                 <Field
-                                                    component="select"
-                                                    id="statusGroupId"
                                                     name="statusGroupId"
-                                                    multiple={false}
-                                                    className="w-full rounded-md"
-                                                >
-                                                    <option value="">{t('selectStatusGroup')}</option>
-                                                    {dropdowns.statusGroupList && dropdowns.statusGroupList.map((option) => (
-                                                        <option key={option.id} value={option.id}>
-                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                                        </option>
-                                                    ))}
-                                                </Field>
+                                                    component={ReactSelect}
+                                                    options={dropdowns.statusGroupList}
+                                                    placeholder={t('selectStatusGroup')}
+                                                    value={values.statusGroupId}
+                                                    onChange={(option) => {
+                                                        setFieldValue('statusGroupId', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
+                                            <Form.Group className="mb-3" controlId="isActive">
                                                 <Field
-                                                    component="select"
-                                                    id="location"
                                                     name="isActive"
-                                                    multiple={false}
-                                                    className="w-full rounded-md"
-                                                >
-                                                    <option value="">{t('selectActiveStatus')}</option>
-                                                    {activeStatusList.map((option) => (
-                                                        <option key={option.value} value={option.value}>
-                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                                        </option>
-                                                    ))}
-                                                </Field>
+                                                    component={ReactSelect}
+                                                    options={activeStatusList}
+                                                    placeholder={t('selectActiveStatus')}
+                                                    value={values.isActive}
+                                                    onChange={(option) => {
+                                                        setFieldValue('isActive', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">

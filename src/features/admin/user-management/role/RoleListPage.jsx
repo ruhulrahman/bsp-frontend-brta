@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReactSelect from '@/components/ui/ReactSelect';
 import { withNamespaces } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
@@ -310,7 +311,7 @@ const RoleListPage = ({ t }) => {
                                 searchData(values);
                             }}
                         >
-                            {({ values, resetForm }) => (
+                            {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
@@ -321,7 +322,7 @@ const RoleListPage = ({ t }) => {
                                         </div>
                                         <div className="col-md-3 col-sm-12">
                                             <Form.Group className="mb-3" controlId="nameEn">
-                                                <Field
+                                                {/* <Field
                                                     component="select"
                                                     id="location"
                                                     name="isActive"
@@ -334,7 +335,17 @@ const RoleListPage = ({ t }) => {
                                                             {currentLanguage === 'en' ? option.nameEn : option.nameBn}
                                                         </option>
                                                     ))}
-                                                </Field>
+                                                </Field> */}
+                                                <Field
+                                                    name="isActive"
+                                                    component={ReactSelect}
+                                                    options={activeStatusList}
+                                                    placeholder={t('selectActiveStatus')}
+                                                    value={values.isActive}
+                                                    onChange={(option) => {
+                                                        setFieldValue('isActive', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
@@ -364,7 +375,7 @@ const RoleListPage = ({ t }) => {
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
                             <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
-                        <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate('/admin/user-management/add-or-update-role')}>{t('add_new')}</button>
+                        <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate(`/admin/user-management/add-or-update-role/${false}`)}>{t('add_new')}</button>
                         {/* <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button> */}
                         <AddNew
                             show={modalOpen}

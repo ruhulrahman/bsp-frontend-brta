@@ -49,8 +49,8 @@ const AdminLayout = ({ t }) => {
 
         setLoading(true);
         try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/common-dropdown-list')
-            console.log('data', data)
+            const { data } = await RestApi.get('api/v1/admin/common/dropdown-list')
+            // console.log('data', data)
             dispatch(setCommonDropdowns(data.data));
         } catch (error) {
             console.log('error', error)

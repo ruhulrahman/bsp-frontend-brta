@@ -1,9 +1,8 @@
-// SelectField.jsx
 import React from 'react';
 import Select from 'react-select';
 import i18n from '@/i18n';
 
-const SelectField = ({
+const ReactSelect = ({
   options,
   value,
   onChange,
@@ -74,4 +73,4 @@ const SelectField = ({
   );
 };
 
-export default SelectField;
+export default ReactSelect;

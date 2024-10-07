@@ -1,4 +1,5 @@
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
@@ -109,7 +110,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                             onSubmit(values, setSubmitting, resetForm);
                         }}
                     >
-                        {({ values, resetForm }) => (
+                        {({ values, resetForm, setFieldValue }) => (
                             <FormikForm>
                                 <Form.Group className="mb-3" controlId="nameEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
@@ -131,7 +132,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
                                 <Form.Group className="mb-3" controlId="parentDesignationId">
                                     <Form.Label>{t('parentDesingation')}</Form.Label>
-                                    <Field
+                                    {/* <Field
                                         component="select"
                                         id="location"
                                         name="parentDesignationId"
@@ -144,7 +145,18 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                                 {currentLanguage === 'en' ? option.nameEn : option.nameBn}
                                             </option>
                                         ))}
-                                    </Field>
+                                    </Field> */}
+
+                                    <Field
+                                        name="parentDesignationId"
+                                        component={ReactSelect}
+                                        options={parentDesignationList}
+                                        placeholder={t('select')}
+                                        value={values.parentDesignationId}
+                                        onChange={(option) => {
+                                            setFieldValue('parentDesignationId', option ? option.value : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="parentDesignationId" component="div" className="text-danger" />
                                 </Form.Group>
 

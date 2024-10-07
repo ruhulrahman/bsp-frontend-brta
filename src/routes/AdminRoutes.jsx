@@ -26,6 +26,7 @@ import VehicleBrandList from '../features/admin/configurations/vehicleBrand/Vehi
 import PermissionList from '../features/admin/user-management/permission/PermissionList.jsx';
 import RoleListPage from '../features/admin/user-management/role/RoleListPage.jsx';
 import AddOrUpdateRole from '../features/admin/user-management/role/AddOrUpdateRole.jsx';
+import AddOrUpdateUser from '../features/admin/user-management/user/AddOrUpdateUser.jsx';
 
 const adminRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -53,7 +54,8 @@ const adminRoutes = [
     { path: 'user-management/permission-list', element: <PermissionList /> },
     { path: 'user-management/role-list', element: <RoleListPage /> },
     { path: 'user-management/add-or-update-role/:isViewable/:id?', element: <AddOrUpdateRole /> },
-    { path: 'user-management/user', element: <UserList /> },
+    { path: 'user-management/user-list', element: <UserList /> },
+    { path: 'user-management/add-or-update-user/:isViewable/:id?', element: <AddOrUpdateUser /> },
     { path: 'user-management/designation', element: <DesignationList /> },
   ];
   

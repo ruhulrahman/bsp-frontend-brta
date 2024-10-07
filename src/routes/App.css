@@ -17,7 +17,7 @@
 
 .scrollbar-design::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    border-radius: 8px;
     background-color: #F5F5F5;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .scrollbar-design::-webkit-scrollbar-thumb {
-    border-radius: 10px;
+    border-radius: 8px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #555;
 }
@@ -36,18 +36,18 @@
 {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 	background-color: #F5F5F5;
-	border-radius: 10px;
+	border-radius: 8px;
 }
 
 .scrollbar-design-2::-webkit-scrollbar
 {
-	width: 10px;
+	width: 8px;
 	background-color: #F5F5F5;
 }
 
 .scrollbar-design-2::-webkit-scrollbar-thumb
 {
-	border-radius: 10px;
+	border-radius: 8px;
 	background-image: -webkit-gradient(linear,
 									   left bottom,
 									   left top,
@@ -65,7 +65,7 @@
 .scrollbar-design-3::-webkit-scrollbar-track
 {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	border-radius: 10px;
+	border-radius: 8px;
 	background-color: #F5F5F5;
 }
 
@@ -77,7 +77,7 @@
 
 .scrollbar-design-3::-webkit-scrollbar-thumb
 {
-	border-radius: 10px;
+	border-radius: 8px;
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 	background-color: #D62929;
 }
@@ -86,18 +86,18 @@
 {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
 	background-color: #F5F5F5;
-	border-radius: 10px;
+	border-radius: 8px;
 }
 
 .scrollbar-design-4::-webkit-scrollbar
 {
-	width: 10px;
+	width: 8px;
 	background-color: #F5F5F5;
 }
 
 .scrollbar-design-4::-webkit-scrollbar-thumb
 {
-	border-radius: 10px;
+	border-radius: 8px;
 	background-color: #FFF;
 	background-image: -webkit-linear-gradient(top,
 											  #e4f5fc 0%,
@@ -110,18 +110,18 @@
 {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
 	background-color: #F5F5F5;
-	border-radius: 10px;
+	border-radius: 8px;
 }
 
 .scrollbar-design-5::-webkit-scrollbar
 {
-	width: 10px;
+	width: 8px;
 	background-color: #F5F5F5;
 }
 
 .scrollbar-design-5::-webkit-scrollbar-thumb
 {
-	border-radius: 10px;
+	border-radius: 8px;
 	background-color: #FFF;
 	background-image: -webkit-gradient(linear,
 									   40% 0%,

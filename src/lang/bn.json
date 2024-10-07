@@ -217,5 +217,10 @@
   "enterConfirmPassword": "পাসওয়ার্ড নিশ্চিত করুন",
   "enterOldPassword": "পুরাতন পাসওয়ার্ড লিখুন",
   "enterNewPassword": "নতুন পাসওয়ার্ড লিখুন",
-  "enterConfirmNewPassword": "নতুন পাসওয়ার্ড নিশ্চিত করুন"
+  "enterConfirmNewPassword": "নতুন পাসওয়ার্ড নিশ্চিত করুন",
+  "organizationWiseRole": "অধিদপ্তর অনুসারে রোল",
+  "selectOrganization": "অধিদপ্তর নির্বাচন করুন",
+  "organization": "অধিদপ্তর",
+  "add": "যোগ করুন",
+  "remove": "অপসারণ করুন"
 }

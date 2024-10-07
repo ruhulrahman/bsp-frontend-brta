@@ -43,7 +43,6 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         email: Yup.string().email('Invalid email address').required('Email is required'),
         username: Yup.string().required('Username is required'),
         password: Yup.string().required('Password is required')
-            .min(8, 'Must be at least 8 characters')
             .matches(
                 /^(?=.*[a-z])(?=.*[A-Z]).+$/,
                 'Must contain at least one uppercase letter and one lowercase letter'
@@ -55,7 +54,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
             .matches(
                 /^(?=.*[@$!%*?&]).+$/,
                 'Must contain at least one special character'
-            ),
+            ).min(8, 'Must be at least 8 characters'),
         confirmPassword: Yup.string().label('Confirm Password').required().oneOf([Yup.ref('password')], 'Passwords does not match'),
         is_active: Yup.string().required('Is active is required'),
     });
