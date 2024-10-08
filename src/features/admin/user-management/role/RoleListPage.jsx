@@ -3,7 +3,6 @@ import ReactSelect from '@/components/ui/ReactSelect';
 import { withNamespaces } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
-import AddNew from './AddNew';
 import Loading from '@/components/common/Loading';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -182,7 +181,7 @@ const RoleListPage = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/role/list', { params })
+            const { data } = await RestApi.get('api/v1/admin/user-management/role/list', { params })
             dispatch(setListData(data.content));
             setPaginationData(data)
         } catch (error) {
@@ -210,7 +209,7 @@ const RoleListPage = ({ t }) => {
 
                 dispatch(setLoading(true));
                 try {
-                    await RestApi.delete(`api/v1/admin/configurations/role/delete/${data.id}`)
+                    await RestApi.delete(`api/v1/admin/user-management/role/delete/${data.id}`)
 
                     Swal.fire({
                         title: t('deleted'),
@@ -275,9 +274,9 @@ const RoleListPage = ({ t }) => {
         try {
             let result = ''
             if (values.id) {
-                result = await RestApi.put(`api/v1/admin/configurations/role/update/${values.id}`, values)
+                result = await RestApi.put(`api/v1/admin/user-management/role/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/configurations/role/create', values)
+                result = await RestApi.post('api/v1/admin/user-management/role/create', values)
             }
 
             if (result.data.success) {
@@ -377,12 +376,6 @@ const RoleListPage = ({ t }) => {
                         </OverlayTrigger>
                         <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate(`/admin/user-management/add-or-update-role/${false}`)}>{t('add_new')}</button>
                         {/* <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button> */}
-                        <AddNew
-                            show={modalOpen}
-                            onHide={handleCloseModal}
-                            onSave={handleSave}
-                            editData={editData}
-                        />
                     </div>
                 </div>
                 <div className="p-0 overflow-scroll relative min-h-[300px]">

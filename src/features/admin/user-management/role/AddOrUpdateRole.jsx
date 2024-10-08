@@ -85,7 +85,7 @@ const AddOrUpdateRole = ({ t }) => {
     const getRoleById = async (id) => {
 
         try {
-            const { data } = await RestApi.get(`api/v1/admin/configurations/role/${id}`)
+            const { data } = await RestApi.get(`api/v1/admin/user-management/role/${id}`)
             setInitialValues(data);
 
             // Make sure parentChildPermissionList is available
@@ -129,9 +129,9 @@ const AddOrUpdateRole = ({ t }) => {
             let result = ''
             if (values.id) {
                 // values.permissionIds = [4, 6]
-                result = await RestApi.put(`api/v1/admin/configurations/role/update/${values.id}`, values)
+                result = await RestApi.put(`api/v1/admin/user-management/role/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/configurations/role/create', values)
+                result = await RestApi.post('api/v1/admin/user-management/role/create', values)
             }
 
             if (result.data.success) {
@@ -466,14 +466,18 @@ const AddOrUpdateRole = ({ t }) => {
                                 </div> */}
 
 
-                                {isViewable ? (
-                                    <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/role-list`)}>{t('back')}</button>
-                                ) : (
-                                    <>
-                                        <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{id ? t('save_changes') : t('save')}</button>
-                                        <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
-                                    </>
-                                )}
+                                <div className="row mt-2 mb-6">
+                                    <div className="col-md-12 text-right">
+                                        {isViewable ? (
+                                            <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/role-list`)}>{t('back')}</button>
+                                        ) : (
+                                            <>
+                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{id ? t('save_changes') : t('save')}</button>
+                                                <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
                             </FormikForm>
                         )}
                     </Formik>

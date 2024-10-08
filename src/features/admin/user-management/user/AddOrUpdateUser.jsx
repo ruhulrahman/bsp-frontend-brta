@@ -40,7 +40,7 @@ const AddOrUpdateUser = ({ t }) => {
         userTypeId: '',
         designationId: '',
         isActive: true,
-        userOrgRoles: [
+        userOfficeRoles: [
             { orgId: '', roleId: '' }
         ]
     })
@@ -57,10 +57,10 @@ const AddOrUpdateUser = ({ t }) => {
         userTypeId: '',
         designationId: '',
         isActive: true,
-        userOrgRoles: [
+        userOfficeRoles: [
             {
-                orgId: '',
-                roleId: ''
+                orgId: null,
+                roleId: null
             }
         ]
     }
@@ -109,7 +109,7 @@ const AddOrUpdateUser = ({ t }) => {
         userTypeId: Yup.string().required('User type is required'),
         designationId: Yup.string().required('Designation is required'),
         isActive: Yup.boolean().required('Is active is required'),
-        userOrgRoles: Yup.array().of(
+        userOfficeRoles: Yup.array().of(
             Yup.object().shape({
                 orgId: Yup.string().required('Office is required'),
                 roleId: Yup.string().required('Role is required')
@@ -127,10 +127,12 @@ const AddOrUpdateUser = ({ t }) => {
     const [parentChildPermissionList, setParentChildPermissionList] = useState([]);
 
 
-    const [officeList, setOfficeLis] = useState([]);
+    const [officeList, setOfficeList] = useState([]);
+    const [roleList, setRoleLis] = useState([]);
 
     useEffect(() => {
         getOfficeList();
+        getActiveRoleList();
     }, []);
 
     // Fetch the role by id after the parent-child list is ready
@@ -146,7 +148,18 @@ const AddOrUpdateUser = ({ t }) => {
 
         try {
             const { data } = await RestApi.get(`api/v1/admin/common/get-active-orgation-list`)
-            setOfficeLis(data);
+            console.log('data', data)
+            setOfficeList(data);
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
+    const getActiveRoleList = async () => {
+
+        try {
+            const { data } = await RestApi.get(`api/v1/admin/user-management/role/active-list`)
+            setRoleLis(data);
         } catch (error) {
             console.log('error', error)
         }
@@ -156,7 +169,14 @@ const AddOrUpdateUser = ({ t }) => {
 
         try {
             const { data } = await RestApi.get(`api/v1/admin/user-management/user/${id}`)
+            if (data.userOfficeRoles.length == 0) {
+                data.userOfficeRoles = [{
+                    orgId: null,
+                    roleId: null
+                }]
+            }
             setInitialValues(data);
+            console.log('initialValues', initialValues)
 
             // Make sure parentChildPermissionList is available
             // parentChildPermissionList.map((item) => {
@@ -244,7 +264,7 @@ const AddOrUpdateUser = ({ t }) => {
                                             <div className="col-md-4 col-lg-3">
                                                 <Form.Group className="mb-3" controlId="nameEn">
                                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
-                                                    <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                                    <Field disabled={isViewable} type="text" name="nameEn" className="form-control" placeholder="Enter name" />
                                                     <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                                 </Form.Group>
                                             </div>
@@ -252,7 +272,7 @@ const AddOrUpdateUser = ({ t }) => {
                                             <div className="col-md-4 col-lg-3">
                                                 <Form.Group className="mb-3" controlId="nameBn">
                                                     <Form.Label>{t('name')} ({t('bn')})</Form.Label>
-                                                    <Field type="text" name="nameBn" className="form-control" placeholder="Enter name" />
+                                                    <Field disabled={isViewable} type="text" name="nameBn" className="form-control" placeholder="Enter name" />
                                                     <ErrorMessage name="nameBn" component="div" className="text-danger" />
                                                 </Form.Group>
                                             </div>
@@ -260,7 +280,7 @@ const AddOrUpdateUser = ({ t }) => {
                                             <div className="col-md-4 col-lg-3">
                                                 <Form.Group className="mb-3" controlId="username">
                                                     <Form.Label>{t('username')}</Form.Label>
-                                                    <Field type="text" name="username" className="form-control" placeholder="Enter username" />
+                                                    <Field disabled={isViewable} type="text" name="username" className="form-control" placeholder="Enter username" />
                                                     <ErrorMessage name="username" component="div" className="text-danger" />
                                                 </Form.Group>
                                             </div>
@@ -268,7 +288,7 @@ const AddOrUpdateUser = ({ t }) => {
                                             <div className="col-md-4 col-lg-3">
                                                 <Form.Group className="mb-3" controlId="mobile">
                                                     <Form.Label>{t('mobile')}</Form.Label>
-                                                    <Field type="text" name="mobile" className="form-control" placeholder="Enter mobile" />
+                                                    <Field disabled={isViewable} type="text" name="mobile" className="form-control" placeholder="Enter mobile" />
                                                     <ErrorMessage name="mobile" component="div" className="text-danger" />
                                                 </Form.Group>
                                             </div>
@@ -276,7 +296,7 @@ const AddOrUpdateUser = ({ t }) => {
                                             <div className="col-md-4 col-lg-3">
                                                 <Form.Group className="mb-3" controlId="email">
                                                     <Form.Label>{t('email')}</Form.Label>
-                                                    <Field type="text" name="email" className="form-control" placeholder="Enter email" />
+                                                    <Field disabled={isViewable} type="text" name="email" className="form-control" placeholder="Enter email" />
                                                     <ErrorMessage name="email" component="div" className="text-danger" />
                                                 </Form.Group>
                                             </div>
@@ -285,7 +305,7 @@ const AddOrUpdateUser = ({ t }) => {
                                                 <div className="col-md-4 col-lg-3">
                                                     <Form.Group className="mb-3" controlId="password">
                                                         <Form.Label>{t('password')}</Form.Label>
-                                                        <Field type="password" name="password" className="form-control" placeholder="Enter password" />
+                                                        <Field disabled={isViewable} type="password" name="password" className="form-control" placeholder="Enter password" />
                                                         <ErrorMessage name="password" component="div" className="text-danger" />
                                                     </Form.Group>
                                                 </div>
@@ -295,7 +315,7 @@ const AddOrUpdateUser = ({ t }) => {
                                                 <div className="col-md-4 col-lg-3">
                                                     <Form.Group className="mb-3" controlId="confirmPassword">
                                                         <Form.Label>{t('confirmPassword')}</Form.Label>
-                                                        <Field type="password" name="confirmPassword" className="form-control" placeholder="Enter confirm password" />
+                                                        <Field disabled={isViewable} type="password" name="confirmPassword" className="form-control" placeholder="Enter confirm password" />
                                                         <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
                                                     </Form.Group>
                                                 </div>
@@ -305,6 +325,7 @@ const AddOrUpdateUser = ({ t }) => {
                                                 <Form.Group className="mb-3" controlId="userTypeId">
                                                     <Form.Label>{t('userType')}</Form.Label>
                                                     <Field
+                                                        disabled={isViewable}
                                                         name="userTypeId"
                                                         component={ReactSelect}
                                                         options={dropdowns.userTypeList}
@@ -322,6 +343,7 @@ const AddOrUpdateUser = ({ t }) => {
                                                 <Form.Group className="mb-3" controlId="designationId">
                                                     <Form.Label>{t('designation')}</Form.Label>
                                                     <Field
+                                                        disabled={isViewable}
                                                         name="designationId"
                                                         component={ReactSelect}
                                                         options={dropdowns.designationList}
@@ -337,7 +359,7 @@ const AddOrUpdateUser = ({ t }) => {
 
                                             <div className="col-md-4 col-lg-3">
                                                 <Form.Group className="mb-3" controlId="isActive">
-                                                    <Checkbox id="custom-switch" name="isActive" className="" label={values.isActive ? t('active') : t('inactive')} />
+                                                    <Checkbox disabled={isViewable} id="custom-switch" name="isActive" className="" label={values.isActive ? t('active') : t('inactive')} />
                                                     <ErrorMessage name="isActive" component="div" className="text-danger" />
                                                 </Form.Group>
                                             </div>
@@ -352,121 +374,73 @@ const AddOrUpdateUser = ({ t }) => {
                                         <div className="row">
                                             <div className="col">
                                                 <h4 className="my-2 font-bold text-green-900">{t('organizationWiseRole')}</h4>
-                                                <hr />
+                                                <hr className='my-3' />
 
-                                                {/* <div className="row ml-[10px] mb-2">
-                                                    <div className="col-md-5 col-lg-5 col-sm-12">
-                                                        <Form.Group className="mb-3" controlId="userTypeId">
-                                                            <Form.Label>{t('userType')}</Form.Label>
-                                                            <Field
-                                                                name="userTypeId"
-                                                                component={ReactSelect}
-                                                                options={dropdowns.userTypeList}
-                                                                placeholder={t('selectUserType')}
-                                                                value={values.userTypeId}
-                                                                onChange={(option) => {
-                                                                    setFieldValue('userTypeId', option ? option.value : '')
-                                                                }}
-                                                            />
-                                                            <ErrorMessage name="userTypeId" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-md-5 col-lg-5 col-sm-12">
-                                                        <Form.Group className="mb-3" controlId="designationId">
-                                                            <Form.Label>{t('designation')}</Form.Label>
-                                                            <Field
-                                                                name="designationId"
-                                                                component={ReactSelect}
-                                                                options={dropdowns.designationList}
-                                                                placeholder={t('selectDesignation')}
-                                                                value={values.designationId}
-                                                                onChange={(option) => {
-                                                                    setFieldValue('designationId', option ? option.value : '')
-                                                                }}
-                                                            />
-                                                            <ErrorMessage name="designationId" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-md-2">
-                                                        <OverlayTrigger overlay={<Tooltip>{t('add')}</Tooltip>}>
-                                                            <button onClick={() => addNewOfficeRole()} className='btn btn-sm text-[12px] btn-outline-success mt-[33px]'>
-                                                                <i className="fa fa-plus"></i>
-                                                            </button>
-                                                        </OverlayTrigger>
-                                                        <OverlayTrigger overlay={<Tooltip>{t('remove')}</Tooltip>}>
-                                                            <button onClick={() => removeOfficeRole()} className='btn btn-sm text-[12px] btn-outline-danger ml-2 mt-[33px]'>
-                                                                <i className="fa fa-minus"></i>
-                                                            </button>
-                                                        </OverlayTrigger>
-                                                    </div>
-                                                </div> */}
-
-                                                <FieldArray name="userOrgRoles">
+                                                <FieldArray name="userOfficeRoles">
                                                     {({ insert, remove, push }) => (
                                                         <div>
-                                                            {values.userOrgRoles && values.userOrgRoles.length > 0 &&
-                                                                values.userOrgRoles.map((friend, index) => (
+                                                            {values.userOfficeRoles && values.userOfficeRoles.length > 0 &&
+                                                                values.userOfficeRoles.map((friend, index) => (
                                                                     <div className="row ml-[10px] mb-2" key={index}>
 
                                                                         <div className="col-md-5 col-lg-5 col-sm-12">
-                                                                            <Form.Group className="mb-3" controlId={`userOrgRoles.${index}.orgId`}>
-                                                                                <Form.Label htmlFor={`userOrgRoles.${index}.orgId`}>{t('organization')}</Form.Label>
+                                                                            <Form.Group className="mb-3">
+                                                                                <Form.Label htmlFor={`userOfficeRoles.${index}.orgId`}>{t('organization')}</Form.Label>
                                                                                 <Field
-                                                                                    name={`userOrgRoles.${index}.orgId`}
+                                                                                    disabled={isViewable}
+                                                                                    name={`userOfficeRoles.${index}.orgId`}
                                                                                     component={ReactSelect}
-                                                                                    options={dropdowns.userTypeList}
+                                                                                    options={officeList}
                                                                                     placeholder={t('selectOrganization')}
-                                                                                    value={`userOrgRoles.${index}.orgId`}
+                                                                                    value={values.userOfficeRoles[index].orgId}
                                                                                     onChange={(option) => {
-                                                                                        setFieldValue(`userOrgRoles.${index}.orgId`, option ? option.value : '')
+                                                                                        setFieldValue(`userOfficeRoles.${index}.orgId`, option ? option.value : '')
                                                                                     }}
                                                                                 />
-                                                                                <ErrorMessage name="userTypeId" component="div" className="text-danger" />
+                                                                                <ErrorMessage name={`userOfficeRoles.${index}.orgId`} component="div" className="text-danger" />
                                                                             </Form.Group>
                                                                         </div>
 
                                                                         <div className="col-md-5 col-lg-5 col-sm-12">
-                                                                            <Form.Group className="mb-3" controlId={`userOrgRoles.${index}.roleId`}>
-                                                                                <Form.Label htmlFor={`userOrgRoles.${index}.roleId`}>{t('role')}</Form.Label>
+                                                                            <Form.Group className="mb-3">
+                                                                                <Form.Label htmlFor={`userOfficeRoles.${index}.roleId`}>{t('role')}</Form.Label>
                                                                                 <Field
-                                                                                    name={`userOrgRoles.${index}.roleId`}
+                                                                                    disabled={isViewable}
+                                                                                    name={`userOfficeRoles.${index}.roleId`}
                                                                                     component={ReactSelect}
-                                                                                    options={dropdowns.userTypeList}
+                                                                                    options={roleList}
                                                                                     placeholder={t('selectRole')}
-                                                                                    value={`userOrgRoles.${index}.roleId`}
+                                                                                    value={values.userOfficeRoles[index].roleId}
                                                                                     onChange={(option) => {
-                                                                                        setFieldValue(`userOrgRoles.${index}.roleId`, option ? option.value : '')
+                                                                                        setFieldValue(`userOfficeRoles.${index}.roleId`, option ? option.value : '')
                                                                                     }}
                                                                                 />
-                                                                                <ErrorMessage name="userTypeId" component="div" className="text-danger" />
+                                                                                <ErrorMessage name={`userOfficeRoles.${index}.roleId`} component="div" className="text-danger" />
                                                                             </Form.Group>
                                                                         </div>
 
+                                                                        {!isViewable &&
+                                                                            <div className="col-md-2">
+                                                                                <OverlayTrigger overlay={<Tooltip>{t('add')}</Tooltip>}>
+                                                                                    <button onClick={() => push({ orgId: '', roleId: '' })} className='btn btn-sm text-[12px] btn-outline-success mt-[33px]'>
+                                                                                        <i className="fa fa-plus"></i>
+                                                                                    </button>
+                                                                                </OverlayTrigger>
+                                                                                {values.userOfficeRoles && values.userOfficeRoles.length > 1 &&
+                                                                                <OverlayTrigger overlay={<Tooltip>{t('remove')}</Tooltip>}>
+                                                                                    <button onClick={() => {
+                                                                                        values.userOfficeRoles.splice(index, 1);
+                                                                                        setFieldValue('userOfficeRoles', values.userOfficeRoles);
+                                                                                    }} className='btn btn-sm text-[12px] btn-outline-danger ml-2 mt-[33px]'>
+                                                                                        <i className="fa fa-minus"></i>
+                                                                                    </button>
+                                                                                </OverlayTrigger>
+                                                                                }
+                                                                            </div>
+                                                                        }
 
-                                                                        <div className="col-md-2">
-                                                                            <OverlayTrigger overlay={<Tooltip>{t('add')}</Tooltip>}>
-                                                                                <button onClick={() => push({ orgId: '', roleId: '' })} className='btn btn-sm text-[12px] btn-outline-success mt-[33px]'>
-                                                                                    <i className="fa fa-plus"></i>
-                                                                                </button>
-                                                                            </OverlayTrigger>
-                                                                            <OverlayTrigger overlay={<Tooltip>{t('remove')}</Tooltip>}>
-                                                                                <button onClick={() => remove(index)} className='btn btn-sm text-[12px] btn-outline-danger ml-2 mt-[33px]'>
-                                                                                    <i className="fa fa-minus"></i>
-                                                                                </button>
-                                                                            </OverlayTrigger>
-                                                                        </div>
                                                                     </div>
                                                                 ))}
-
-                                                            <button
-                                                                type="button"
-                                                                className="secondary"
-                                                                onClick={() => push({ orgId: '', roleId: '' })}
-                                                            >
-                                                                Add Friend
-                                                            </button>
                                                         </div>
                                                     )}
                                                 </FieldArray>
@@ -475,8 +449,18 @@ const AddOrUpdateUser = ({ t }) => {
                                     </CardBody>
                                 </Card>
 
-                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{id ? t('save_changes') : t('save')}</button>
-                                <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                <div className="row mt-2 mb-6">
+                                    <div className="col-md-12 text-right">
+                                        {isViewable ? (
+                                            <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/user-list`)}>{t('back')}</button>
+                                        ) : (
+                                            <>
+                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{id ? t('save_changes') : t('save')}</button>
+                                                <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
                             </FormikForm>
                         )}
                     </Formik>

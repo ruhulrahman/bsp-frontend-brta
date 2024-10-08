@@ -223,5 +223,7 @@
   "selectOrganization": "Select Organization",
   "organization": "Organization",
   "add": "Add",
-  "remove": "Remove"
+  "remove": "Remove",
+  "goBack": "Go Back",
+  "back": "Back"
 }
