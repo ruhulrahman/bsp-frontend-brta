@@ -1,25 +1,29 @@
+import logoBrta from '@/assets/images/logo-brta.png';
+import Loading from '@/components/common/Loading';
+import useWindowSize from '@/hooks/useWindowSize';
 import i18n from '@/i18n';
+import { setCommonDropdowns } from '@/store/commonSlice';
+import RestApi from '@/utils/RestApi';
 import { useEffect, useState } from 'react';
+import { withNamespaces } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { Link, Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { setAuthUser, setToken } from '../../features/common/auth/authSlice';
 import AdminNavbar from '../navbar/AdminNavbar';
 import AdminSidebar from '../navbar/AdminSidebar';
-import { ToastContainer } from 'react-toastify';
-import { withNamespaces } from 'react-i18next';
-import RestApi from '@/utils/RestApi';
-import Loading from '@/components/common/Loading';
-import { useDispatch } from 'react-redux';
-import { setAuthUser, setToken } from '../../features/common/auth/authSlice';
-import { setLoading, setCommonDropdowns } from '@/store/commonSlice';
-import logoBrta from '@/assets/images/logo-brta.png';
 
 const AdminLayout = ({ t }) => {
+
+    const { screenWidth, screenHeight } = useWindowSize();
 
     const currentLanguage = i18n.language;
 
     const dispatch = useDispatch()
     // Sidebar Toggle State
     const [openSidebar, setOpenSidebar] = useState(true);
-    // console.log('openSidebar', openSidebar)
+
+
 
     const [key, setKey] = useState(window.location.pathname);
 
@@ -59,19 +63,13 @@ const AdminLayout = ({ t }) => {
         }
     }
 
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-
     useEffect(() => {
-        const handleResize = () => setScreenWidth(window.innerWidth);
-        window.addEventListener("resize", handleResize);
-        // Cleanup function to remove the event listener
         if (screenWidth < 768) {
             setOpenSidebar(false)
         } else if (screenWidth > 768) {
             setOpenSidebar(true)
         }
-        return () => window.removeEventListener("resize", handleResize);
-    }, [window.innerWidth])
+    }, [screenWidth])
 
     return (
         <>
@@ -95,28 +93,6 @@ const AdminLayout = ({ t }) => {
 
                 {/* <!-- Main Content Area --> */}
                 <div className="flex-grow-1">
-                    {/* <nav className="navbar navbar-expand-lg navbar-light bg-info">
-                        <div className="container-fluid">
-                            <a className="navbar-brand" href="#">Admin Panel</a>
-                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                                <span className="navbar-toggler-icon"></span>
-                            </button>
-                            <div className="collapse navbar-collapse" id="navbarNav">
-                                <ul className="navbar-nav ms-auto">
-                                    <li className="nav-item">
-                                        <a className="nav-link" href="/admin/profile">
-                                            <i className="fas fa-user"></i> Profile
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link" href="/logout">
-                                            <i className="fas fa-sign-out-alt"></i> Logout
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav> */}
                     <AdminNavbar openSidebar={openSidebar} onToggleSidebar={() => setOpenSidebar(!openSidebar)} />
 
                     <div className={`${openSidebar ? 'ml-[265px]' : 'ml-[0px]'}`}>

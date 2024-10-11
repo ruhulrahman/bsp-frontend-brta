@@ -1,8 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import LoginBackground from '../../assets/images/login-background.png';
-import TopNavbar from '../navbar/home/TopNavbar';
 import { ToastContainer } from 'react-toastify';
+import LoginBackground from '../../assets/images/login-background.png';
 <stlye>
   {`
     .login-background-container {

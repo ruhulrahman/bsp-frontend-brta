@@ -1,5 +1,7 @@
 import { toast } from 'react-toastify';
-import { toBengaliNumber, toBengaliWord } from 'bengali-number'
+// import { toBengaliNumber, toBengaliWord } from 'bengali-number'
+
+// const { permissions } = useSelector((state) => state.auth) || [];
 
 export const toaster = (msg, type = 'success') => {
 
@@ -48,8 +50,8 @@ export const toaster = (msg, type = 'success') => {
 }
 
 // import { Notyf } from 'notyf'
-import Hashids from 'hashids'
-import moment from 'moment'
+import Hashids from 'hashids';
+import moment from 'moment';
 
 
 export const pagination = {
@@ -259,9 +261,9 @@ export default {
         // const store = pinia.store;
         // const authStore = useAuthStore(store);
         // const permissions = authStore.permissions;
-        const permissions = []
-        // console.log('permissions', authStore)
         // const permissions = []
+        // console.log('permissions', authStore)
+        const permissions = []
 
         if (permissions && permissions.length) {
 

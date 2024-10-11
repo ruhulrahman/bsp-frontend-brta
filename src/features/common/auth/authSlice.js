@@ -4,6 +4,7 @@ const initialState = {
     accessToken: undefined,
     tokenInfo: undefined,
     authUser: undefined,
+    permissions: ['dashboard', 'profile', 'users'],
 };
 
 const authSlice = createSlice({
@@ -32,8 +33,19 @@ const authSlice = createSlice({
             state.tokenInfo = undefined;
             state.authUser = undefined;
         },
+        setUserPermissions: (state, action) => {
+            state.permissions = action.payload
+        },
+        removeUserPermissions: (state) => {
+            state.permissions = []
+        },
     },
 });
 
-export const { setAuthUser, removeAuthUser, setToken, removeToken, setTokenInfo, removeTokenInfo } = authSlice.actions;
+export const {
+    setAuthUser, removeAuthUser,
+    setToken, removeToken,
+    setTokenInfo, removeTokenInfo,
+    setUserPermissions, removeUserPermissions
+} = authSlice.actions;
 export default authSlice.reducer;

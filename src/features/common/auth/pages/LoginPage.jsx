@@ -1,16 +1,16 @@
 import logo from '@/assets/images/logo.png';
-import { Link, useNavigate } from 'react-router-dom';
-import Form from 'react-bootstrap/Form';
-import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
-import * as Yup from 'yup';
-import React, { useEffect, useState } from 'react'
-import { withNamespaces } from 'react-i18next';
 import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import { toaster } from '@/utils/helpers.js';
+import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
+import React, { useState } from 'react';
+import Form from 'react-bootstrap/Form';
+import { withNamespaces } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 // import { ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { setAuthUser, setTokenInfo, setToken } from '../authSlice';
+import { setToken, setTokenInfo, setUserPermissions } from '../authSlice';
 
 const LoginPage = ({ t }) => {
     const navigate = useNavigate();
@@ -38,6 +38,7 @@ const LoginPage = ({ t }) => {
                 localStorage.setItem('token', result.data.accessToken)
                 dispatch(setToken(result.data.accessToken));
                 dispatch(setTokenInfo(result.data));
+                dispatch(setUserPermissions(result.data.permissions));
                 toaster('Your are logged in successfully')
                 navigate('/admin/dashboard');
         } catch (error) {

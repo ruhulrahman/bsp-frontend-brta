@@ -1,14 +1,14 @@
 // import './custom-bootstrap.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "flatpickr/dist/themes/material_green.css";
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'sweetalert2/src/sweetalert2.scss';
 import App from './App.jsx';
 import './i18n';
-import { store } from './store/store';
 import './index.css';
-import "flatpickr/dist/themes/material_green.css";
+import { store } from './store/store';
 
 window.pagination = {
   page: 1,
