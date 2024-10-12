@@ -10,9 +10,6 @@ import { withNamespaces } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-AddNew.defaultProps = {
-    vehicleMakerList: [],
-};
 
 const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
 
@@ -137,5 +134,10 @@ const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
         </div>
     );
 };
+
+AddNew.defaultProps = {
+    vehicleMakerList: [],
+};
+
 
 export default withNamespaces()(AddNew);
