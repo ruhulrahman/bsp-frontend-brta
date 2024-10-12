@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
-import Pagination from 'react-bootstrap/Pagination'
-import AddNew from './AddNew';
 import Loading from '@/components/common/Loading';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
-import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
-import Form from 'react-bootstrap/Form';
-import { useDispatch, useSelector } from 'react-redux';
+import ReactSelect from '@/components/ui/ReactSelect';
 import i18n from '@/i18n';
+import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
-import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
-import { toBengaliNumber, toBengaliWord } from 'bengali-number'
+import { toaster } from '@/utils/helpers.js';
+import { toBengaliNumber } from 'bengali-number';
+import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
+import React, { useEffect, useState } from 'react';
+import Form from 'react-bootstrap/Form';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Pagination from 'react-bootstrap/Pagination';
+import Tooltip from 'react-bootstrap/Tooltip';
+import { withNamespaces } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import AddNew from './AddNew';
 
 const VehicleBrandList = ({ t }) => {
 
@@ -319,7 +320,7 @@ const VehicleBrandList = ({ t }) => {
                                 searchData(values);
                             }}
                         >
-                            {({ values, resetForm }) => (
+                            {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
@@ -331,37 +332,30 @@ const VehicleBrandList = ({ t }) => {
                                         <div className="col-md-3 col-sm-12">
                                             <Form.Group className="mb-3" controlId="makerId">
                                                 <Field
-                                                    component="select"
-                                                    id="makerId"
                                                     name="makerId"
-                                                    multiple={false}
-                                                    className="w-full rounded-md"
-                                                >
-                                                    <option value="">{t('selectVehicleMaker')}</option>
-                                                    {vehicleMakerList && vehicleMakerList.map((option) => (
-                                                        <option key={option.id} value={option.id}>
-                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                                        </option>
-                                                    ))}
-                                                </Field>
+                                                    id="makerId"
+                                                    component={ReactSelect}
+                                                    options={vehicleMakerList}
+                                                    placeholder={t('selectVehicleMaker')}
+                                                    value={values.makerId}
+                                                    onChange={(option) => {
+                                                        setFieldValue('makerId', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
+                                            <Form.Group className="mb-3" controlId="isActive">
                                                 <Field
-                                                    component="select"
-                                                    id="location"
                                                     name="isActive"
-                                                    multiple={false}
-                                                    className="w-full rounded-md"
-                                                >
-                                                    <option value="">{t('selectActiveStatus')}</option>
-                                                    {activeStatusList.map((option) => (
-                                                        <option key={option.value} value={option.value}>
-                                                            {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                                        </option>
-                                                    ))}
-                                                </Field>
+                                                    component={ReactSelect}
+                                                    options={activeStatusList}
+                                                    placeholder={t('selectActiveStatus')}
+                                                    value={values.isActive}
+                                                    onChange={(option) => {
+                                                        setFieldValue('isActive', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">

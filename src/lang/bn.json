@@ -156,6 +156,7 @@
   "motorCapacityMinKw": "মোটর ক্ষমতা ন্যূনতম (কিলোওয়াট)",
   "motorCapacityMaxKw": "মোটর ক্ষমতা সর্বোচ্চ (কিলোওয়াট)",
   "selectVehicleType": "যানবাহনের ধরণ নির্বাচন করুন",
+  "vehicleBrandList": "যানবাহনের ব্র্যান্ডের তালিকা",
   "vehicleBrand": "যানবাহনের ব্র্যান্ড",
   "selectVehicleBrand": "যানবাহনের ব্র্যান্ড নির্বাচন করুন",
   "selectVehicleMaker": "যানবাহনের প্রস্তুতকারক নির্বাচন করুন",
@@ -224,5 +225,10 @@
   "add": "যোগ করুন",
   "remove": "অপসারণ করুন",
   "goBack": "ফিরে যান",
-  "back": "ফিরে যান"
+  "back": "ফিরে যান",
+  "selectRoutePermitType": "রুট অনুমতি নির্বাচন করুন",
+  "selectRoute": "রুট নির্বাচন করুন",
+  "content": "বিষয়বস্তু",
+  "selectLanguage": "ভাষা নির্বাচন করুন",
+  "selectBloodGroup": "রক্তের গ্রুপ নির্বাচন করুন"
 }

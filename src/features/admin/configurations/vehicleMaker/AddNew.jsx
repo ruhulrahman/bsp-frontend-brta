@@ -1,14 +1,15 @@
+import Loading from '@/components/common/Loading';
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
+import i18n from '@/i18n';
+import RestApi from '@/utils/RestApi';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import RestApi from '@/utils/RestApi';
-import i18n from '@/i18n';
-import Loading from '@/components/common/Loading';
 
 const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
@@ -114,19 +115,16 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                 <Form.Group className="mb-3" controlId="countryId">
                                     <Form.Label>{t('country')}</Form.Label>
                                     <Field
-                                        component="select"
-                                        id="location"
                                         name="countryId"
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('select')}</option>
-                                        {dropdowns.countryList && dropdowns.countryList.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                            </option>
-                                        ))}
-                                    </Field>
+                                        id="countryId"
+                                        component={ReactSelect}
+                                        options={dropdowns.countryList}
+                                        placeholder={t('selectCountry')}
+                                        value={values.countryId}
+                                        onChange={(option) => {
+                                            setFieldValue('countryId', option ? option.value : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="countryId" component="div" className="text-danger" />
                                 </Form.Group>
 

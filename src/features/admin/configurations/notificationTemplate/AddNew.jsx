@@ -1,14 +1,15 @@
+import Loading from '@/components/common/Loading';
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
+import i18n from '@/i18n';
+import RestApi from '@/utils/RestApi';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import RestApi from '@/utils/RestApi';
-import i18n from '@/i18n';
-import Loading from '@/components/common/Loading';
 
 const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
@@ -116,19 +117,16 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                 <Form.Group className="mb-3" controlId="serviceId">
                                     <Form.Label>{t('Service')}</Form.Label>
                                     <Field
-                                        component="select"
                                         id="serviceId"
                                         name="serviceId"
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('selectService')}</option>
-                                        {dropdowns.serviceList && dropdowns.serviceList.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                            </option>
-                                        ))}
-                                    </Field>
+                                        component={ReactSelect}
+                                        options={dropdowns.serviceList}
+                                        placeholder={t('selectService')}
+                                        value={values.serviceId}
+                                        onChange={(option) => {
+                                            setFieldValue('serviceId', option ? option.value : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="serviceId" component="div" className="text-danger" />
                                 </Form.Group>
 
@@ -146,13 +144,13 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
                                 <Form.Group className="mb-3" controlId="messageEn">
                                     <Form.Label>{t('messageEn')}</Form.Label>
-                                    <Field as="textarea" name="messageEn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
+                                    <Field as="textarea" name="messageEn" placeholder="Enter Message" className="form-control" rows="4" cols="50" />
                                     <ErrorMessage name="messageEn" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="messageBn">
                                     <Form.Label>{t('messageBn')}</Form.Label>
-                                    <Field as="textarea" name="messageBn" placeholder="Enter Message" className="form-control" rows="4" cols="50"/>
+                                    <Field as="textarea" name="messageBn" placeholder="Enter Message" className="form-control" rows="4" cols="50" />
                                     <ErrorMessage name="messageBn" component="div" className="text-danger" />
                                 </Form.Group>
 

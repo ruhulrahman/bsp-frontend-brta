@@ -1,16 +1,22 @@
+import Loading from '@/components/common/Loading';
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
+import i18n from '@/i18n';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import RestApi from '@/utils/RestApi';
-import i18n from '@/i18n';
-import Loading from '@/components/common/Loading';
+
+AddNew.defaultProps = {
+    vehicleMakerList: [],
+};
 
 const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
+
+    // const { vehicleMakerList } = props;
 
     const { activeStatusList, loading, listData, dropdowns } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
@@ -91,19 +97,16 @@ const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
                                 <Form.Group className="mb-3" controlId="makerId">
                                     <Form.Label>{t('vehicleMaker')}</Form.Label>
                                     <Field
-                                        component="select"
-                                        id="location"
                                         name="makerId"
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('select')}</option>
-                                        {props.vehicleMakerList && props.vehicleMakerList.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                            </option>
-                                        ))}
-                                    </Field>
+                                        id="makerId"
+                                        component={ReactSelect}
+                                        options={props.vehicleMakerList}
+                                        placeholder={t('selectVehicleMaker')}
+                                        value={values.makerId}
+                                        onChange={(option) => {
+                                            setFieldValue('makerId', option ? option.value : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="makerId" component="div" className="text-danger" />
                                 </Form.Group>
 

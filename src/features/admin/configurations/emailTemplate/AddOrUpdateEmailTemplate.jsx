@@ -1,19 +1,18 @@
+import Loading from '@/components/common/Loading';
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
 import TextEditor from '@/components/ui/TextEditor';
+import i18n from '@/i18n';
+import { toaster } from '@/utils/helpers.js';
+import RestApi from '@/utils/RestApi';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
-import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import * as Yup from 'yup';
-import RestApi from '@/utils/RestApi';
-import i18n from '@/i18n';
-import Loading from '@/components/common/Loading';
-import { useParams, useNavigate } from 'react-router-dom';
-import helper, { toaster } from '@/utils/helpers.js';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 
 const AddOrUpdateEmailTemplate = ({ t }) => {
 
@@ -162,19 +161,16 @@ const AddOrUpdateEmailTemplate = ({ t }) => {
                                 <Form.Group className="mb-3" controlId="serviceId">
                                     <Form.Label>{t('Service')}</Form.Label>
                                     <Field
-                                        component="select"
                                         id="serviceId"
                                         name="serviceId"
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('selectService')}</option>
-                                        {dropdowns.serviceList && dropdowns.serviceList.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                            </option>
-                                        ))}
-                                    </Field>
+                                        component={ReactSelect}
+                                        options={dropdowns.serviceList}
+                                        placeholder={t('selectService')}
+                                        value={values.serviceId}
+                                        onChange={(option) => {
+                                            setFieldValue('serviceId', option ? option.value : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="serviceId" component="div" className="text-danger" />
                                 </Form.Group>
 
@@ -204,7 +200,7 @@ const AddOrUpdateEmailTemplate = ({ t }) => {
 
                                 <Form.Group className="mb-3" controlId="messageBn">
                                     <Form.Label>{t('emailBody')} ({t('bn')})</Form.Label>
-                                    <Field name="messageBn" component={TextEditor} placeholder="Enter Email Body"/>
+                                    <Field name="messageBn" component={TextEditor} placeholder="Enter Email Body" />
                                     <ErrorMessage name="messageBn" component="div" className="text-danger" />
                                 </Form.Group>
 

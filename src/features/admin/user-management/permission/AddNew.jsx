@@ -1,14 +1,14 @@
+import Loading from '@/components/common/Loading';
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
+import i18n from '@/i18n';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import RestApi from '@/utils/RestApi';
-import i18n from '@/i18n';
-import Loading from '@/components/common/Loading';
 
 const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
 
@@ -94,23 +94,16 @@ const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
                                 <Form.Group className="mb-3" controlId="type">
                                     <Form.Label>{t('permissionType')}</Form.Label>
                                     <Field
-                                        component="select"
                                         id="type"
                                         name="type"
-                                        value={values.type} onChange={(e) => {
-                                            handleChange(e); // This updates Formik's state
-                                            setFieldValue('type', parseInt(e.target.value));
-                                        }}
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('select')}</option>
-                                        {permissionTypeList && permissionTypeList.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                            </option>
-                                        ))}
-                                    </Field>
+                                        component={ReactSelect}
+                                        options={permissionTypeList}
+                                        placeholder={t('selectPermissionType')}
+                                        value={values.type}
+                                        onChange={(option) => {
+                                            setFieldValue('type', option ? option.value : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="type" component="div" className="text-danger" />
                                 </Form.Group>
 
@@ -137,23 +130,16 @@ const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
                                 <Form.Group className="mb-3" controlId="parentId">
                                     <Form.Label>{t('parentPermission')}</Form.Label>
                                     <Field
-                                        component="select"
                                         id="parentId"
                                         name="parentId"
-                                        value={values.parentId} onChange={(e) => {
-                                            handleChange(e); // This updates Formik's state
-                                            setFieldValue('parentId', parseInt(e.target.value));
-                                        }}
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('select')}</option>
-                                        {props.parentPermissionList && props.parentPermissionList.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameEn}
-                                            </option>
-                                        ))}
-                                    </Field>
+                                        component={ReactSelect}
+                                        options={props.parentPermissionList}
+                                        placeholder={t('selectParentPermission')}
+                                        value={values.parentId}
+                                        onChange={(option) => {
+                                            setFieldValue('parentId', option ? parseInt(option.value) : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="parentId" component="div" className="text-danger" />
                                 </Form.Group>
 

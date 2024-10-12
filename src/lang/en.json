@@ -225,5 +225,10 @@
   "add": "Add",
   "remove": "Remove",
   "goBack": "Go Back",
-  "back": "Back"
+  "back": "Back",
+  "selectRoutePermitType": "Select Route Permit Type",
+  "selectRoute": "Select Route",
+  "content": "Content",
+  "selectLanguage": "Select Language",
+  "selectBloodGroup": "Select Blood Group"
 }

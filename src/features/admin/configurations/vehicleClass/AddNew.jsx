@@ -1,14 +1,15 @@
+import Loading from '@/components/common/Loading';
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
+import i18n from '@/i18n';
+import RestApi from '@/utils/RestApi';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import RestApi from '@/utils/RestApi';
-import i18n from '@/i18n';
-import Loading from '@/components/common/Loading';
 
 const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
@@ -128,21 +129,18 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                 <Loading loading={loading} loadingText={t('submitting')} />
 
                                 <Form.Group className="mb-3" controlId="vehicleTypeId">
-                                    <Form.Label>{t('routePermitType')}</Form.Label>
+                                    <Form.Label>{t('vehicleType')}</Form.Label>
                                     <Field
-                                        component="select"
                                         id="vehicleTypeId"
                                         name="vehicleTypeId"
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('select')}</option>
-                                        {dropdowns.routePermitTypes && dropdowns.routePermitTypes.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                            </option>
-                                        ))}
-                                    </Field>
+                                        component={ReactSelect}
+                                        options={dropdowns.vehicleTypeList}
+                                        placeholder={t('selectVehicleType')}
+                                        value={values.vehicleTypeId}
+                                        onChange={(option) => {
+                                            setFieldValue('vehicleTypeId', option ? option.value : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="vehicleTypeId" component="div" className="text-danger" />
                                 </Form.Group>
 
