@@ -431,9 +431,11 @@ const PermissionList = ({ t }) => {
                             <tr>
                                 <th>{t('sl')}</th>
                                 <th>{t('name') + ` (${t('en')})`}</th>
+                                <th>{t('name') + ` (${t('bn')})`}</th>
                                 <th>{t('permissionCode')}</th>
                                 <th className='text-center'>{t('permissionType')}</th>
-                                <th className='text-center'>{t('parentPermission')}</th>
+                                <th>{t('pageUrl')}</th>
+                                <th>{t('parentPermission')}</th>
                                 <th>{t('status')}</th>
                                 <th className='text-center'>{t('action')}</th>
                             </tr>
@@ -446,8 +448,10 @@ const PermissionList = ({ t }) => {
                                     {/* <td>{toBengaliNumber(slOffset + index)}.</td> */}
                                     <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
                                     <td>{item.nameEn}</td>
+                                    <td>{item.nameBn}</td>
                                     <td><span className='badge bg-secondary'>{item.permissionCode}</span></td>
-                                    <td>{item.typeName}</td>
+                                    <td className='text-center'>{item.typeName}</td>
+                                    <td>{item.pageUrl}</td>
                                     <td>
                                         {currentLanguage === 'en' ? item.parentName : item.parentName}
                                     </td>

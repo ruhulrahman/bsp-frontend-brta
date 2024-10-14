@@ -230,5 +230,6 @@
   "selectRoute": "Select Route",
   "content": "Content",
   "selectLanguage": "Select Language",
-  "selectBloodGroup": "Select Blood Group"
+  "selectBloodGroup": "Select Blood Group",
+  "pageUrl": "Page Url"
 }

@@ -325,79 +325,90 @@ const AddOrUpdateRole = ({ t }) => {
 
                                             <div className="row">
                                                 <div className="col">
-                                                    <hr />
-                                                    <h4 className="my-2 font-bold text-green-900">{t('pages')}</h4>
-                                                    <div className="row ml-[10px] mb-2">
-                                                        {item.pageList.length > 0 && item.pageList.map((childItem, pageIndex) => (
-                                                            <div className="mt-3 col-sm-3 col-md-3 col-lg-3">
-                                                                <div className="custom-control custom-checkbox">
-                                                                    <Field type="checkbox"
-                                                                        id={`page-${index}-${pageIndex}`}
-                                                                        disabled={isViewable}
-                                                                        name="permissionIds"
-                                                                        value={childItem.id}
-                                                                        checked={values.permissionIds.length && values.permissionIds.includes(childItem.id)}
-                                                                        onChange={(e) => {
-                                                                            const id = childItem.id
-                                                                            if (e.target.checked) {
-                                                                                // Add the checkbox ID to permissionIds array
-                                                                                setFieldValue('permissionIds', [
-                                                                                    ...values.permissionIds,
-                                                                                    id,
-                                                                                ]);
-                                                                            } else {
-                                                                                // Remove the checkbox ID from permissionIds array
-                                                                                setFieldValue(
-                                                                                    'permissionIds',
-                                                                                    values.permissionIds.filter(
-                                                                                        (selectedId) => selectedId !== id
-                                                                                    )
-                                                                                );
-                                                                            }
-                                                                        }} />
-                                                                    {/* <input id={`page-${index}-${pageIndex}`} type="checkbox" className="custom-control-input" /> */}
-                                                                    <label for={`page-${index}-${pageIndex}`} className="ml-1.5"> {childItem.nameEn} </label>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                    <hr />
+                                                    {item.pageList.length > 0 && (
+                                                        <>
 
-                                                    <h4 className="my-2 font-bold text-blue-900">{t('features')}</h4>
-                                                    <div className="row ml-[10px]">
-                                                        {item.featureList.length > 0 && item.featureList.map((childItem, featureIndex) => (
-                                                            <div className="mt-3 col-sm-3 col-md-3 col-lg-3">
-                                                                <div className="custom-control custom-checkbox">
-                                                                    <Field type="checkbox"
-                                                                        id={`feature-${index}-${featureIndex}`}
-                                                                        disabled={isViewable}
-                                                                        name="permissionIds"
-                                                                        value={childItem.id}
-                                                                        checked={values.permissionIds.length && values.permissionIds.includes(childItem.id)}
-                                                                        onChange={(e) => {
-                                                                            const id = childItem.id
-                                                                            if (e.target.checked) {
-                                                                                // Add the checkbox ID to permissionIds array
-                                                                                setFieldValue('permissionIds', [
-                                                                                    ...values.permissionIds,
-                                                                                    id,
-                                                                                ]);
-                                                                            } else {
-                                                                                // Remove the checkbox ID from permissionIds array
-                                                                                setFieldValue(
-                                                                                    'permissionIds',
-                                                                                    values.permissionIds.filter(
-                                                                                        (selectedId) => selectedId !== id
-                                                                                    )
-                                                                                );
-                                                                            }
-                                                                        }} />
-                                                                    {/* <input id={`feature-${index}-${featureIndex}`} type="checkbox" className="custom-control-input" /> */}
-                                                                    <label for={`feature-${index}-${featureIndex}`} className="ml-1.5"> {childItem.nameEn} </label>
-                                                                </div>
+                                                            <hr />
+                                                            <h4 className="my-2 font-bold text-green-900">{t('pages')}</h4>
+                                                            <div className="row ml-[10px] mb-2">
+                                                                {item.pageList.length > 0 && item.pageList.map((childItem, pageIndex) => (
+                                                                    <div className="mt-3 col-sm-3 col-md-3 col-lg-3">
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <Field type="checkbox"
+                                                                                id={`page-${index}-${pageIndex}`}
+                                                                                disabled={isViewable}
+                                                                                name="permissionIds"
+                                                                                value={childItem.id}
+                                                                                checked={values.permissionIds.length && values.permissionIds.includes(childItem.id)}
+                                                                                onChange={(e) => {
+                                                                                    const id = childItem.id
+                                                                                    if (e.target.checked) {
+                                                                                        // Add the checkbox ID to permissionIds array
+                                                                                        setFieldValue('permissionIds', [
+                                                                                            ...values.permissionIds,
+                                                                                            id,
+                                                                                        ]);
+                                                                                    } else {
+                                                                                        // Remove the checkbox ID from permissionIds array
+                                                                                        setFieldValue(
+                                                                                            'permissionIds',
+                                                                                            values.permissionIds.filter(
+                                                                                                (selectedId) => selectedId !== id
+                                                                                            )
+                                                                                        );
+                                                                                    }
+                                                                                }} />
+                                                                            {/* <input id={`page-${index}-${pageIndex}`} type="checkbox" className="custom-control-input" /> */}
+                                                                            <label for={`page-${index}-${pageIndex}`} className="ml-1.5"> {childItem.nameEn} </label>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
                                                             </div>
-                                                        ))}
-                                                    </div>
+                                                        </>
+                                                    )}
+
+
+                                                    {item.featureList.length > 0 && (
+                                                        <>
+
+                                                            <hr />
+                                                            <h4 className="my-2 font-bold text-blue-900">{t('features')}</h4>
+                                                            <div className="row ml-[10px]">
+                                                                {item.featureList.length > 0 && item.featureList.map((childItem, featureIndex) => (
+                                                                    <div className="mt-3 col-sm-3 col-md-3 col-lg-3">
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <Field type="checkbox"
+                                                                                id={`feature-${index}-${featureIndex}`}
+                                                                                disabled={isViewable}
+                                                                                name="permissionIds"
+                                                                                value={childItem.id}
+                                                                                checked={values.permissionIds.length && values.permissionIds.includes(childItem.id)}
+                                                                                onChange={(e) => {
+                                                                                    const id = childItem.id
+                                                                                    if (e.target.checked) {
+                                                                                        // Add the checkbox ID to permissionIds array
+                                                                                        setFieldValue('permissionIds', [
+                                                                                            ...values.permissionIds,
+                                                                                            id,
+                                                                                        ]);
+                                                                                    } else {
+                                                                                        // Remove the checkbox ID from permissionIds array
+                                                                                        setFieldValue(
+                                                                                            'permissionIds',
+                                                                                            values.permissionIds.filter(
+                                                                                                (selectedId) => selectedId !== id
+                                                                                            )
+                                                                                        );
+                                                                                    }
+                                                                                }} />
+                                                                            {/* <input id={`feature-${index}-${featureIndex}`} type="checkbox" className="custom-control-input" /> */}
+                                                                            <label for={`feature-${index}-${featureIndex}`} className="ml-1.5"> {childItem.nameEn} </label>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
                                         </CardBody>

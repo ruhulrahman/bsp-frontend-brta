@@ -16,20 +16,22 @@ const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
     const currentLanguage = i18n.language;
 
     const [initialValues, setInitialValues] = useState({
-        // nameBn: '',
         nameEn: '',
+        nameBn: '',
         parentId: '',
         permissionCode: '',
         type: '',
+        pageUrl: '',
         isActive: true,
     })
 
     const resetValues = {
-        // nameBn: '',
         nameEn: '',
+        nameBn: '',
         parentId: '',
         permissionCode: '',
         type: '',
+        pageUrl: '',
         isActive: true,
     };
 
@@ -47,10 +49,16 @@ const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
 
 
     const validationSchema = Yup.object().shape({
-        // nameBn: Yup.string().required('Name is required'),
-        nameEn: Yup.string().required('Name is required'),
+        nameEn: Yup.string().required('Name in English is required'),
+        nameBn: Yup.string().required('Name in Bangla is required'),
         permissionCode: Yup.string().required('Permission Code is required'),
         type: Yup.string().required('Type is required'),
+        pageUrl: Yup.string()
+            .when('type', {
+                is: (type) => type === '1',
+                then: schema => schema.required('Page Url is required'),
+                otherwise: schema => schema.optional(),
+            }),
         isActive: Yup.string().required('Is active is required'),
     });
 
@@ -120,6 +128,20 @@ const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
                                     }} className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                 </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="nameBn">
+                                    <Form.Label>{t('name')} ({t('bn')})</Form.Label>
+                                    <Field type="text" name="nameBn" className="form-control" placeholder="Enter name" />
+                                    <ErrorMessage name="nameBn" component="div" className="text-danger" />
+                                </Form.Group>
+
+                                {values.type == '1' && (
+                                    <Form.Group className="mb-3" controlId="pageUrl">
+                                        <Form.Label>{t('pageUrl')}</Form.Label>
+                                        <Field type="text" name="pageUrl" className="form-control" placeholder="Enter page url" />
+                                        <ErrorMessage name="pageUrl" component="div" className="text-danger" />
+                                    </Form.Group>
+                                )}
 
                                 <Form.Group className="mb-3" controlId="permissionCode">
                                     <Form.Label>{t('permissionCode')}</Form.Label>

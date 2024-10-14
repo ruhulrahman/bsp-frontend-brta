@@ -4,7 +4,7 @@ const initialState = {
     accessToken: undefined,
     tokenInfo: undefined,
     authUser: undefined,
-    permissions: ['dashboard', 'profile', 'users'],
+    permissions: [],
 };
 
 const authSlice = createSlice({

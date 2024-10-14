@@ -9,7 +9,7 @@ import { withNamespaces } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Link, Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { setAuthUser, setToken } from '../../features/common/auth/authSlice';
+import { setAuthUser, setUserPermissions, setToken } from '../../features/common/auth/authSlice';
 import AdminNavbar from '../navbar/AdminNavbar';
 import AdminSidebar from '../navbar/AdminSidebar';
 
@@ -38,9 +38,11 @@ const AdminLayout = ({ t }) => {
 
         setLoading(true);
         try {
-            const result = await RestApi.get('api/user/me')
+            // const result = await RestApi.get('api/user/me')
+            const result = await RestApi.get('api/v1/auth/get-auth-user')
             if (result.status == 200) {
                 dispatch(setAuthUser(result.data));
+                dispatch(setUserPermissions(result.data.permissionCodes));
                 dispatch(setToken(localStorage.getItem('token')));
             }
         } catch (error) {
