@@ -327,7 +327,6 @@ const AddOrUpdateRole = ({ t }) => {
                                                 <div className="col">
                                                     {item.pageList.length > 0 && (
                                                         <>
-
                                                             <hr />
                                                             <h4 className="my-2 font-bold text-green-900">{t('pages')}</h4>
                                                             <div className="row ml-[10px] mb-2">
@@ -359,7 +358,7 @@ const AddOrUpdateRole = ({ t }) => {
                                                                                     }
                                                                                 }} />
                                                                             {/* <input id={`page-${index}-${pageIndex}`} type="checkbox" className="custom-control-input" /> */}
-                                                                            <label for={`page-${index}-${pageIndex}`} className="ml-1.5"> {childItem.nameEn} </label>
+                                                                            <label for={`page-${index}-${pageIndex}`} className="ml-1.5"> {currentLanguage === 'bn' && childItem.nameBn ? childItem.nameBn : childItem.nameEn} </label>
                                                                         </div>
                                                                     </div>
                                                                 ))}
@@ -367,10 +366,8 @@ const AddOrUpdateRole = ({ t }) => {
                                                         </>
                                                     )}
 
-
                                                     {item.featureList.length > 0 && (
                                                         <>
-
                                                             <hr />
                                                             <h4 className="my-2 font-bold text-blue-900">{t('features')}</h4>
                                                             <div className="row ml-[10px]">
@@ -402,7 +399,7 @@ const AddOrUpdateRole = ({ t }) => {
                                                                                     }
                                                                                 }} />
                                                                             {/* <input id={`feature-${index}-${featureIndex}`} type="checkbox" className="custom-control-input" /> */}
-                                                                            <label for={`feature-${index}-${featureIndex}`} className="ml-1.5"> {childItem.nameEn} </label>
+                                                                            <label for={`feature-${index}-${featureIndex}`} className="ml-1.5"> {currentLanguage === 'bn' && childItem.nameBn ? childItem.nameBn : childItem.nameEn} </label>
                                                                         </div>
                                                                     </div>
                                                                 ))}

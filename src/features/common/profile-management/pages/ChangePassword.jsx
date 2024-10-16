@@ -21,14 +21,14 @@ const ChangePassword = ({ t }) => {
   const [initialValues, setInitialValues] = useState({
     // name: currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn,
     name: currentLanguage === 'en' ? helper.cn(authStore, 'authUser.nameEn') : helper.cn(authStore, 'authUser.nameBn'),
-    current_password: '',
-    new_password: '',
+    currentPassword: '',
+    newPassword: '',
     confirmPassword: '',
   })
 
   const validationSchema = Yup.object().shape({
-    current_password: Yup.string().required('Current password is required'),
-    new_password: Yup.string().required('New password is required')
+    currentPassword: Yup.string().required('Current password is required'),
+    newPassword: Yup.string().required('New password is required')
       .min(8, 'Must be at least 8 characters')
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z]).+$/,
@@ -42,13 +42,13 @@ const ChangePassword = ({ t }) => {
         /^(?=.*[@$!%*?&]).+$/,
         'Must contain at least one special character'
       ),
-    confirmPassword: Yup.string().label('Confirm Password').required().oneOf([Yup.ref('new_password')], 'Confirm password does not match with new password'),
+    confirmPassword: Yup.string().label('Confirm Password').required().oneOf([Yup.ref('newPassword')], 'Confirm password does not match with new password'),
   });
 
   const resetValues = {
     // name: currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn,
-    current_password: '',
-    new_password: '',
+    currentPassword: '',
+    newPassword: '',
     confirmPassword: '',
   };
 
@@ -58,20 +58,25 @@ const ChangePassword = ({ t }) => {
     });
   };
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values, setErrors, resetForm, setSubmitting) => {
     console.log('Form submitted:', values);
     setLoading(true);
     try {
-      const result = await RestApi.post('api/v1/auth/change-password', values)
-      if (result.status == 200) {
-        toaster('Your password has been changed successfully')
-      }
+      const result = await RestApi.post('api/v1/admin/user-management/user/change-password', values)
+
+      if (result.data.success) {
+        toaster(result.data.message)
+        resetForm({
+          values: resetValues,
+        })
+    }
 
     } catch (error) {
       console.log('error', error)
-      // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
+      setErrors(error.response.data);
     } finally {
       setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -91,11 +96,11 @@ const ChangePassword = ({ t }) => {
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
-              onSubmit={(values, { resetForm }) => {
-                onSubmit(values);
+              onSubmit={(values, {setErrors, resetForm, setSubmitting }) => {
+                onSubmit(values, setErrors, resetForm, setSubmitting);
               }}
             >
-              {({ values, resetForm }) => (
+              {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => (
                 <FormikForm>
                   <Form.Group className="mb-3" controlId="name_en">
                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
@@ -103,20 +108,20 @@ const ChangePassword = ({ t }) => {
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="password">
                     <Form.Label>{t('current_password')}</Form.Label>
-                    <Field type="password" name="current_password" className="form-control" placeholder="Enter current password" />
-                    <ErrorMessage name="current_password" component="div" className="text-danger" />
+                    <Field type="password" name="currentPassword" className="form-control" placeholder="Enter current password" />
+                    <ErrorMessage name="currentPassword" component="div" className="text-danger" />
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="password">
                     <Form.Label>{t('new_password')}</Form.Label>
-                    <Field type="password" name="new_password" className="form-control" placeholder="Enter current password" />
-                    <ErrorMessage name="new_password" component="div" className="text-danger" />
+                    <Field type="password" name="newPassword" className="form-control" placeholder="Enter current password" />
+                    <ErrorMessage name="newPassword" component="div" className="text-danger" />
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="confirmPassword">
                     <Form.Label>{t('confirmPassword')}</Form.Label>
                     <Field type="password" name="confirmPassword" className="form-control" placeholder="Enter confirm Password" />
                     <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
                   </Form.Group>
-                  <button type='submit' className='btn btn-success btn-rounded btn-xs'>{t('save_changes')}</button>
+                  <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('save_changes')}</button>
                   <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('clear')}</button>
                 </FormikForm>
               )}

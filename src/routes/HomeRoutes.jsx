@@ -6,6 +6,7 @@ import Logout from '@/components/common/Logout.jsx';
 import RegistrationPage from '../features/common/auth/pages/RegistrationPage.jsx';
 import HomePage from '../features/home/pages/HomePage.jsx';
 import TestLayout from './TestLayout.jsx';
+import AboutPage from '../features/home/pages/AboutPage.jsx';
 
 const publicRoutes = [
     {
@@ -13,6 +14,7 @@ const publicRoutes = [
       element: <HomeLayout />,
       children: [
         { path: '', element: <HomePage /> },
+        { path: '/about', element: <AboutPage /> },
       ],
     },
     {

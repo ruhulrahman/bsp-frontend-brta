@@ -2,22 +2,32 @@ import logo from '@/assets/images/logo.png';
 import i18n from '@/i18n';
 import React from 'react';
 import { withNamespaces } from 'react-i18next';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const TopNavbar = ({ t }) => {
 
     const setLanguage = (language) => {
         localStorage.setItem('preferredLanguage', language);
-      }
+    }
 
     const changeLanguage = (lng) => {
         setLanguage(lng)
         const preferredLanguage = localStorage.getItem('preferredLanguage');
         i18n.changeLanguage(preferredLanguage);
     }
-    
+
     let preferredLanguage = localStorage.getItem('preferredLanguage');
     preferredLanguage = preferredLanguage ? preferredLanguage : 'bn'
+
+    const navigate = useNavigate();
+
+    const isAuthenticated = localStorage.getItem('token');
+
+    // useEffect(() => {
+    //   if (isAuthenticated) {
+    //     navigate('/admin/dashboard');
+    //   }
+    // }, []);
 
     return (
         <>
@@ -31,21 +41,33 @@ const TopNavbar = ({ t }) => {
                     </div>
                     <ul className="hidden items-center justify-center gap-6 md:flex">
                         <li className="pt-1.5 font-dm text-sm font-medium text-slate-700 hover:text-green-700">
-                            <NavLink className={({ isActive }) => isActive ? 'text-green-700' : ''} to="/">Home</NavLink>
+                            <NavLink className={({ isActive }) => isActive ? 'text-green-700' : ''} to="/">{t('home')}</NavLink>
+                        </li>
+                        <li className="pt-1.5 font-dm text-sm font-medium text-slate-700 hover:text-green-700">
+                            <NavLink className={({ isActive }) => isActive ? 'text-green-700' : ''} to="/about">{t('about')}</NavLink>
                         </li>
                     </ul>
                     <div className="flex-grow"></div>
                     <div className="hidden items-center justify-center gap-6 md:flex">
-                        <NavLink className={({ isActive }) => isActive ? 'text-green-700' : 'font-dm text-sm font-medium text-slate-700'} to="/login">Login</NavLink>
-                        <NavLink className={({ isActive }) => isActive ? 'text-green-700' : 'rounded-md bg-gradient-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]'} to="/register">Registration</NavLink>
+                        {!isAuthenticated &&
+                            <>
+                                <NavLink className={({ isActive }) => isActive ? 'text-green-700' : 'font-dm text-sm font-medium text-slate-700'} to="/login">{t('login')}</NavLink>
+                                <NavLink className={({ isActive }) => isActive ? 'text-green-700' : 'rounded-md bg-gradient-to-br from-green-600 to-emerald-400 px-3 py-1.5 font-dm text-sm font-medium text-white shadow-md shadow-green-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]'} to="/register">{t('register')}</NavLink>
+                            </>
+                        }
+                        {isAuthenticated &&
+                            <>
+                                <NavLink className='font-dm text-sm btn btn-dark' to="/admin/dashboard">{t('dashboard')}</NavLink>
+                            </>
+                        }
                         {preferredLanguage === 'en' &&
-                        <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
-                            <span className="text-md">{t('bangla')}</span>
-                        </button>}
+                            <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
+                                <span className="text-md">{t('bangla')}</span>
+                            </button>}
                         {preferredLanguage === 'bn' &&
-                        <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
-                            <span className="text-md">{t('lang')}</span>
-                        </button>}
+                            <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
+                                <span className="text-md">{t('lang')}</span>
+                            </button>}
                     </div>
                     <div className="relative flex items-center justify-center md:hidden">
                         <button type="button" to='/registration'>

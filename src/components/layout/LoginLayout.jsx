@@ -1,5 +1,5 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import LoginBackground from '../../assets/images/login-background.png';
 <stlye>
@@ -17,6 +17,17 @@ import LoginBackground from '../../assets/images/login-background.png';
 </stlye>
 
 const LoginLayout = () => {
+
+  const navigate = useNavigate();
+
+  const isAuthenticated = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/admin/dashboard');
+    }
+  }, []);
+
   return (
     <div>
 

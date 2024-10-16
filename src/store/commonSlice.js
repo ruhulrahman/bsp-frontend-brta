@@ -41,14 +41,14 @@ const initialState = {
     },
     pagination: {
         currentPage: 0,
-        perPage: 5,
+        perPage: 20,
         totalRows: 0,
         totalPages: 0,
         slOffset: 1,
     },
     resetPagination: {
         currentPage: 0,
-        perPage: 5,
+        perPage: 20,
         totalRows: 0,
         totalPages: 0,
         slOffset: 1,

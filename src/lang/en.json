@@ -231,5 +231,7 @@
   "content": "Content",
   "selectLanguage": "Select Language",
   "selectBloodGroup": "Select Blood Group",
-  "pageUrl": "Page Url"
+  "pageUrl": "Page Url",
+  "home": "Home",
+  "about": "About"
 }
