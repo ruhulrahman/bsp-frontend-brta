@@ -81,8 +81,8 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         nameBn: Yup.string().required('Route Name is required'),
         nameEn: Yup.string().required('Route Name is required'),
         vehicleTypeId: Yup.string().required('Vehicle Type is required'),
-        ccMin: Yup.number().required('CC Minimum is required'),
-        ccMax: Yup.number().required('CC Maximum is required'),
+        // ccMin: Yup.number().required('CC Minimum is required'),
+        // ccMax: Yup.number().required('CC Maximum is required'),
         isActive: Yup.string().required('Is active is required'),
     });
 
@@ -146,7 +146,16 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
                                 <Form.Group className="mb-3" controlId="nameEn">
                                     <Form.Label>{t('name')} ({t('en')})</Form.Label>
-                                    <Field type="text" name="nameEn" className="form-control" placeholder="Enter name" />
+                                    <Field type="text" name="nameEn"  onChange={(e) => {
+                                        handleChange(e); // This updates Formik's state
+                                        const nameField = e.target.value.trim()
+                                        const nameSplit = nameField.split(' ')
+                                        let result = nameSplit.join("_");
+                                        console.log("nameSplit", nameSplit); // Custom logic here
+                                        if (!values.id) {
+                                            setFieldValue('vehicleClassCode', result.toLowerCase());
+                                        }
+                                    }} className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                 </Form.Group>
 
@@ -156,51 +165,57 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <ErrorMessage name="nameBn" component="div" className="text-danger" />
                                 </Form.Group>
 
+                                <Form.Group className="mb-3" controlId="vehicleClassCode">
+                                    <Form.Label>{t('vehicleClassCode')}</Form.Label>
+                                    <Field type="text" name="vehicleClassCode" className="form-control" placeholder="Enter name" />
+                                    <ErrorMessage name="vehicleClassCode" component="div" className="text-danger" />
+                                </Form.Group>
+
                                 <Form.Group className="mb-3" controlId="ccMin">
                                     <Form.Label>{t('ccMin')}</Form.Label>
-                                    <Field type="number" min="1" name="ccMin" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="number" min="1" name="ccMin" className="form-control" placeholder="Enter min cc" />
                                     <ErrorMessage name="ccMin" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="ccMax">
                                     <Form.Label>{t('ccMax')}</Form.Label>
-                                    <Field type="number" min="1" name="ccMax" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="number" min="1" name="ccMax" className="form-control" placeholder="Enter max cc" />
                                     <ErrorMessage name="ccMax" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="seatMin">
                                     <Form.Label>{t('seatMin')}</Form.Label>
-                                    <Field type="number" min="1" name="seatMin" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="number" min="1" name="seatMin" className="form-control" placeholder="Enter min seat" />
                                     <ErrorMessage name="seatMin" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="seatMax">
                                     <Form.Label>{t('seatMax')}</Form.Label>
-                                    <Field type="number" min="1" name="seatMax" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="number" min="1" name="seatMax" className="form-control" placeholder="Enter max seat" />
                                     <ErrorMessage name="seatMax" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="loadedWeightMinKg">
                                     <Form.Label>{t('loadedWeightMinKg')}</Form.Label>
-                                    <Field type="number" min="1" name="loadedWeightMinKg" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="number" min="1" name="loadedWeightMinKg" className="form-control" placeholder="Enter loaded weight min (kg)" />
                                     <ErrorMessage name="loadedWeightMinKg" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="loadedWeightMaxKg">
                                     <Form.Label>{t('loadedWeightMaxKg')}</Form.Label>
-                                    <Field type="number" min="1" name="loadedWeightMaxKg" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="number" min="1" name="loadedWeightMaxKg" className="form-control" placeholder="Enter loaded weight max (kg)" />
                                     <ErrorMessage name="loadedWeightMaxKg" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="motorCapacityMinKw">
                                     <Form.Label>{t('motorCapacityMinKw')}</Form.Label>
-                                    <Field type="number" min="1" name="motorCapacityMinKw" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="number" min="1" name="motorCapacityMinKw" className="form-control" placeholder="Enter motor capacity min (kw)" />
                                     <ErrorMessage name="motorCapacityMinKw" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="motorCapacityMaxKw">
                                     <Form.Label>{t('motorCapacityMaxKw')}</Form.Label>
-                                    <Field type="number" min="1" name="motorCapacityMaxKw" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="number" min="1" name="motorCapacityMaxKw" className="form-control" placeholder="Enter motor capacity max (kw)" />
                                     <ErrorMessage name="motorCapacityMaxKw" component="div" className="text-danger" />
                                 </Form.Group>
 

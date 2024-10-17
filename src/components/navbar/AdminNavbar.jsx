@@ -9,8 +9,8 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import logoBrta from '@/assets/images/logo-brta.png';
 
 const navigation = [
-    { name: 'Contact', href: '/admin/contact' },
-    { name: 'Help', href: '/admin/help' },
+    // { name: 'Contact', href: '/admin/contact' },
+    // { name: 'Help', href: '/admin/help' },
 ]
 
 function classNames(...classes) {

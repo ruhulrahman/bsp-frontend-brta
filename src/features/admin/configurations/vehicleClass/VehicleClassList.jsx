@@ -385,11 +385,9 @@ const VehicleClassList = ({ t }) => {
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>
-                                <th>{t('routeName') + ` (${t('en')})`}</th>
-                                <th>{t('routeName') + ` (${t('bn')})`}</th>
-                                <th className='text-center'>{t('minDistrictNo')}</th>
-                                <th className='text-center'>{t('maxDistrictNo')}</th>
-                                <th>{t('routePermitType')}</th>
+                                <th>{t('name') + ` (${t('en')})`}</th>
+                                <th>{t('name') + ` (${t('bn')})`}</th>
+                                <th>{t('vehicleType')}</th>
                                 <th>{t('status')}</th>
                                 <th className='text-center'>{t('action')}</th>
                             </tr>
@@ -403,10 +401,8 @@ const VehicleClassList = ({ t }) => {
                                     <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
                                     <td>{item.nameEn}</td>
                                     <td>{item.nameBn}</td>
-                                    <td className='text-center'>{item.minDistrict}</td>
-                                    <td className='text-center'>{item.maxDistrict}</td>
                                     <td>
-                                        {currentLanguage === 'en' ? item?.routePermitType?.nameEn : item?.routePermitType?.nameBn}
+                                        {currentLanguage === 'en' ? item?.vehicleType?.nameEn : item?.vehicleType?.nameBn}
                                     </td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
