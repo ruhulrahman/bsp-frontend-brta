@@ -1,4 +1,5 @@
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
@@ -123,19 +124,15 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                 <Form.Group className="mb-3" controlId="parentServiceId">
                                     <Form.Label>{t('parentService')}</Form.Label>
                                     <Field
-                                        component="select"
-                                        id="location"
                                         name="parentServiceId"
-                                        multiple={false}
-                                        className="w-full rounded-md border"
-                                    >
-                                        <option value="">{t('select')}</option>
-                                        {allServiceList.map((option) => (
-                                            <option key={option.id} value={option.id}>
-                                                {currentLanguage === 'en' ? option.nameEn : option.nameBn}
-                                            </option>
-                                        ))}
-                                    </Field>
+                                        component={ReactSelect}
+                                        options={allServiceList}
+                                        placeholder={t('selectStatusGroup')}
+                                        value={values.parentServiceId}
+                                        onChange={(option) => {
+                                            setFieldValue('parentServiceId', option ? option.value : '')
+                                        }} // Update Formik value
+                                    />
                                     <ErrorMessage name="parentServiceId" component="div" className="text-danger" />
                                 </Form.Group>
 

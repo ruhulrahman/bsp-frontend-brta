@@ -10,10 +10,10 @@ import { useDispatch } from 'react-redux';
 import { Link, Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { setAuthUser, setUserPermissions, setToken } from '../../features/common/auth/authSlice';
-import AdminNavbar from './navbar/admin/AdminNavbar';
-import AdminSidebar from './navbar/admin/AdminSidebar';
+import Navbar from './navbar/applicant/Navbar';
+import Sidebar from './navbar/applicant/Sidebar';
 
-const AdminLayout = ({ t }) => {
+const ApplicantLayout = ({ t }) => {
 
     const { screenWidth, screenHeight } = useWindowSize();
 
@@ -90,12 +90,12 @@ const AdminLayout = ({ t }) => {
                             <img className="h-8 w-auto mr-2" src={logoBrta} alt="BRTA" />
                         </Link>
                     </div>
-                    <AdminSidebar openSidebar={openSidebar} />
+                    <Sidebar openSidebar={openSidebar} />
                 </div>
 
                 {/* <!-- Main Content Area --> */}
                 <div className="flex-grow-1">
-                    <AdminNavbar openSidebar={openSidebar} onToggleSidebar={() => setOpenSidebar(!openSidebar)} />
+                    <Navbar openSidebar={openSidebar} onToggleSidebar={() => setOpenSidebar(!openSidebar)} />
 
                     <div className={`${openSidebar ? 'ml-[265px]' : 'ml-[0px]'}`}>
                         <div className="container-fluid p-3">
@@ -110,4 +110,4 @@ const AdminLayout = ({ t }) => {
     );
 };
 
-export default withNamespaces()(AdminLayout);
+export default withNamespaces()(ApplicantLayout);

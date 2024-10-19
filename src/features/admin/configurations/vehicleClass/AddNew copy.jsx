@@ -21,12 +21,14 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         nameBn: '',
         nameEn: '',
         vehicleClassCode: '',
-        symbolEn: '',
-        symbolBn: '',
-        startNumber: '',
-        endNumber: '',
-        remarksEn: '',
-        remarksBn: '',
+        ccMin: '',
+        ccMax: '',
+        seatMin: '',
+        seatMax: '',
+        loadedWeightMinKg: '',
+        loadedWeightMaxKg: '',
+        motorCapacityMinKw: '',
+        motorCapacityMaxKw: '',
         isActive: true,
     })
 
@@ -35,12 +37,14 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         nameBn: '',
         nameEn: '',
         vehicleClassCode: '',
-        symbolEn: '',
-        symbolBn: '',
-        startNumber: '',
-        endNumber: '',
-        remarksEn: '',
-        remarksBn: '',
+        ccMin: '',
+        ccMax: '',
+        seatMin: '',
+        seatMax: '',
+        loadedWeightMinKg: '',
+        loadedWeightMaxKg: '',
+        motorCapacityMinKw: '',
+        motorCapacityMaxKw: '',
         isActive: true,
     };
 
@@ -74,14 +78,11 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
 
     const validationSchema = Yup.object().shape({
+        nameBn: Yup.string().required('Route Name is required'),
+        nameEn: Yup.string().required('Route Name is required'),
         vehicleTypeId: Yup.string().required('Vehicle Type is required'),
-        nameEn: Yup.string().required('Name (En) is required'),
-        nameBn: Yup.string().required('Name (Bn) is required'),
-        vehicleClassCode: Yup.string().required('Vehicle Class Code is required'),
-        symbolEn: Yup.string().required('Symbol (En) is required'),
-        symbolBn: Yup.string().required('Symbol (Bn) is required'),
-        startNumber: Yup.number().required('Start Number is required'),
-        endNumber: Yup.number().required('End Number is required'),
+        // ccMin: Yup.number().required('CC Minimum is required'),
+        // ccMax: Yup.number().required('CC Maximum is required'),
         isActive: Yup.string().required('Is active is required'),
     });
 
@@ -170,40 +171,52 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <ErrorMessage name="vehicleClassCode" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="symbolEn">
-                                    <Form.Label>{t('symbol')} ({t('en')})</Form.Label>
-                                    <Field type="number" min="1" name="symbolEn" className="form-control" placeholder="Enter symbol" />
-                                    <ErrorMessage name="symbolEn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="ccMin">
+                                    <Form.Label>{t('ccMin')}</Form.Label>
+                                    <Field type="number" min="1" name="ccMin" className="form-control" placeholder="Enter min cc" />
+                                    <ErrorMessage name="ccMin" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="symbolBn">
-                                    <Form.Label>{t('symbol')} ({t('bn')})</Form.Label>
-                                    <Field type="number" min="1" name="symbolBn" className="form-control" placeholder="Enter symbol" />
-                                    <ErrorMessage name="symbolBn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="ccMax">
+                                    <Form.Label>{t('ccMax')}</Form.Label>
+                                    <Field type="number" min="1" name="ccMax" className="form-control" placeholder="Enter max cc" />
+                                    <ErrorMessage name="ccMax" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="startNumber">
-                                    <Form.Label>{t('startNumber')}</Form.Label>
-                                    <Field type="number" min="1" name="startNumber" className="form-control" placeholder="Enter Start Number" />
-                                    <ErrorMessage name="startNumber" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="seatMin">
+                                    <Form.Label>{t('seatMin')}</Form.Label>
+                                    <Field type="number" min="1" name="seatMin" className="form-control" placeholder="Enter min seat" />
+                                    <ErrorMessage name="seatMin" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="endNumber">
-                                    <Form.Label>{t('endNumber')}</Form.Label>
-                                    <Field type="number" min="1" name="endNumber" className="form-control" placeholder="Enter End Number" />
-                                    <ErrorMessage name="endNumber" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="seatMax">
+                                    <Form.Label>{t('seatMax')}</Form.Label>
+                                    <Field type="number" min="1" name="seatMax" className="form-control" placeholder="Enter max seat" />
+                                    <ErrorMessage name="seatMax" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="remarksEn">
-                                    <Form.Label>{t('remarks')} ({t('en')})</Form.Label>
-                                    <Field type="text" min="1" name="remarksEn" className="form-control" placeholder="Enter remarks" />
-                                    <ErrorMessage name="remarksEn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="loadedWeightMinKg">
+                                    <Form.Label>{t('loadedWeightMinKg')}</Form.Label>
+                                    <Field type="number" min="1" name="loadedWeightMinKg" className="form-control" placeholder="Enter loaded weight min (kg)" />
+                                    <ErrorMessage name="loadedWeightMinKg" component="div" className="text-danger" />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="remarksBn">
-                                    <Form.Label>{t('remarks')} ({t('bn')})</Form.Label>
-                                    <Field type="text" min="1" name="remarksBn" className="form-control" placeholder="Enter remarks" />
-                                    <ErrorMessage name="remarksBn" component="div" className="text-danger" />
+                                <Form.Group className="mb-3" controlId="loadedWeightMaxKg">
+                                    <Form.Label>{t('loadedWeightMaxKg')}</Form.Label>
+                                    <Field type="number" min="1" name="loadedWeightMaxKg" className="form-control" placeholder="Enter loaded weight max (kg)" />
+                                    <ErrorMessage name="loadedWeightMaxKg" component="div" className="text-danger" />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="motorCapacityMinKw">
+                                    <Form.Label>{t('motorCapacityMinKw')}</Form.Label>
+                                    <Field type="number" min="1" name="motorCapacityMinKw" className="form-control" placeholder="Enter motor capacity min (kw)" />
+                                    <ErrorMessage name="motorCapacityMinKw" component="div" className="text-danger" />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="motorCapacityMaxKw">
+                                    <Form.Label>{t('motorCapacityMaxKw')}</Form.Label>
+                                    <Field type="number" min="1" name="motorCapacityMaxKw" className="form-control" placeholder="Enter motor capacity max (kw)" />
+                                    <ErrorMessage name="motorCapacityMaxKw" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="isActive">

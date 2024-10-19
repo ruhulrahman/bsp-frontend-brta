@@ -16,10 +16,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import AddNew from './AddNew';
 
-const ServiceList = ({ t }) => {
+const VehicleClassList = ({ t }) => {
 
     const dispatch = useDispatch();
-    const { activeStatusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
+    const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
     const toggleFilter = () => {
@@ -59,7 +59,6 @@ const ServiceList = ({ t }) => {
 
     useEffect(() => {
         getListData()
-        getAllServiceList()
     }, [currentPage]);
 
     // Render pagination using React Bootstrap Pagination
@@ -144,13 +143,13 @@ const ServiceList = ({ t }) => {
 
     const [searchValues, setSearchValues] = useState({
         nameEn: '',
-        parentServiceId: '',
+        vehicleTypeId: '',
         isActive: '',
     });
 
     const resetSearchValues = {
         nameEn: '',
-        parentServiceId: '',
+        vehicleTypeId: '',
         isActive: '',
     };
 
@@ -182,7 +181,7 @@ const ServiceList = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/service/list', { params })
+            const { data } = await RestApi.get('api/v1/admin/configurations/vehicle-class/list', { params })
             dispatch(setListData(data.content));
             setPaginationData(data)
         } catch (error) {
@@ -210,7 +209,7 @@ const ServiceList = ({ t }) => {
 
                 dispatch(setLoading(true));
                 try {
-                    await RestApi.delete(`api/v1/admin/configurations/service/delete/${data.id}`)
+                    await RestApi.delete(`api/v1/admin/configurations/vehicle-class/delete/${data.id}`)
 
                     Swal.fire({
                         title: t('deleted'),
@@ -269,9 +268,9 @@ const ServiceList = ({ t }) => {
         try {
             let result = ''
             if (values.id) {
-                result = await RestApi.put(`api/v1/admin/configurations/service/update/${values.id}`, values)
+                result = await RestApi.put(`api/v1/admin/configurations/vehicle-class/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/configurations/service/create', values)
+                result = await RestApi.post('api/v1/admin/configurations/vehicle-class/create', values)
             }
 
             if (result.data.success) {
@@ -287,28 +286,6 @@ const ServiceList = ({ t }) => {
             setSubmitting(false)
         }
     };
-
-    
-    const [allServiceList, setAllServiceList] = useState([]);
-    const getAllServiceList = async () => {
-
-        try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/service/all-list')
-            if (data.success) {
-                if (data.data.length > 0) {
-                    const allServiceParentList = data.data.filter((item) => item.parentServiceId == null).map((item) => {
-                        item.children = data.data.filter((child) => child.parentServiceId == item.id)
-                        return item
-                    })
-                    setAllServiceList(allServiceParentList)
-                }
-            }
-        } catch (error) {
-            console.log('error', error)
-        } finally {
-            // dispatch(setLoading(false));
-        }
-    }
 
     return (
         <>
@@ -337,17 +314,18 @@ const ServiceList = ({ t }) => {
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
-                                        <Form.Group className="mb-3" controlId="parentServiceId">
-                                        <Field
-                                        name="parentServiceId"
-                                        component={ReactSelect}
-                                        options={allServiceList}
-                                        placeholder={t('selectStatusGroup')}
-                                        value={values.parentServiceId}
-                                        onChange={(option) => {
-                                            setFieldValue('parentServiceId', option ? option.value : '')
-                                        }} // Update Formik value
-                                    />
+                                            <Form.Group className="mb-3" controlId="vehicleTypeId">
+                                                <Field
+                                                    id="vehicleTypeId"
+                                                    name="vehicleTypeId"
+                                                    component={ReactSelect}
+                                                    options={dropdowns.vehicleTypeList}
+                                                    placeholder={t('selectVehicleType')}
+                                                    value={values.vehicleTypeId}
+                                                    onChange={(option) => {
+                                                        setFieldValue('vehicleTypeId', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
@@ -384,7 +362,7 @@ const ServiceList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('serviceList')}</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">{t('vehicleClassList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
@@ -403,16 +381,15 @@ const ServiceList = ({ t }) => {
                 </div>
                 <div className="p-0 overflow-scroll relative min-h-[300px]">
                     <Loading loading={loading} />
-                    <table className="mt-2 text-left table table-responsive">
+                    <table className="mt-2 text-left table table-responsive min-w-max">
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>
                                 <th>{t('name') + ` (${t('en')})`}</th>
                                 <th>{t('name') + ` (${t('bn')})`}</th>
-                                <th>{t('serviceCode')}</th>
-                                <th>{t('parentService')}</th>
+                                <th>{t('vehicleType')}</th>
                                 <th>{t('status')}</th>
-                                <th>{t('action')}</th>
+                                <th className='text-center'>{t('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -425,24 +402,19 @@ const ServiceList = ({ t }) => {
                                     <td>{item.nameEn}</td>
                                     <td>{item.nameBn}</td>
                                     <td>
-                                        <span className='badge bg-secondary'>
-                                            {item.serviceCode}
-                                        </span>
+                                        {currentLanguage === 'en' ? item?.vehicleType?.nameEn : item?.vehicleType?.nameBn}
                                     </td>
-                                    <td>
-                                        {currentLanguage === 'en' ? item.parentService?.nameEn : item.parentService?.nameBn}
-                                        </td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
-                                    <td>
+                                    <td className='text-center'>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
                                             <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>
                                         <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
-                                            <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1 mt-1'>
+                                            <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
                                                 <i className="fa fa-trash"></i>
                                             </button>
                                         </OverlayTrigger>
@@ -452,7 +424,7 @@ const ServiceList = ({ t }) => {
 
                             {listData && listData.length === 0 && (
                                 <tr>
-                                    <td colSpan={7} className="text-center text-danger text-slate-500">
+                                    <td colSpan={8} className="text-center text-danger text-slate-500">
                                         <i className="fa fa-exclamation-circle"></i> {t('no_data_found')}
                                     </td>
                                 </tr>
@@ -475,4 +447,4 @@ const ServiceList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(ServiceList)
+export default withNamespaces()(VehicleClassList)
