@@ -33,14 +33,22 @@ const LoginPage = ({ t }) => {
         setLoading(true);
         
         try {
-            const result = await RestApi.post('api/auth/v1/login', values)
+            const { data: result } = await RestApi.post('api/auth/v1/login', values)
             console.log('result', result)
-                localStorage.setItem('token', result.data.accessToken)
-                dispatch(setToken(result.data.accessToken));
-                dispatch(setTokenInfo(result.data));
-                dispatch(setUserPermissions(result.data.permissions));
+                await localStorage.setItem('token', result.tokenInfo?.accessToken)
+                await dispatch(setToken(result.tokenInfo?.accessToken));
+                await dispatch(setTokenInfo(result.tokenInfo));
+                await dispatch(setUserPermissions(result.tokenInfo?.permissions));
                 toaster('Your are logged in successfully')
-                navigate('/admin/dashboard');
+
+                if (result.userInfo?.userTypeCode === 'applicant') {
+                    navigate('/applicant-panel/dashboard');
+                } else if (result.userInfo?.userTypeCode === 'system_admin') {
+                    navigate('/admin/dashboard');
+                } else if (result.userInfo?.userTypeCode === 'system_user') {
+                    navigate('/system-user-panel/dashboard');
+                }
+                // navigate('/admin/dashboard');
         } catch (error) {
             console.log('error', error)
             setErrorMessage(error.response.data)

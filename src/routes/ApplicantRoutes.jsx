@@ -6,6 +6,7 @@ import ChangePassword from '../features/common/profile-management/pages/ChangePa
 import Profile from '../features/common/profile-management/pages/Profile.jsx';
 import VehicleRegistrationApplications from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/ApplicationList.jsx';
 import VehicleRegistrationPage1 from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage1.jsx';
+import VehicleRegistrationPage2 from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage2.jsx';
 
 const applicantRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -14,7 +15,8 @@ const applicantRoutes = [
 
     // Vehicle Registration Routes
     { path: 'vehicle-registration/application-for-vehicle-registration/application-list', element: <VehicleRegistrationApplications /> },
-    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration/:page/:id?', element: <VehicleRegistrationPage1 /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/:id?', element: <VehicleRegistrationPage1 /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2/:id?', element: <VehicleRegistrationPage2 /> },
   ];
   
   const privateRoutes = [

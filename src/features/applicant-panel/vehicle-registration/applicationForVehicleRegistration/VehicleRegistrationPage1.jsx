@@ -140,54 +140,24 @@ const VehicleRegistrationPage1 = ({ t }) => {
             setInitialValues(data);
             console.log('initialValues', initialValues)
 
-            // Make sure parentChildPermissionList is available
-            // parentChildPermissionList.map((item) => {
-            //     let newIds = [];
-            //     let checkedIds = [];
-
-            //     // Collect item IDs
-            //     newIds.push(item.id);
-            //     item.pageList.forEach((page) => newIds.push(page.id));
-            //     item.featureList.forEach((feature) => newIds.push(feature.id));
-
-            //     // Compare with initialValues.permissionIds
-            //     newIds.forEach((id) => {
-            //         if (data.permissionIds.includes(id)) {
-            //             checkedIds.push(id);
-            //         }
-            //     });
-
-            //     // Check if all IDs are checked
-            //     if (newIds.length === checkedIds.length) {
-            //         item.checkedAll = true;
-            //     }
-
-            //     // Update item with checked status
-            //     return Object.assign(item);
-            // });
-
         } catch (error) {
             console.log('error', error)
         }
     }
 
     const onSubmit = async (values, setSubmitting, resetForm) => {
-        handleSave(values, setSubmitting, resetForm);
-    };
-
-    const handleSave = async (values, setSubmitting, resetForm) => {
 
         try {
             let result = ''
             if (values.id) {
-                result = await RestApi.put(`api/v1/admin/user-management/user/update/${values.id}`, values)
+                result = await RestApi.put(`api/v1/applicant/vehicle/registration-application-page1/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/user-management/user/create', values)
+                result = await RestApi.post('api/v1/applicant/vehicle/registration-application-page1', values)
             }
 
             if (result.data.success) {
                 toaster(result.data.message)
-                navigate('/admin/user-management/user-list')
+                navigate('/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2')
             }
 
         } catch (error) {
@@ -399,7 +369,7 @@ const VehicleRegistrationPage1 = ({ t }) => {
                                             <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/user-list`)}>{t('back')}</button>
                                         ) : (
                                             <>
-                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{id ? t('save_changes') : t('save')}</button>
+                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
                                                 <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
                                             </>
                                         )}

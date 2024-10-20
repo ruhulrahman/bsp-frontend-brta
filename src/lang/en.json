@@ -6,7 +6,7 @@
   "submit": "Submit",
   "save": "Save",
   "save_changes": "Save Changes",
-  "save_and_next": "Save & Next",
+  "saveAndNext": "Save & Next",
   "reset": "Reset",
   "delete": "Delete",
   "edit": "Edit",
@@ -290,5 +290,7 @@
   "selectDivision": "Select Division",
   "selectDistrict": "Select District",
   "selectThana": "Select Thana",
-  "selectMakerCountry": "Select Maker Country"
+  "selectMakerCountry": "Select Maker Country",
+  "vehicleInformation": "Vehicle Information",
+  "vehicleDetailsInformation": "Vehicle Details Information"
 }

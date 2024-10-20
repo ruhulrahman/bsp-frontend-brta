@@ -381,7 +381,7 @@ const VehicleMakerList = ({ t }) => {
                 </div>
                 <div className="p-0 overflow-scroll relative min-h-[300px]">
                     <Loading loading={loading} />
-                    <table className="mt-2 text-left table table-responsive min-w-max">
+                    <table className="mt-2 text-left table table-responsive">
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>

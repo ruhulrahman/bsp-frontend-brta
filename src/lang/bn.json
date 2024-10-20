@@ -6,7 +6,7 @@
   "submit": "দাখিল করুন",
   "save": "সংরক্ষণ করুন",
   "save_changes": "পরিবর্তনগুলি সংরক্ষণ করুন",
-  "save_and_next": "সংরক্ষণ করুন এবং পরবর্তী",
+  "saveAndNext": "সংরক্ষণ করুন এবং পরবর্তী",
   "reset": "রিসেট করুন",
   "delete": "মুছে ফেলুন",
   "edit": "সম্পাদনা করুন",
@@ -290,5 +290,7 @@
   "selectDivision": "বিভাগ নির্বাচন করুন",
   "selectDistrict": "জেলা নির্বাচন করুন",
   "selectThana": "থানা নির্বাচন করুন",
-  "selectMakerCountry": "প্রস্তুতকারক দেশ নির্বাচন করুন"
+  "selectMakerCountry": "প্রস্তুতকারক দেশ নির্বাচন করুন",
+  "vehicleInformation": "যানবাহনের তথ্য",
+  "vehicleDetailsInformation": "যানবাহনের বিবরণের তথ্য"
 }

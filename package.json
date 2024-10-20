@@ -2,6 +2,7 @@
   "name": "bsp-frontend-brta",
   "private": true,
   "version": "0.0.0",
+  "homepage": "/bsp",
   "type": "module",
   "scripts": {
     "dev": "vite",

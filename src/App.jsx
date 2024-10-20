@@ -21,11 +21,9 @@ function App() {
   }, [setLanguage]);
 
   return (
-    <>
-    <Router>
+    <Router basename="/bsp">
       <AppRoutes />
     </Router>
-    </>
   )
 }
 

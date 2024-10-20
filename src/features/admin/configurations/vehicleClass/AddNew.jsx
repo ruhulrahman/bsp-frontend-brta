@@ -172,13 +172,13 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
                                 <Form.Group className="mb-3" controlId="symbolEn">
                                     <Form.Label>{t('symbol')} ({t('en')})</Form.Label>
-                                    <Field type="number" min="1" name="symbolEn" className="form-control" placeholder="Enter symbol" />
+                                    <Field type="text" min="1" name="symbolEn" className="form-control" placeholder="Enter symbol" />
                                     <ErrorMessage name="symbolEn" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="symbolBn">
                                     <Form.Label>{t('symbol')} ({t('bn')})</Form.Label>
-                                    <Field type="number" min="1" name="symbolBn" className="form-control" placeholder="Enter symbol" />
+                                    <Field type="text" min="1" name="symbolBn" className="form-control" placeholder="Enter symbol" />
                                     <ErrorMessage name="symbolBn" component="div" className="text-danger" />
                                 </Form.Group>
 

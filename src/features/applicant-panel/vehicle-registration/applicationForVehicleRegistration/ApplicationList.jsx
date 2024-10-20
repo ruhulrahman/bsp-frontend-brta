@@ -417,7 +417,7 @@ const UserList = ({ t }) => {
                         </OverlayTrigger>
 
                         {/* <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button> */}
-                        <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration/${1}`)}>{t('newVehicleRegistration')}</button>
+                        <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)}>{t('newVehicleRegistration')}</button>
                     </div>
                 </div>
                 <div className="p-0 overflow-scroll relative min-h-[300px]">

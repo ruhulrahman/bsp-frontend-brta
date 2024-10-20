@@ -16,7 +16,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const VehicleRegistrationPage1 = ({ t }) => {
+const VehicleRegistrationPage2 = ({ t }) => {
 
     let { id, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
@@ -28,31 +28,22 @@ const VehicleRegistrationPage1 = ({ t }) => {
     const findItem = listData?.find((item) => item.id == id)
 
     const [initialValues, setInitialValues] = useState({
-        billOfEntryNumber: '',
-        billOfEntryDate: '',
-        billOfEntryOfficeCode: '',
-        hsCode: '',
-        importerId: '',
+        vehicleTypeId: '',
+        vehicleClassId: '',
+        isElectrictVehicle: '',
+        ccOrKw: '',
+        chassisNumber: '',
+        engineNumber: '',
         makerId: '',
-        exporterId: '',
-        agent: '',
+        makerCountryId: '',
+        manufacturingYear: '',
+        bodyColorId: '',
         productLocation: '',
         productDescription: '',
         invoiceNumber: '',
         invoiceDate: '',
-        isElectrictVehicle: '',
-        ccOrKw: '',
-        manufacturingYear: '',
-        vehicleTypeId: '',
-        vehicleClassId: '',
-        bodyColorId: '',
-        bodyColorId: '',
-        bodyColorId: '',
-        bodyColorId: '',
-        bodyColorId: '',
-        isActive: true,
+        pageCompleted: 0,
     })
-
 
     const resetValues = {
         billOfEntryNumber: '',
@@ -60,69 +51,27 @@ const VehicleRegistrationPage1 = ({ t }) => {
         billOfEntryOfficeCode: '',
         hsCode: '',
         importerId: '',
-        password: '',
-        confirmPassword: '',
-        userTypeId: '',
-        designationId: '',
-        isActive: true,
-        userOfficeRoles: [
-            {
-                orgId: null,
-                roleId: null
-            }
-        ]
+        makerId: '',
+        makerCountryId: '',
+        exporterId: '',
+        agent: '',
+        productLocation: '',
+        productDescription: '',
+        invoiceNumber: '',
+        invoiceDate: '',
+        chassisNumber: '',
+        engineNumber: '',
+        pageCompleted: 0,
     }
 
     const validationSchema = Yup.object().shape({
-        nameBn: Yup.string().required('Name is required'),
-        nameEn: Yup.string().required('Name is required'),
-        username: Yup.string().required('Username is required'),
-        mobile: Yup.string()
-            .matches(/^\d{11}$/, "Mobile number must be exactly 11 digits")
-            .required("Mobile number is required"),
-        email: Yup.string().email("Invalid email format").required('Email is required'),
-        password: Yup.string()
-            .when('id', {
-                is: (id) => !id,  // When id is not present (new entry)
-                then: schema => schema.matches(
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                    "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character"
-                ).required('Password is required'),
-                // then: schema => schema.required('Password is required')
-                //     .matches(
-                //         /^(?=.*[A-Z]).+$/,
-                //         'Must contain at least one uppercase letter'
-                //     )
-                //     .matches(
-                //         /^(?=.*[a-z]).+$/,
-                //         'Must contain at least one lowercase letter'
-                //     )
-                //     .matches(
-                //         /^(?=.*\d)/,
-                //         'Must contain at least one number'
-                //     )
-                //     .matches(
-                //         /^(?=.*[@$!%*?&]).+$/,
-                //         'Must contain at least one special character'
-                //     ).min(8, 'Must be at least 8 characters'),
-                otherwise: schema => schema.optional(),
-            }),
-        confirmPassword: Yup.string()
-            .when('id', {
-                is: (id) => !id,  // When id is not present (new entry)
-                then: schema => schema.oneOf([Yup.ref('password'), null], "Confirm password must match")
-                    .required('Confirm password is required'),
-                otherwise: schema => schema.optional(),
-            }),
-        userTypeId: Yup.string().required('User type is required'),
-        designationId: Yup.string().required('Designation is required'),
-        isActive: Yup.boolean().required('Is active is required'),
-        userOfficeRoles: Yup.array().of(
-            Yup.object().shape({
-                orgId: Yup.string().required('Office is required'),
-                roleId: Yup.string().required('Role is required')
-            })
-        )
+        billOfEntryNumber: Yup.string().required('Bill of entry is required'),
+        billOfEntryDate: Yup.string().required('Bill of entry date is required'),
+        makerId: Yup.string().required('Maker Country is required'),
+        invoiceNumber: Yup.string().required('Invoice number is required'),
+        invoiceDate: Yup.string().required('Invoice date is required'),
+        chassisNumber: Yup.string().required('Chassis number is required'),
+        engineNumber: Yup.string().required('Engine number is required'),
     });
 
     const handleReset = (resetForm) => {
@@ -136,11 +85,15 @@ const VehicleRegistrationPage1 = ({ t }) => {
 
 
     const [officeList, setOfficeList] = useState([]);
-    const [roleList, setRoleLis] = useState([]);
+
+    const [commonDropdowns, setCommonDropdowns] = useState({
+        exporterList: [],
+        importerList: []
+    });
 
     useEffect(() => {
         getOfficeList();
-        getActiveRoleList();
+        getVehicleRegistrationRelatedDropdwonList();
     }, []);
 
     // Fetch the role by id after the parent-child list is ready
@@ -163,11 +116,11 @@ const VehicleRegistrationPage1 = ({ t }) => {
         }
     }
 
-    const getActiveRoleList = async () => {
+    const getVehicleRegistrationRelatedDropdwonList = async () => {
 
         try {
-            const { data } = await RestApi.get(`api/v1/admin/user-management/role/active-list`)
-            setRoleLis(data);
+            const { data } = await RestApi.get(`api/v1/admin/common/get-vehile-registration-related-dropdown-list`)
+            setCommonDropdowns(data);
         } catch (error) {
             console.log('error', error)
         }
@@ -186,49 +139,19 @@ const VehicleRegistrationPage1 = ({ t }) => {
             setInitialValues(data);
             console.log('initialValues', initialValues)
 
-            // Make sure parentChildPermissionList is available
-            // parentChildPermissionList.map((item) => {
-            //     let newIds = [];
-            //     let checkedIds = [];
-
-            //     // Collect item IDs
-            //     newIds.push(item.id);
-            //     item.pageList.forEach((page) => newIds.push(page.id));
-            //     item.featureList.forEach((feature) => newIds.push(feature.id));
-
-            //     // Compare with initialValues.permissionIds
-            //     newIds.forEach((id) => {
-            //         if (data.permissionIds.includes(id)) {
-            //             checkedIds.push(id);
-            //         }
-            //     });
-
-            //     // Check if all IDs are checked
-            //     if (newIds.length === checkedIds.length) {
-            //         item.checkedAll = true;
-            //     }
-
-            //     // Update item with checked status
-            //     return Object.assign(item);
-            // });
-
         } catch (error) {
             console.log('error', error)
         }
     }
 
     const onSubmit = async (values, setSubmitting, resetForm) => {
-        handleSave(values, setSubmitting, resetForm);
-    };
-
-    const handleSave = async (values, setSubmitting, resetForm) => {
 
         try {
             let result = ''
             if (values.id) {
-                result = await RestApi.put(`api/v1/admin/user-management/user/update/${values.id}`, values)
+                result = await RestApi.put(`api/v1/applicant/vehicle/registration-application-page1/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/user-management/user/create', values)
+                result = await RestApi.post('api/v1/applicant/vehicle/registration-application-page1', values)
             }
 
             if (result.data.success) {
@@ -249,7 +172,7 @@ const VehicleRegistrationPage1 = ({ t }) => {
             <div>
                 <CardHeader>
                     {/* <CardTitle className='mb-2'>{id ? t('edit') : t('add_new')} {t('user')}</CardTitle> */}
-                    <CardTitle className='mb-2'>{t('applicationForVehicleRegistration')} - {t('page')} - {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}</CardTitle>
+                    <CardTitle className='mb-2'>{t('applicationForVehicleRegistration')} - {t('page')} - {currentLanguage === 'en' ? 2 : toBengaliNumber(2)}</CardTitle>
                 </CardHeader>
                 <div>
                     <Formik
@@ -269,198 +192,58 @@ const VehicleRegistrationPage1 = ({ t }) => {
 
                                 <Card className='mb-3'>
                                     <CardBody>
-                                        <div className="row mb-3">
+                                        <div className="row">
 
-                                            <h4 className="my-2 font-bold text-green-900">{t('billOfEntry')}</h4>
+                                            <h4 className="my-2 font-bold text-green-900">{t('vehicleInformation')}</h4>
                                             <hr className='my-3' />
 
-                                            <div className="col-md-4 col-lg-3">
+                                            <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                <Form.Group className="mb-3" controlId="vehicleTypeId">
+                                                    <Form.Label>{t('vehicleType')}</Form.Label>
+                                                    <Field
+                                                        disabled={isViewable}
+                                                        name="vehicleTypeId"
+                                                        component={ReactSelect}
+                                                        options={commonDropdowns.exporterList}
+                                                        placeholder={t('selectExporterName')}
+                                                        value={values.vehicleTypeId}
+                                                        onChange={(option) => {
+                                                            setFieldValue('vehicleTypeId', option ? option.value : '')
+                                                        }} // Update Formik value
+                                                    />
+                                                    <ErrorMessage name="vehicleTypeId" component="div" className="text-danger" />
+                                                </Form.Group>
+                                            </div>
+
+                                            <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                <Form.Group className="mb-3" controlId="vehicleClassId">
+                                                    <Form.Label>{t('vehicleClass')}</Form.Label>
+                                                    <Field
+                                                        disabled={isViewable}
+                                                        name="vehicleClassId"
+                                                        component={ReactSelect}
+                                                        options={commonDropdowns.exporterList}
+                                                        placeholder={t('selectExporterName')}
+                                                        value={values.vehicleClassId}
+                                                        onChange={(option) => {
+                                                            setFieldValue('vehicleClassId', option ? option.value : '')
+                                                        }} // Update Formik value
+                                                    />
+                                                    <ErrorMessage name="vehicleClassId" component="div" className="text-danger" />
+                                                </Form.Group>
+                                            </div>
+
+                                            <div className="col-sm-12 col-lg-6 col-xl-6">
                                                 <Form.Group className="mb-3" controlId="billOfEntryNumber">
-                                                    <Form.Label>{t('billOfEntryNumber')}</Form.Label>
+                                                    <Form.Label>{t('billOfEntryNumber')} <span className='text-red-500'>*</span></Form.Label>
                                                     <Field disabled={isViewable} type="text" name="billOfEntryNumber" className="form-control" placeholder="Enter bill Of Entry Number" />
                                                     <ErrorMessage name="billOfEntryNumber" component="div" className="text-danger" />
                                                 </Form.Group>
                                             </div>
-
-                                            <div className="col-md-4 col-lg-3">
-                                                <Form.Group className="mb-3" controlId="billOfEntryDate">
-                                                    <Form.Label>{t('billOfEntryDate')}</Form.Label>
-                                                    <Field disabled={isViewable} type="date" name="billOfEntryDate" className="form-control" placeholder="Enter bill Of Entry date" />
-                                                    <ErrorMessage name="billOfEntryDate" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-md-4 col-lg-3">
-                                                <Form.Group className="mb-3" controlId="username">
-                                                    <Form.Label>{t('username')}</Form.Label>
-                                                    <Field disabled={isViewable} type="text" name="username" className="form-control" placeholder="Enter username" />
-                                                    <ErrorMessage name="username" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-md-4 col-lg-3">
-                                                <Form.Group className="mb-3" controlId="mobile">
-                                                    <Form.Label>{t('mobile')}</Form.Label>
-                                                    <Field disabled={isViewable} type="text" name="mobile" className="form-control" placeholder="Enter mobile" />
-                                                    <ErrorMessage name="mobile" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-md-4 col-lg-3">
-                                                <Form.Group className="mb-3" controlId="email">
-                                                    <Form.Label>{t('email')}</Form.Label>
-                                                    <Field disabled={isViewable} type="text" name="email" className="form-control" placeholder="Enter email" />
-                                                    <ErrorMessage name="email" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            {!values.id &&
-                                                <div className="col-md-4 col-lg-3">
-                                                    <Form.Group className="mb-3" controlId="password">
-                                                        <Form.Label>{t('password')}</Form.Label>
-                                                        <Field disabled={isViewable} type="password" name="password" className="form-control" placeholder="Enter password" />
-                                                        <ErrorMessage name="password" component="div" className="text-danger" />
-                                                    </Form.Group>
-                                                </div>
-                                            }
-
-                                            {!values.id &&
-                                                <div className="col-md-4 col-lg-3">
-                                                    <Form.Group className="mb-3" controlId="confirmPassword">
-                                                        <Form.Label>{t('confirmPassword')}</Form.Label>
-                                                        <Field disabled={isViewable} type="password" name="confirmPassword" className="form-control" placeholder="Enter confirm password" />
-                                                        <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
-                                                    </Form.Group>
-                                                </div>
-                                            }
-
-                                            <div className="col-md-4 col-lg-3">
-                                                <Form.Group className="mb-3" controlId="userTypeId">
-                                                    <Form.Label>{t('userType')}</Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="userTypeId"
-                                                        component={ReactSelect}
-                                                        options={dropdowns.userTypeList}
-                                                        placeholder={t('selectUserType')}
-                                                        value={values.userTypeId}
-                                                        onChange={(option) => {
-                                                            setFieldValue('userTypeId', option ? option.value : '')
-                                                        }} // Update Formik value
-                                                    />
-                                                    <ErrorMessage name="userTypeId" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-md-4 col-lg-3">
-                                                <Form.Group className="mb-3" controlId="designationId">
-                                                    <Form.Label>{t('designation')}</Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="designationId"
-                                                        component={ReactSelect}
-                                                        options={dropdowns.designationList}
-                                                        placeholder={t('selectDesignation')}
-                                                        value={values.designationId}
-                                                        onChange={(option) => {
-                                                            setFieldValue('designationId', option ? option.value : '')
-                                                        }} // Update Formik value
-                                                    />
-                                                    <ErrorMessage name="designationId" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-md-4 col-lg-3">
-                                                <Form.Group className="mb-3" controlId="isActive">
-                                                    <Checkbox disabled={isViewable} id="custom-switch" name="isActive" className="" label={values.isActive ? t('active') : t('inactive')} />
-                                                    <ErrorMessage name="isActive" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
                                         </div>
                                     </CardBody>
                                 </Card>
 
-
-                                <Card className='mb-3'>
-                                    <CardBody>
-                                        <div className="row">
-                                            <div className="col">
-                                                <h4 className="my-2 font-bold text-green-900">{t('organizationWiseRole')}</h4>
-                                                <hr className='my-3' />
-
-                                                <FieldArray name="userOfficeRoles">
-                                                    {({ insert, remove, push }) => (
-                                                        <div>
-                                                            {values.userOfficeRoles && values.userOfficeRoles.length > 0 &&
-                                                                values.userOfficeRoles.map((friend, index) => (
-                                                                    <div className="row ml-[10px] mb-2" key={index}>
-
-                                                                        <div className="col-md-5 col-lg-5 col-sm-12">
-                                                                            <Form.Group className="mb-3">
-                                                                                <Form.Label htmlFor={`userOfficeRoles.${index}.orgId`}>{t('organization')}</Form.Label>
-                                                                                <Field
-                                                                                    disabled={isViewable}
-                                                                                    name={`userOfficeRoles.${index}.orgId`}
-                                                                                    component={ReactSelect}
-                                                                                    options={officeList}
-                                                                                    placeholder={t('selectOrganization')}
-                                                                                    value={values.userOfficeRoles[index].orgId}
-                                                                                    onChange={(option) => {
-                                                                                        setFieldValue(`userOfficeRoles.${index}.orgId`, option ? option.value : '')
-                                                                                    }}
-                                                                                />
-                                                                                <ErrorMessage name={`userOfficeRoles.${index}.orgId`} component="div" className="text-danger" />
-                                                                            </Form.Group>
-                                                                        </div>
-
-                                                                        <div className="col-md-5 col-lg-5 col-sm-12">
-                                                                            <Form.Group className="mb-3">
-                                                                                <Form.Label htmlFor={`userOfficeRoles.${index}.roleId`}>{t('role')}</Form.Label>
-                                                                                <Field
-                                                                                    disabled={isViewable}
-                                                                                    name={`userOfficeRoles.${index}.roleId`}
-                                                                                    component={ReactSelect}
-                                                                                    options={roleList}
-                                                                                    placeholder={t('selectRole')}
-                                                                                    value={values.userOfficeRoles[index].roleId}
-                                                                                    onChange={(option) => {
-                                                                                        setFieldValue(`userOfficeRoles.${index}.roleId`, option ? option.value : '')
-                                                                                    }}
-                                                                                />
-                                                                                <ErrorMessage name={`userOfficeRoles.${index}.roleId`} component="div" className="text-danger" />
-                                                                            </Form.Group>
-                                                                        </div>
-
-                                                                        {!isViewable &&
-                                                                            <div className="col-md-2">
-                                                                                <OverlayTrigger overlay={<Tooltip>{t('add')}</Tooltip>}>
-                                                                                    <button onClick={() => push({ orgId: '', roleId: '' })} className='btn btn-sm text-[12px] btn-outline-success mt-[33px]'>
-                                                                                        <i className="fa fa-plus"></i>
-                                                                                    </button>
-                                                                                </OverlayTrigger>
-                                                                                {values.userOfficeRoles && values.userOfficeRoles.length > 1 &&
-                                                                                    <OverlayTrigger overlay={<Tooltip>{t('remove')}</Tooltip>}>
-                                                                                        <button onClick={() => {
-                                                                                            values.userOfficeRoles.splice(index, 1);
-                                                                                            setFieldValue('userOfficeRoles', values.userOfficeRoles);
-                                                                                        }} className='btn btn-sm text-[12px] btn-outline-danger ml-2 mt-[33px]'>
-                                                                                            <i className="fa fa-minus"></i>
-                                                                                        </button>
-                                                                                    </OverlayTrigger>
-                                                                                }
-                                                                            </div>
-                                                                        }
-
-                                                                    </div>
-                                                                ))}
-                                                        </div>
-                                                    )}
-                                                </FieldArray>
-                                            </div>
-                                        </div>
-                                    </CardBody>
-                                </Card>
 
                                 <div className="row mt-2 mb-6">
                                     <div className="col-md-12 text-right">
@@ -468,7 +251,7 @@ const VehicleRegistrationPage1 = ({ t }) => {
                                             <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/user-list`)}>{t('back')}</button>
                                         ) : (
                                             <>
-                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{id ? t('save_changes') : t('save')}</button>
+                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
                                                 <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
                                             </>
                                         )}
@@ -483,4 +266,4 @@ const VehicleRegistrationPage1 = ({ t }) => {
     );
 };
 
-export default withNamespaces()(VehicleRegistrationPage1);
+export default withNamespaces()(VehicleRegistrationPage2);
