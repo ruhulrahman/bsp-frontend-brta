@@ -207,15 +207,11 @@ const VehicleRegistrationPage2 = ({ t }) => {
 
         try {
             const { data } = await RestApi.get(`api/v1/applicant/vehicle/${id}`)
-            if (data && data.pageCompleted < 1) {
-                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
-            }
             setInitialValues(data);
-            console.log('data', data)
+            console.log('initialValues', initialValues)
 
         } catch (error) {
             console.log('error', error)
-            navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
         }
     }
 
@@ -226,7 +222,7 @@ const VehicleRegistrationPage2 = ({ t }) => {
 
             if (result.data.success) {
                 toaster(result.data.message)
-                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page3/${result.data.data.id}`)
+                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2/${result.data.data.id}`)
             }
 
         } catch (error) {
@@ -263,7 +259,6 @@ const VehicleRegistrationPage2 = ({ t }) => {
                                 <Card className='mb-3'>
                                     <CardBody>
                                         <div className="row">
-
 
                                             <h4 className="my-2 font-bold text-green-900">{t('vehicleInformation')}</h4>
                                             <hr className='mb-3' />
@@ -649,8 +644,8 @@ const VehicleRegistrationPage2 = ({ t }) => {
                                                             <ErrorMessage name="centralAxle2" component="div" className="text-danger" />
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <Field disabled={isViewable} type="number" name="centralAxle3" className="form-control" placeholder="3" />
-                                                            <ErrorMessage name="centralAxle3" component="div" className="text-danger" />
+                                                            <Field disabled={isViewable} type="number" name="centralAxle2" className="form-control" placeholder="3" />
+                                                            <ErrorMessage name="centralAxle2" component="div" className="text-danger" />
                                                         </div>
                                                     </div>
                                                 </Form.Group>
@@ -683,7 +678,7 @@ const VehicleRegistrationPage2 = ({ t }) => {
                                             <hr className='my-3' />
 
                                             <h3 className='text-center mb-3 font-semibold'>{t('dimension')} :</h3>
-
+                                            
                                             <div className="col-sm-12 col-lg-4 col-xl-4">
                                                 <Form.Group className="mb-3" controlId="overallLength">
                                                     <Form.Label>{t('overallLength')}</Form.Label>
@@ -715,7 +710,7 @@ const VehicleRegistrationPage2 = ({ t }) => {
                                             <hr className='my-3' />
 
                                             <h3 className='text-center mb-3 font-semibold'>{t('overhangs')} (%) :</h3>
-
+                                            
                                             <div className="col-sm-12 col-lg-4 col-xl-4">
                                                 <Form.Group className="mb-3" controlId="overhangsFront">
                                                     <Form.Label>{t('overhangsFront')}</Form.Label>
@@ -748,11 +743,13 @@ const VehicleRegistrationPage2 = ({ t }) => {
 
                                 <div className="row mt-2 mb-6">
                                     <div className="col-md-12 text-right">
-
-                                        <button className='btn btn-secondary btn-rounded btn-xs mr-1' onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/${initialValues.id}`)}>{t('previous')}</button>
-                                        <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
-                                        {!isViewable && (
-                                            <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                        {isViewable ? (
+                                            <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/user-list`)}>{t('back')}</button>
+                                        ) : (
+                                            <>
+                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
+                                                <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                            </>
                                         )}
                                     </div>
                                 </div>

@@ -36,7 +36,7 @@ createRoot(document.getElementById('root')).render(
   // <StrictMode>
   //   <App />
   // </StrictMode>,
-    <Provider store={store}>
+  <Provider store={store}>
     <App />
   </Provider>,
 )

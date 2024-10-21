@@ -16,7 +16,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const VehicleRegistrationPage2 = ({ t }) => {
+const VehicleRegistrationPage3 = ({ t }) => {
 
     let { id, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
@@ -226,7 +226,7 @@ const VehicleRegistrationPage2 = ({ t }) => {
 
             if (result.data.success) {
                 toaster(result.data.message)
-                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page3/${result.data.data.id}`)
+                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2/${result.data.data.id}`)
             }
 
         } catch (error) {
@@ -242,7 +242,7 @@ const VehicleRegistrationPage2 = ({ t }) => {
             <div>
                 <CardHeader>
                     {/* <CardTitle className='mb-2'>{id ? t('edit') : t('add_new')} {t('user')}</CardTitle> */}
-                    <CardTitle className='mb-2'>{t('applicationForVehicleRegistration')} - {t('page')} - {currentLanguage === 'en' ? 2 : toBengaliNumber(2)}</CardTitle>
+                    <CardTitle className='mb-2'>{t('applicationForVehicleRegistration')} - {t('page')} - {currentLanguage === 'en' ? 3 : toBengaliNumber(3)}</CardTitle>
                 </CardHeader>
                 <div>
                     <Formik
@@ -263,7 +263,6 @@ const VehicleRegistrationPage2 = ({ t }) => {
                                 <Card className='mb-3'>
                                     <CardBody>
                                         <div className="row">
-
 
                                             <h4 className="my-2 font-bold text-green-900">{t('vehicleInformation')}</h4>
                                             <hr className='mb-3' />
@@ -683,7 +682,7 @@ const VehicleRegistrationPage2 = ({ t }) => {
                                             <hr className='my-3' />
 
                                             <h3 className='text-center mb-3 font-semibold'>{t('dimension')} :</h3>
-
+                                            
                                             <div className="col-sm-12 col-lg-4 col-xl-4">
                                                 <Form.Group className="mb-3" controlId="overallLength">
                                                     <Form.Label>{t('overallLength')}</Form.Label>
@@ -715,7 +714,7 @@ const VehicleRegistrationPage2 = ({ t }) => {
                                             <hr className='my-3' />
 
                                             <h3 className='text-center mb-3 font-semibold'>{t('overhangs')} (%) :</h3>
-
+                                            
                                             <div className="col-sm-12 col-lg-4 col-xl-4">
                                                 <Form.Group className="mb-3" controlId="overhangsFront">
                                                     <Form.Label>{t('overhangsFront')}</Form.Label>
@@ -748,11 +747,13 @@ const VehicleRegistrationPage2 = ({ t }) => {
 
                                 <div className="row mt-2 mb-6">
                                     <div className="col-md-12 text-right">
-
-                                        <button className='btn btn-secondary btn-rounded btn-xs mr-1' onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/${initialValues.id}`)}>{t('previous')}</button>
-                                        <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
-                                        {!isViewable && (
-                                            <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                        {isViewable ? (
+                                            <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/user-list`)}>{t('back')}</button>
+                                        ) : (
+                                            <>
+                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
+                                                <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                            </>
                                         )}
                                     </div>
                                 </div>
@@ -765,4 +766,4 @@ const VehicleRegistrationPage2 = ({ t }) => {
     );
 };
 
-export default withNamespaces()(VehicleRegistrationPage2);
+export default withNamespaces()(VehicleRegistrationPage3);

@@ -43,7 +43,7 @@ const VehicleRegistrationPage1 = ({ t }) => {
         invoiceDate: '',
         chassisNumber: '',
         engineNumber: '',
-        pageCompleted: 1,
+        pageCompleted: 0,
     })
 
     const resetValues = {
@@ -100,7 +100,7 @@ const VehicleRegistrationPage1 = ({ t }) => {
     // Fetch the role by id after the parent-child list is ready
     useEffect(() => {
         if (id) {
-            getVehicleInfoById(id);
+            getUserById(id);
         } else {
             setInitialValues(resetValues);
         }
@@ -127,12 +127,18 @@ const VehicleRegistrationPage1 = ({ t }) => {
         }
     }
 
-    const getVehicleInfoById = async (id) => {
+    const getUserById = async (id) => {
 
         try {
-            const { data } = await RestApi.get(`api/v1/applicant/vehicle/${id}`)
+            const { data } = await RestApi.get(`api/v1/admin/user-management/user/${id}`)
+            if (data.userOfficeRoles.length == 0) {
+                data.userOfficeRoles = [{
+                    orgId: null,
+                    roleId: null
+                }]
+            }
             setInitialValues(data);
-            console.log('data', data)
+            console.log('initialValues', initialValues)
 
         } catch (error) {
             console.log('error', error)
@@ -142,7 +148,14 @@ const VehicleRegistrationPage1 = ({ t }) => {
     const onSubmit = async (values, setSubmitting, resetForm) => {
 
         try {
-            let result = await RestApi.post('api/v1/applicant/vehicle/registration-application-page1', values)
+            let result = ''
+            if (values.id) {
+                result = await RestApi.put(`api/v1/applicant/vehicle/registration-application-page1/update/${values.id}`, values)
+            } else {
+                result = await RestApi.post('api/v1/applicant/vehicle/registration-application-page1', values)
+            }
+
+            console.log('result.data', result.data)
 
             if (result.data.success) {
                 toaster(result.data.message)

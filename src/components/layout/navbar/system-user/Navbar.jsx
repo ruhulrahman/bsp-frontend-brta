@@ -130,7 +130,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                             <div className='text-gray-300 flex flex-col'>
                                 {/* <span className='text-[14px]'>Ruhul Amin</span> */}
                                 <span className='text-[14px]'>{currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}</span>
-                                <span className='text-[12px] text-green-200 text-right leadin'>{t('systemAdmin')}</span>
+                                <span className='text-[12px] text-green-200 text-right leadin'>{t('systemUser')}</span>
                             </div>
 
                             {/* Profile dropdown */}

@@ -86,6 +86,20 @@ const initialState = {
             value: false,
         },
     ],
+    yesNoList: [
+        {
+            id: true,
+            nameEn: "Yes",
+            nameBn: "হ্যা",
+            value: true,
+        },
+        {
+            id: false,
+            nameEn: "No",
+            nameBn: "না",
+            value: false,
+        },
+    ],
     permissionTypeList: [
         {
             id: 1,

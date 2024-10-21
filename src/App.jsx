@@ -7,7 +7,6 @@ import AppRoutes from './routes/AppRoutes';
 import { withNamespaces } from 'react-i18next';
 
 function App() {
-  const [count, setCount] = useState(0)
   const preferredLanguage = localStorage.getItem('preferredLanguage');
 
   const setLanguage = (language) => {

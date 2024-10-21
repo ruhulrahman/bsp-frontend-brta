@@ -1,15 +1,14 @@
-import ApplicantLayout from '../components/layout/ApplicantLayout.jsx';
+import SystemUserLayout from '../components/layout/SystemUserLayout.jsx';
 
 import AuthGuard from './AuthGuard.jsx';
 import DashboardPage from '../features/admin/dashboard/pages/DashboardPage.jsx';
 import ChangePassword from '../features/common/profile-management/pages/ChangePassword.jsx';
 import Profile from '../features/common/profile-management/pages/Profile.jsx';
-import VehicleRegistrationApplications from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/ApplicationList.jsx';
-import VehicleRegistrationPage1 from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage1.jsx';
-import VehicleRegistrationPage2 from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage2.jsx';
-import VehicleRegistrationPage3 from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage3.jsx';
+import VehicleRegistrationApplications from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/ApplicationList.jsx';
+import VehicleRegistrationPage1 from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage1.jsx';
+import VehicleRegistrationPage2 from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage2.jsx';
 
-const applicantRoutes = [
+const SystemUserRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
     { path: 'profile', element: <Profile /> },
     { path: 'change-password', element: <ChangePassword /> },
@@ -18,18 +17,17 @@ const applicantRoutes = [
     { path: 'vehicle-registration/application-for-vehicle-registration/application-list', element: <VehicleRegistrationApplications /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/:id?', element: <VehicleRegistrationPage1 /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2/:id?', element: <VehicleRegistrationPage2 /> },
-    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page3/:id?', element: <VehicleRegistrationPage3 /> },
   ];
   
   const privateRoutes = [
     {
-      path: '/applicant-panel',
+      path: '/system-user-panel',
       element: (
         <AuthGuard>
-          <ApplicantLayout />
+          <SystemUserLayout />
         </AuthGuard>
       ),
-      children: applicantRoutes,
+      children: SystemUserRoutes,
     },
   ];
 
