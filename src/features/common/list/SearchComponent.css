@@ -1,0 +1,83 @@
+.search-component {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-component h2 {
+    text-align: center;
+    color: #333;
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping for responsive design */
+    gap: 15px; /* Space between input rows */
+}
+
+.input-row {
+    display: flex;
+    flex-direction: column;
+    width: calc(33% - 10px); /* Two columns with space */
+}
+
+.input-row label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.input-row input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.input-row input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+button {
+    padding: 12px 24px;
+    width: 75px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex; /* Use inline-flex to center text */
+    align-items: center; /* Center align text vertically */
+    justify-content: center;
+}
+
+.clear-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.clear-button:hover {
+    background-color: #d32f2f;
+    transform: translateY(-1px);
+}
+
+.search-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}

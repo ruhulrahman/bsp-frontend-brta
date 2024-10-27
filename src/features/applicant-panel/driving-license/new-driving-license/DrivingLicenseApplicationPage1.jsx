@@ -16,7 +16,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const VehicleRegistrationPage1 = ({ t }) => {
+const DrivingLicenseApplicationPage1 = ({ t }) => {
 
     let { serviceRequestId, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
@@ -375,4 +375,4 @@ const VehicleRegistrationPage1 = ({ t }) => {
     );
 };
 
-export default withNamespaces()(VehicleRegistrationPage1);
+export default withNamespaces()(DrivingLicenseApplicationPage1);

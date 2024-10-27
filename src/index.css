@@ -92,7 +92,9 @@ body {
 } */
 
 
+
 @layer components {
+
 
   .table-responsive{
     overflow-x: hidden; /* Prevent horizontal scrolling */
@@ -183,6 +185,7 @@ table td {
     bg-green-600
     hover:bg-green-700
     hover:text-white
+    sm:w-auto
   }
 
 
@@ -204,6 +207,7 @@ table td {
     bg-slate-800
     hover:bg-slate-900
     hover:text-white
+    sm:w-auto
   }
 
   .btn-outline-black {
@@ -264,6 +268,18 @@ table td {
   }
   .react-select-container > .react-select__control > .react-select__indicators {
 
+  }
+
+  .labelClass{
+    @apply
+    mt-[5px]
+    font-semibold
+  }
+
+  
+  .btn {
+    @apply
+    sm:min-w-max
   }
  
 }

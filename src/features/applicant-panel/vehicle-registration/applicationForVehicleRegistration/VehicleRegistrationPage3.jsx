@@ -18,133 +18,85 @@ import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
 const VehicleRegistrationPage3 = ({ t }) => {
 
-    let { id, isViewable } = useParams()
+    let { serviceRequestId, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
     const navigate = useNavigate();
 
     const { activeStatusList, loading, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
-    const findItem = listData?.find((item) => item.id == id)
-
     const [initialValues, setInitialValues] = useState({
-        vehicleTypeId: '',
-        vehicleClassId: '',
-        isElectrictVehicle: false,
-        ccOrKw: '',
-        chassisNumber: '',
-        engineNumber: '',
-        makerId: '',
-        makerCountryId: '',
-        manufacturingYear: '',
-        bodyColorId: '',
-        assemblyOperationId: '',
-        mileage: '',
-        unladenWeight: '',
-        maxLadenWeight: '',
-        isHire: false,
-        isHirePurchase: false,
-        totalSeat: '',
-        fuelId: '',
-        brandId: '',
-        vehiclePrice: '',
-        economicLife: '',
-        remainingLife: '',
-        model: '',
-        cylinder: '',
-        isAirConditioner: false,
-        horsePower: '',
-        highestRpm: '',
-        wheelBase: '',
-        standee: '',
-        tyreSize: '',
-        tyreNumber: '',
-        axleNumber: '',
-        frontAxle1: '',
-        frontAxle2: '',
-        centralAxle1: '',
-        centralAxle2: '',
-        centralAxle3: '',
-        rearAxle1: '',
-        rearAxle2: '',
-        rearAxle3: '',
-        overallLength: '',
-        overallWidth: '',
-        overallHeight: '',
-        overhangsFront: '',
-        overhangsRear: '',
-        overhangsOther: '',
-        pageCompleted: 2,
+        orgId: '',
+        applicantNidInfo: {
+            nidNumber: '',
+            dob: '',
+            nameBn: '',
+            nameEn: '',
+            fatherOrHusbandNameEn: '',
+            fatherOrHusbandNameBn: '',
+            motherNameEn: '',
+            motherNameBn: '',
+            addressEn: '',
+            addressBn: '',
+            mobile: '',
+        },
+        vehicleInfoId: '',
+        serviceRequestId: '',
+        vehcleOwner: {
+            name: '',
+            fatherOrHusbandName: '',
+            motherName: '',
+            genderId: '',
+            nationalityId: '',
+            guardianName: '',
+            passportNo: '',
+            birthCertificateNo: '',
+            addressId: '',
+            isRecondition: '',
+            isJointOwner: '',
+            ownerTypeId: '',
+            ministryId: '',
+            departmentId: '',
+            subOfficeUnitGroupId: '',
+            unitOrActivityId: '',
+            inUse: '',
+            usedById: '',
+            withinOrganogram: '',
+            acquisitionProcessId: '',
+            acquisitionOffice: '',
+            acquisitionPrice: '',
+            dateOfReceipt: '',
+            remarks: '',
+            isPrimaryOwner: '',
+        },
+        addressInfo: {
+            addressTypeId: '',
+            countryId: '',
+            divisionId: '',
+            districtId: '',
+            locationId: '',
+            postCode: '',
+            holdingHouseVillage: '',
+            roadBlockSectorColony: '',
+            mobileNumber: '',
+        },
+        pageCompleted: 3,
     })
 
     const resetValues = {
-        vehicleTypeId: '',
-        vehicleClassId: '',
-        isElectrictVehicle: false,
-        ccOrKw: '',
-        chassisNumber: '',
-        engineNumber: '',
-        makerId: '',
-        makerCountryId: '',
-        manufacturingYear: '',
-        bodyColorId: '',
-        assemblyOperationId: '',
-        mileage: '',
-        unladenWeight: '',
-        maxLadenWeight: '',
-        isHire: false,
-        isHirePurchase: false,
-        totalSeat: '',
-        fuelId: '',
-        brandId: '',
-        vehiclePrice: '',
-        economicLife: '',
-        remainingLife: '',
-        model: '',
-        cylinder: '',
-        isAirConditioner: false,
-        horsePower: '',
-        highestRpm: '',
-        wheelBase: '',
-        standee: '',
-        tyreSize: '',
-        tyreNumber: '',
-        axleNumber: '',
-        frontAxle1: '',
-        frontAxle2: '',
-        centralAxle1: '',
-        centralAxle2: '',
-        centralAxle3: '',
-        rearAxle1: '',
-        rearAxle2: '',
-        rearAxle3: '',
-        overallLength: '',
-        overallWidth: '',
-        overallHeight: '',
-        overhangsFront: '',
-        overhangsRear: '',
-        overhangsOther: '',
+        nidNumber: '',
+        dob: '',
+        nameEn: '',
+        nameBn: '',
+        fatherOrHusbandNameEn: '',
+        fatherOrHusbandNameBn: '',
+        motherNameEn: '',
+        motherNameBn: '',
         pageCompleted: 2,
     }
 
     const validationSchema = Yup.object().shape({
-        vehicleTypeId: Yup.string().required('The Field is required'),
-        vehicleClassId: Yup.string().required('The Field is required'),
-        isElectrictVehicle: Yup.string().required('The Field is required'),
-        ccOrKw: Yup.number().required('The Field is required'),
-        manufacturingYear: Yup.number().required('The Field is required'),
-        bodyColorId: Yup.string().required('The Field is required'),
-        assemblyOperationId: Yup.string().required('The Field is required'),
-        mileage: Yup.number().required('The Field is required'),
-        unladenWeight: Yup.number().required('The Field is required'),
-        maxLadenWeight: Yup.number().required('The Field is required'),
-        isHire: Yup.string().required('The Field is required'),
-        isHirePurchase: Yup.string().required('The Field is required'),
-        totalSeat: Yup.number().required('The Field is required'),
-        fuelId: Yup.string().required('The Field is required'),
-        vehiclePrice: Yup.string().required('The Field is required'),
-        tyreSize: Yup.string().required('The Field is required'),
-        tyreNumber: Yup.string().required('The Field is required'),
+        // vehicleTypeId: Yup.string().required('The Field is required'),
     });
 
     const handleReset = (resetForm) => {
@@ -174,13 +126,12 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
     // Fetch the role by id after the parent-child list is ready
     useEffect(() => {
-        if (id) {
-            getVehicleInfoById(id);
+        if (serviceRequestId) {
+            getVehicleInfoById(serviceRequestId);
         } else {
             navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
-            setInitialValues(resetValues);
         }
-    }, [id, officeList]);
+    }, [serviceRequestId, officeList]);
 
     const getOfficeList = async () => {
 
@@ -203,15 +154,67 @@ const VehicleRegistrationPage3 = ({ t }) => {
         }
     }
 
-    const getVehicleInfoById = async (id) => {
+    const [districtList, setDistrictList] = useState([]);
+    const [thanaList, setThanaList] = useState([]);
+
+    const getDistrictListByParentId = async (parentId) => {
 
         try {
-            const { data } = await RestApi.get(`api/v1/applicant/vehicle/${id}`)
-            if (data && data.pageCompleted < 1) {
+            const { data } = await RestApi.get(`api/v1/admin/common/get-locations-by-parent-location-id/${parentId}`)
+            setDistrictList(data.locationList);
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
+    const getThanaListByParentId = async (parentId) => {
+
+        try {
+            const { data } = await RestApi.get(`api/v1/admin/common/get-locations-by-parent-location-id/${parentId}`)
+            setThanaList(data.locationList);
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
+    const [organization, setOrganization] = useState({
+        id: '',
+        nameEn: '',
+        nameBn: '',
+    });
+
+    const getOrgnationNameByThanaId = async (thanaId) => {
+
+        try {
+            const data = await RestApi.get(`api/v1/admin/common/get-organization-by-thana-id/${thanaId}`)
+            setOrganization(data.data);
+            setInitialValues({ ...initialValues, orgId: data.data.id });
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
+    const [isOwnerTypePublic, setIsOwnerTypePublic] = useState(false);
+
+    const setOwnerType = (ownerTypeId) => {
+        const selectedOwner = dropdowns.ownerTypeList.find(
+            (item) => item.id === ownerTypeId && item.statusCode === 'owner_type_public'
+        );
+        setIsOwnerTypePublic(!!selectedOwner);  // Set to true if found, false otherwise
+    };
+
+    const getVehicleInfoById = async (serviceRequestId) => {
+
+        try {
+            // const { data } = await RestApi.get(`api/v1/applicant/vehicle/${id}`)
+            const { data } = await RestApi.get(`api/v1/applicant/vehicle/service/${serviceRequestId}`)
+
+            const apiResponse = Object.assign({}, data.applicantNidInfo, data.vehicleInfo, data, { serviceRequestId: data.id });
+
+            if (apiResponse && apiResponse.pageCompleted < 1) {
                 navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
             }
-            setInitialValues(data);
-            console.log('data', data)
+            setInitialValues(apiResponse);
 
         } catch (error) {
             console.log('error', error)
@@ -222,11 +225,11 @@ const VehicleRegistrationPage3 = ({ t }) => {
     const onSubmit = async (values, setSubmitting, resetForm) => {
 
         try {
-            let result = await RestApi.post('api/v1/applicant/vehicle/registration-application-page2', values)
+            let result = await RestApi.post('api/v1/applicant/vehicle/registration-application-page3', values)
 
             if (result.data.success) {
                 toaster(result.data.message)
-                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2/${result.data.data.id}`)
+                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page4/${result.data.data.id}`)
             }
 
         } catch (error) {
@@ -256,509 +259,531 @@ const VehicleRegistrationPage3 = ({ t }) => {
                             onSubmit(values, setSubmitting, resetForm);
                         }}
                     >
-                        {({ values, resetForm, isSubmitting, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
-                            <FormikForm>
-                                <Loading loading={loading} loadingText={t('submitting')} />
+                        {({ values, resetForm, isSubmitting, handleChange, handleBlur, handleSubmit, setFieldValue }) => {
+                            useEffect(() => {
+                                // Check if the vehicleOwner.ownerTypeId is available and set the owner type.
+                                if (values.vehicleOwner?.ownerTypeId) {
+                                    setOwnerType(values.vehicleOwner.ownerTypeId);
+                                }
+                            }, [values.vehicleOwner?.ownerTypeId]);
 
-                                <Card className='mb-3'>
-                                    <CardBody>
-                                        <div className="row">
+                            return (
+                                <FormikForm>
+                                    <Loading loading={loading} loadingText={t('submitting')} />
 
-                                            <h4 className="my-2 font-bold text-green-900">{t('vehicleInformation')}</h4>
-                                            <hr className='mb-3' />
+                                    <Card className='mb-3'>
+                                        <CardBody>
+                                            <div className="row">
 
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="vehicleTypeId">
-                                                    <Form.Label>{t('vehicleType')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="vehicleTypeId"
-                                                        component={ReactSelect}
-                                                        options={dropdowns.vehicleTypeList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.vehicleTypeId}
-                                                        onChange={(option) => {
-                                                            setFieldValue('vehicleTypeId', option ? option.value : '')
-                                                        }} // Update Formik value
-                                                    />
-                                                    <ErrorMessage name="vehicleTypeId" component="div" className="text-danger" />
-                                                </Form.Group>
+                                                <h4 className="my-2 font-bold text-green-900">{t('nidInformation')}</h4>
+                                                <hr className='mb-3' />
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('nationalIdentityNo')}</Form.Label>
+                                                        <Field disabled={true} type="number" name="applicantNidInfo.nidNumber" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('Date Of Birth')}</Form.Label>
+                                                        <Field disabled={true} type="date" name="applicantNidInfo.dob" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('name')} {t('en')}</Form.Label>
+                                                        <Field disabled={true} type="text" name="applicantNidInfo.nameEn" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('name')} {t('bn')}</Form.Label>
+                                                        <Field disabled={true} type="text" name="applicantNidInfo.nameBn" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('Father/Husband Name')} {t('bn')}</Form.Label>
+                                                        <Field disabled={true} type="text" name="applicantNidInfo.fatherOrHusbandNameBn" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('Mother Name (Bangla)')} {t('bn')}</Form.Label>
+                                                        <Field disabled={true} type="text" name="applicantNidInfo.motherNameBn" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
                                             </div>
 
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="vehicleClassId">
-                                                    <Form.Label>{t('vehicleClass')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="vehicleClassId"
-                                                        component={ReactSelect}
-                                                        options={commonDropdowns.vehicleClassList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.vehicleClassId}
-                                                        onChange={(option) => {
-                                                            setFieldValue('vehicleClassId', option ? option.value : '')
-                                                        }} // Update Formik value
-                                                    />
-                                                    <ErrorMessage name="vehicleClassId" component="div" className="text-danger" />
-                                                </Form.Group>
+                                            <div className="row mt-3">
+
+                                                <h4 className="my-2 font-bold text-green-900">{t('Vehicle Owner Information')}</h4>
+                                                <hr className='mb-3' />
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.name">
+                                                        <Form.Label>{t('Owner Name ')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="vehicleOwner.name" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="vehicleOwner.name" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.nationalityId">
+                                                        <Form.Label>{t('Nationality')}</Form.Label>
+                                                        <Field
+                                                            disabled={isViewable}
+                                                            name="vehicleOwner.nationalityId"
+                                                            component={ReactSelect}
+                                                            options={dropdowns.countryList}
+                                                            placeholder={t('pleaseSelectOne')}
+                                                            value={values.vehicleOwner?.nationalityId}
+                                                            onChange={(option) => {
+                                                                setFieldValue('vehicleOwner.nationalityId', option ? option.value : '')
+                                                            }}
+                                                        />
+                                                        <ErrorMessage name="vehicleOwner.nationalityId" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.fatherOrHusbandName">
+                                                        <Form.Label>{t('Father/Husband')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="vehicleOwner.fatherOrHusbandName" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="vehicleOwner.fatherOrHusbandName" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.motherName">
+                                                        <Form.Label>{t("Mother's Name")} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="vehicleOwner.motherName" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="vehicleOwner.motherName" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.guardianName">
+                                                        <Form.Label>{t("Guardian's Name")} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="vehicleOwner.guardianName" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="vehicleOwner.guardianName" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.passportNo">
+                                                        <Form.Label>{t("Passport No")} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="vehicleOwner.passportNo" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="vehicleOwner.passportNo" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.birthCertificateNo">
+                                                        <Form.Label>{t("Birth Certificate No")} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="vehicleOwner.birthCertificateNo" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="vehicleOwner.birthCertificateNo" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
                                             </div>
 
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="isElectrictVehicle">
-                                                    <Form.Label>{t('electricVehicle')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="isElectrictVehicle"
-                                                        component={ReactSelect}
-                                                        options={yesNoList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.isElectrictVehicle}
-                                                        onChange={(option) => {
-                                                            setFieldValue('isElectrictVehicle', option ? option.value : '')
-                                                        }}
-                                                    />
-                                                    <ErrorMessage name="isElectrictVehicle" component="div" className="text-danger" />
-                                                </Form.Group>
+                                            <div className="row mt-3">
+
+                                                <h4 className="my-2 font-bold text-green-900">{t("Owner's Address :")}</h4>
+                                                <hr className='mb-3' />
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="bodyColorId">
+                                                        <Form.Label>{t('Country')}</Form.Label>
+                                                        <Field
+                                                            disabled={isViewable}
+                                                            name="bodyColorId"
+                                                            component={ReactSelect}
+                                                            options={dropdowns.countryList}
+                                                            placeholder={t('pleaseSelectOne')}
+                                                            value={values.bodyColorId}
+                                                            onChange={(option) => {
+                                                                setFieldValue('bodyColorId', option ? option.value : '')
+                                                            }}
+                                                        />
+                                                        <ErrorMessage name="bodyColorId" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="addressInfo.divisionId">
+                                                        <Form.Label>{t('Division')}</Form.Label>
+                                                        <Field
+                                                            disabled={isViewable}
+                                                            name="addressInfo.divisionId"
+                                                            component={ReactSelect}
+                                                            options={dropdowns.divisionList}
+                                                            placeholder={t('pleaseSelectOne')}
+                                                            value={values.addressInfo?.divisionId}
+                                                            onChange={(option) => {
+                                                                const selectedValue = option ? option.value : '';
+                                                                setFieldValue('addressInfo.divisionId', selectedValue);
+                                                                getDistrictListByParentId(selectedValue);
+                                                            }}
+                                                        />
+                                                        <ErrorMessage name="addressInfo.divisionId" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="addressInfo.districtId">
+                                                        <Form.Label>{t('Disctrict')}</Form.Label>
+                                                        <Field
+                                                            disabled={isViewable}
+                                                            name="addressInfo.districtId"
+                                                            component={ReactSelect}
+                                                            options={districtList}
+                                                            placeholder={t('pleaseSelectOne')}
+                                                            value={values.addressInfo?.districtId}
+                                                            onChange={(option) => {
+                                                                const selectedValue = option ? option.value : '';
+                                                                setFieldValue('addressInfo.districtId', selectedValue);
+                                                                getThanaListByParentId(selectedValue);
+                                                            }}
+                                                        />
+                                                        <ErrorMessage name="addressInfo.districtId" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="addressInfo.thanaId">
+                                                        <Form.Label>{t('Thana')}</Form.Label>
+                                                        <Field
+                                                            disabled={isViewable}
+                                                            name="addressInfo.thanaId"
+                                                            component={ReactSelect}
+                                                            options={thanaList}
+                                                            placeholder={t('pleaseSelectOne')}
+                                                            value={values.addressInfo?.thanaId}
+                                                            onChange={(option) => {
+                                                                const selectedValue = option ? option.value : '';
+                                                                setFieldValue('addressInfo.thanaId', selectedValue);
+                                                                getOrgnationNameByThanaId(selectedValue);
+                                                            }}
+                                                        />
+                                                        <ErrorMessage name="addressInfo.thanaId" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="addressInfo.postCode">
+                                                        <Form.Label>{t('Post Code')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="addressInfo.postCode" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="addressInfo.postCode" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="addressInfo.holdingHouseVillage">
+                                                        <Form.Label>{t('Holding House/Village')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="addressInfo.holdingHouseVillage" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="addressInfo.holdingHouseVillage" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="addressInfo.roadBlockSectorColony">
+                                                        <Form.Label>{t('Road/Block/Sector/Colony')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="addressInfo.roadBlockSectorColony" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="addressInfo.roadBlockSectorColony" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="addressInfo.mobileNumber">
+                                                        <Form.Label>{t('Mobile No')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="addressInfo.mobileNumber" className="form-control" placeholder={t('enterSomething')} />
+                                                        <ErrorMessage name="addressInfo.mobileNumber" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        {/* <Form.Label>{t('Concerned BRTA Office : ')} {currentLanguage === 'en' ? organization.nameEn : organization.nameBn}</Form.Label> */}
+                                                        <Form.Label className='font-bold'>{t('Concerned BRTA Office : ')} {organization.nameBn}</Form.Label>
+                                                    </Form.Group>
+                                                </div>
+
                                             </div>
 
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="ccOrKw">
-                                                    <Form.Label>{t('ccOrKw')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="ccOrKw" className="form-control" placeholder="Enter cc or kw" />
-                                                    <ErrorMessage name="ccOrKw" component="div" className="text-danger" />
-                                                </Form.Group>
+                                            <div className="row">
+                                                <hr className='mb-3' />
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.isRecondition">
+                                                        <Form.Label>{t('Is Recondition ?')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field
+                                                            disabled={isViewable}
+                                                            name="vehicleOwner.isRecondition"
+                                                            component={ReactSelect}
+                                                            options={yesNoList}
+                                                            placeholder={t('pleaseSelectOne')}
+                                                            value={values.vehicleOwner?.isRecondition}
+                                                            onChange={(option) => {
+                                                                setFieldValue('vehicleOwner.isRecondition', option ? option.value : '')
+                                                            }}
+                                                        />
+                                                        <ErrorMessage name="vehicleOwner.isRecondition" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.isJointOwner">
+                                                        <Form.Label>{t('Joint Owner')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field
+                                                            disabled={isViewable}
+                                                            name="vehicleOwner.isJointOwner"
+                                                            component={ReactSelect}
+                                                            options={yesNoList}
+                                                            placeholder={t('pleaseSelectOne')}
+                                                            value={values.vehicleOwner?.isJointOwner}
+                                                            onChange={(option) => {
+                                                                setFieldValue('vehicleOwner.isJointOwner', option ? option.value : '')
+                                                            }}
+                                                        />
+                                                        <ErrorMessage name="vehicleOwner.isJointOwner" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3" controlId="vehicleOwner.ownerTypeId">
+                                                        <Form.Label>{t('Owner type')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field
+                                                            disabled={isViewable}
+                                                            name="vehicleOwner.ownerTypeId"
+                                                            component={ReactSelect}
+                                                            options={dropdowns.ownerTypeList}
+                                                            placeholder={t('pleaseSelectOne')}
+                                                            value={values.vehicleOwner?.ownerTypeId}
+                                                            onChange={(option) => {
+                                                                const selectedValue = option ? option.value : '';
+                                                                setFieldValue('vehicleOwner.ownerTypeId', selectedValue);
+                                                                setOwnerType(selectedValue);
+                                                            }}
+                                                        />
+                                                        <ErrorMessage name="vehicleOwner.ownerTypeId" component="div" className="text-danger" />
+                                                    </Form.Group>
+                                                </div>
+
                                             </div>
 
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="chassisNumber">
-                                                    <Form.Label>{t('chassisNumber')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="text" name="chassisNumber" className="form-control" placeholder="Enter chassis number" />
-                                                    <ErrorMessage name="chassisNumber" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
+                                            {isOwnerTypePublic && (
 
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="engineNumber">
-                                                    <Form.Label>{t('engineNumber')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="text" name="engineNumber" className="form-control" placeholder="Enter engine number" />
-                                                    <ErrorMessage name="engineNumber" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
 
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="manufacturingYear">
-                                                    <Form.Label>{t('manufacturingYear')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="manufacturingYear" className="form-control" placeholder="Enter manufacturing Year" />
-                                                    <ErrorMessage name="manufacturingYear" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
+                                                <div className="row">
+                                                    <hr className='mb-3' />
+                                                    <h3 className='font-bold text-center'>{t('Additional Information for Public Vehicle')}</h3>
+                                                    <hr className='my-3' />
 
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="bodyColorId">
-                                                    <Form.Label>{t('colourCabin')}</Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="bodyColorId"
-                                                        component={ReactSelect}
-                                                        options={dropdowns.vehicleColorList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.bodyColorId}
-                                                        onChange={(option) => {
-                                                            setFieldValue('bodyColorId', option ? option.value : '')
-                                                        }}
-                                                    />
-                                                    <ErrorMessage name="bodyColorId" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="assemblyOperationId">
-                                                    <Form.Label>{t('assemblyOperation')}</Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="assemblyOperationId"
-                                                        component={ReactSelect}
-                                                        options={commonDropdowns.assembleOperationList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.assemblyOperationId}
-                                                        onChange={(option) => {
-                                                            setFieldValue('assemblyOperationId', option ? option.value : '')
-                                                        }}
-                                                    />
-                                                    <ErrorMessage name="assemblyOperationId" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="mileage">
-                                                    <Form.Label>{t('mileage')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="mileage" className="form-control" placeholder="Enter mileage" />
-                                                    <ErrorMessage name="mileage" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="unladenWeight">
-                                                    <Form.Label>{t('unladenWeight')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="unladenWeight" className="form-control" placeholder="Enter unladen weight" />
-                                                    <ErrorMessage name="unladenWeight" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="maxLadenWeight">
-                                                    <Form.Label>{t('maxLadenWeight')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="maxLadenWeight" className="form-control" placeholder="Enter max laden weight" />
-                                                    <ErrorMessage name="maxLadenWeight" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="isHire">
-                                                    <Form.Label>{t('hire')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="isHire"
-                                                        component={ReactSelect}
-                                                        options={yesNoList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.isHire}
-                                                        onChange={(option) => {
-                                                            setFieldValue('isHire', option ? option.value : '')
-                                                        }}
-                                                    />
-                                                    <ErrorMessage name="isHire" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="isHirePurchase">
-                                                    <Form.Label>{t('hirePurchase')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="isHirePurchase"
-                                                        component={ReactSelect}
-                                                        options={yesNoList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.isHirePurchase}
-                                                        onChange={(option) => {
-                                                            setFieldValue('isHirePurchase', option ? option.value : '')
-                                                        }}
-                                                    />
-                                                    <ErrorMessage name="isHirePurchase" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="totalSeat">
-                                                    <Form.Label>{t('totalSeat')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="totalSeat" className="form-control" placeholder="Enter total seat" />
-                                                    <ErrorMessage name="totalSeat" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="fuelId">
-                                                    <Form.Label>{t('fuelUsed')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="fuelId"
-                                                        component={ReactSelect}
-                                                        options={dropdowns.fuelTypeList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.fuelId}
-                                                        onChange={(option) => {
-                                                            setFieldValue('fuelId', option ? option.value : '')
-                                                        }}
-                                                    />
-                                                    <ErrorMessage name="fuelId" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="brandId">
-                                                    <Form.Label>{t('vehicleBrand')}</Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="brandId"
-                                                        component={ReactSelect}
-                                                        options={commonDropdowns.vehicleBrandList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.brandId}
-                                                        onChange={(option) => {
-                                                            setFieldValue('brandId', option ? option.value : '')
-                                                        }}
-                                                    />
-                                                    <ErrorMessage name="brandId" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="isAirConditioner">
-                                                    <Form.Label>{t('airConditioner')}</Form.Label>
-                                                    <Field
-                                                        disabled={isViewable}
-                                                        name="isAirConditioner"
-                                                        component={ReactSelect}
-                                                        options={yesNoList}
-                                                        placeholder={t('pleaseSelectOne')}
-                                                        value={values.isAirConditioner}
-                                                        onChange={(option) => {
-                                                            setFieldValue('isAirConditioner', option ? option.value : '')
-                                                        }}
-                                                    />
-                                                    <ErrorMessage name="isAirConditioner" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="vehiclePrice">
-                                                    <Form.Label>{t('vehiclePrice')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="vehiclePrice" className="form-control" placeholder="Enter vehicle price" />
-                                                    <ErrorMessage name="vehiclePrice" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="economicLife">
-                                                    <Form.Label>{t('economicLife')}</Form.Label>
-                                                    <Field disabled={isViewable} type="date" name="economicLife" className="form-control" placeholder="Enter economic life" />
-                                                    <ErrorMessage name="economicLife" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="remainingLife">
-                                                    <Form.Label>{t('remainingLife')}</Form.Label>
-                                                    <Field disabled={isViewable} type="date" name="remainingLife" className="form-control" placeholder="Enter remaining life" />
-                                                    <ErrorMessage name="remainingLife" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="model">
-                                                    <Form.Label>{t('vehicleModel')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="model" className="form-control" placeholder="Enter vehicle model" />
-                                                    <ErrorMessage name="model" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="cylinder">
-                                                    <Form.Label>{t('noOfCylinder')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="cylinder" className="form-control" placeholder="Enter cylinder" />
-                                                    <ErrorMessage name="cylinder" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="horsePower">
-                                                    <Form.Label>{t('horsePower')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="horsePower" className="form-control" placeholder="Enter horse power" />
-                                                    <ErrorMessage name="horsePower" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="highestRpm">
-                                                    <Form.Label>{t('highestRpm')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="highestRpm" className="form-control" placeholder="Enter highest rpm" />
-                                                    <ErrorMessage name="highestRpm" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="standee">
-                                                    <Form.Label>{t('standee')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="standee" className="form-control" placeholder="Enter standee" />
-                                                    <ErrorMessage name="standee" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                <Form.Group className="mb-3" controlId="wheelBase">
-                                                    <Form.Label>{t('wheelBase')}</Form.Label>
-                                                    <Field disabled={isViewable} type="text" name="wheelBase" className="form-control" placeholder="Enter wheelBase" />
-                                                    <ErrorMessage name="wheelBase" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                        </div>
-
-                                        <div className="row mt-3">
-
-                                            <h4 className="my-2 font-bold text-green-900">{t('vehicleDetailsInformation')}</h4>
-                                            <hr className='mb-3' />
-
-                                            <div className="col-sm-12 col-lg-4 col-xl-4">
-                                                <Form.Group className="mb-3" controlId="tyreSize">
-                                                    <Form.Label>{t('tyreSize')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="text" name="tyreSize" className="form-control" placeholder="Enter tyre size" />
-                                                    <ErrorMessage name="tyreSize" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-4 col-xl-4">
-                                                <Form.Group className="mb-3" controlId="axleNumber">
-                                                    <Form.Label>{t('axleNumber')} <span className='text-red-500'>*</span></Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="axleNumber" className="form-control" placeholder="Enter axle number" />
-                                                    <ErrorMessage name="axleNumber" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-4 col-xl-4">
-                                                <Form.Group className="mb-3" controlId="tyreNumber">
-                                                    <Form.Label>{t('tyreNumber')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="tyreNumber" className="form-control" placeholder="Enter tyre number" />
-                                                    <ErrorMessage name="tyreNumber" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                        </div>
-
-                                        <div className="row">
-                                            <hr className='my-3' />
-
-                                            <div className="col-sm-11 col-lg-5 col-xl-5 border mr-1 p-2 mt-1">
-                                                <Form.Group className="mb-3" controlId="frontAxle1">
-                                                    <Form.Label>{t('frontAxle')} ({t('maximumAxleWeight')} :)</Form.Label>
-                                                    <div className="row">
-                                                        <div className="col-sm-6">
-                                                            <Field disabled={isViewable} type="number" name="frontAxle1" className="form-control" placeholder="1" />
-                                                            <ErrorMessage name="frontAxle1" component="div" className="text-danger" />
-                                                        </div>
-                                                        <div className="col-sm-6">
-                                                            <Field disabled={isViewable} type="number" name="frontAxle2" className="form-control" placeholder="2" />
-                                                            <ErrorMessage name="frontAxle2" component="div" className="text-danger" />
-                                                        </div>
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.ministryId">
+                                                            <Form.Label>{t('Ministry')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="vehicleOwner.ministryId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.countryList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.vehicleOwner?.ministryId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('vehicleOwner.ministryId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="vehicleOwner.ministryId" component="div" className="text-danger" />
+                                                        </Form.Group>
                                                     </div>
-                                                </Form.Group>
-                                            </div>
 
-                                            <div className="col-sm-11 col-lg-5 col-xl-5 border p-2 mt-1">
-                                                <Form.Group className="mb-3" controlId="centralAxle1">
-                                                    <Form.Label>{t('centralAxle')} ({t('maximumAxleWeight')} :)</Form.Label>
-                                                    <div className="row">
-                                                        <div className="col-sm-4">
-                                                            <Field disabled={isViewable} type="number" name="centralAxle1" className="form-control" placeholder="1" />
-                                                            <ErrorMessage name="centralAxle1" component="div" className="text-danger" />
-                                                        </div>
-                                                        <div className="col-sm-4">
-                                                            <Field disabled={isViewable} type="number" name="centralAxle2" className="form-control" placeholder="2" />
-                                                            <ErrorMessage name="centralAxle2" component="div" className="text-danger" />
-                                                        </div>
-                                                        <div className="col-sm-4">
-                                                            <Field disabled={isViewable} type="number" name="centralAxle3" className="form-control" placeholder="3" />
-                                                            <ErrorMessage name="centralAxle3" component="div" className="text-danger" />
-                                                        </div>
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.departmentId">
+                                                            <Form.Label>{t('Department')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="vehicleOwner.departmentId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.countryList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.vehicleOwner?.departmentId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('vehicleOwner.departmentId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="vehicleOwner.departmentId" component="div" className="text-danger" />
+                                                        </Form.Group>
                                                     </div>
-                                                </Form.Group>
-                                            </div>
 
-                                            <div className="col-sm-11 col-lg-5 col-xl-5 border p-2 mt-1">
-                                                <Form.Group className="mb-3" controlId="rearAxle1">
-                                                    <Form.Label>{t('rearAxle')} ({t('maximumAxleWeight')} :)</Form.Label>
-                                                    <div className="row">
-                                                        <div className="col-sm-4">
-                                                            <Field disabled={isViewable} type="number" name="rearAxle1" className="form-control" placeholder="1" />
-                                                            <ErrorMessage name="rearAxle1" component="div" className="text-danger" />
-                                                        </div>
-                                                        <div className="col-sm-4">
-                                                            <Field disabled={isViewable} type="number" name="rearAxle2" className="form-control" placeholder="2" />
-                                                            <ErrorMessage name="rearAxle2" component="div" className="text-danger" />
-                                                        </div>
-                                                        <div className="col-sm-4">
-                                                            <Field disabled={isViewable} type="number" name="rearAxle3" className="form-control" placeholder="3" />
-                                                            <ErrorMessage name="rearAxle3" component="div" className="text-danger" />
-                                                        </div>
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.subOfficeUnitGroupId">
+                                                            <Form.Label>{t('Sub Office/Unit Group')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="vehicleOwner.subOfficeUnitGroupId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.countryList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.vehicleOwner?.subOfficeUnitGroupId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('vehicleOwner.subOfficeUnitGroupId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="vehicleOwner.subOfficeUnitGroupId" component="div" className="text-danger" />
+                                                        </Form.Group>
                                                     </div>
-                                                </Form.Group>
-                                            </div>
 
-                                        </div>
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.unitOrActivityId">
+                                                            <Form.Label>{t('Unit/Activity')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="vehicleOwner.unitOrActivityId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.countryList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.vehicleOwner?.unitOrActivityId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('vehicleOwner.unitOrActivityId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="vehicleOwner.unitOrActivityId" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
 
-                                        <div className="row mt-2">
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.inUse">
+                                                            <Form.Label>{t('In Use')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="vehicleOwner.inUse"
+                                                                component={ReactSelect}
+                                                                options={yesNoList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.vehicleOwner?.inUse}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('vehicleOwner.inUse', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="vehicleOwner.inUse" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
 
-                                            <hr className='my-3' />
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.usedById">
+                                                            <Form.Label>{t('Used By')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="vehicleOwner.usedById"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.countryList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.vehicleOwner.usedById}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('vehicleOwner.usedById', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="vehicleOwner.usedById" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
 
-                                            <h3 className='text-center mb-3 font-semibold'>{t('dimension')} :</h3>
-                                            
-                                            <div className="col-sm-12 col-lg-4 col-xl-4">
-                                                <Form.Group className="mb-3" controlId="overallLength">
-                                                    <Form.Label>{t('overallLength')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="overallLength" className="form-control" placeholder="" />
-                                                    <ErrorMessage name="overallLength" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.withinOrganogram">
+                                                            <Form.Label>{t('Within Organogram')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="vehicleOwner.withinOrganogram"
+                                                                component={ReactSelect}
+                                                                options={yesNoList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.vehicleOwner?.withinOrganogram}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('vehicleOwner.withinOrganogram', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="vehicleOwner.withinOrganogram" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
 
-                                            <div className="col-sm-12 col-lg-4 col-xl-4">
-                                                <Form.Group className="mb-3" controlId="overallWidth">
-                                                    <Form.Label>{t('overallWidth')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="overallWidth" className="form-control" placeholder="" />
-                                                    <ErrorMessage name="overallWidth" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.acquisitionProcessId">
+                                                            <Form.Label>{t('Acquisition Process')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="vehicleOwner.acquisitionProcessId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.countryList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.vehicleOwner?.acquisitionProcessId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('vehicleOwner.acquisitionProcessId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="vehicleOwner.acquisitionProcessId" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
 
-                                            <div className="col-sm-12 col-lg-4 col-xl-4">
-                                                <Form.Group className="mb-3" controlId="overallHeight">
-                                                    <Form.Label>{t('overallHeight')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="overallHeight" className="form-control" placeholder="" />
-                                                    <ErrorMessage name="overallHeight" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.acquisitionOffice">
+                                                            <Form.Label>{t("Acquisition Office")} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field disabled={isViewable} type="text" name="vehicleOwner.acquisitionOffice" className="form-control" placeholder={t('enterSomething')} />
+                                                            <ErrorMessage name="vehicleOwner.acquisitionOffice" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
 
-                                        </div>
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.acquisitionPrice">
+                                                            <Form.Label>{t("Acquisition Price")} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field disabled={isViewable} type="text" name="vehicleOwner.acquisitionPrice" className="form-control" placeholder={t('enterSomething')} />
+                                                            <ErrorMessage name="vehicleOwner.acquisitionPrice" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
 
-                                        <div className="row mt-2">
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.dateOfReceipt">
+                                                            <Form.Label>{t("Date of Receipt")} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field disabled={isViewable} type="date" name="vehicleOwner.dateOfReceipt" className="form-control" placeholder={t('enterSomething')} />
+                                                            <ErrorMessage name="vehicleOwner.dateOfReceipt" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
 
-                                            <hr className='my-3' />
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="vehicleOwner.remarks">
+                                                            <Form.Label>{t("Remarks")} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field disabled={isViewable} type="text" name="vehicleOwner.remarks" className="form-control" placeholder={t('enterSomething')} />
+                                                            <ErrorMessage name="vehicleOwner.remarks" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
 
-                                            <h3 className='text-center mb-3 font-semibold'>{t('overhangs')} (%) :</h3>
-                                            
-                                            <div className="col-sm-12 col-lg-4 col-xl-4">
-                                                <Form.Group className="mb-3" controlId="overhangsFront">
-                                                    <Form.Label>{t('overhangsFront')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="overhangsFront" className="form-control" placeholder="" />
-                                                    <ErrorMessage name="overhangsFront" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
+                                                </div>
+                                            )}
 
-                                            <div className="col-sm-12 col-lg-4 col-xl-4">
-                                                <Form.Group className="mb-3" controlId="overhangsRear">
-                                                    <Form.Label>{t('overhangsRear')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="overhangsRear" className="form-control" placeholder="" />
-                                                    <ErrorMessage name="overhangsRear" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                            <div className="col-sm-12 col-lg-4 col-xl-4">
-                                                <Form.Group className="mb-3" controlId="overhangsOther">
-                                                    <Form.Label>{t('overhangsOther')}</Form.Label>
-                                                    <Field disabled={isViewable} type="number" name="overhangsOther" className="form-control" placeholder="" />
-                                                    <ErrorMessage name="overhangsOther" component="div" className="text-danger" />
-                                                </Form.Group>
-                                            </div>
-
-                                        </div>
-
-                                    </CardBody>
-                                </Card>
+                                        </CardBody>
+                                    </Card>
 
 
-                                <div className="row mt-2 mb-6">
-                                    <div className="col-md-12 text-right">
-                                        {isViewable ? (
-                                            <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/user-list`)}>{t('back')}</button>
-                                        ) : (
-                                            <>
-                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
+                                    <div className="row mt-2 mb-6">
+                                        <div className="col-md-12 text-right">
+
+                                            <button className='btn btn-secondary btn-rounded btn-xs mr-1' onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2/${initialValues.id}`)}>{t('previous')}</button>
+                                            <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
+                                            {!isViewable && (
                                                 <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
-                                            </>
-                                        )}
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            </FormikForm>
-                        )}
+                                </FormikForm>
+                            )
+                        }}
                     </Formik>
                 </div>
             </div>

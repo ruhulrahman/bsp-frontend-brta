@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import HomeTopNavBar from '../navbar/home/TopNavbar';
+import HomeTopNavBar from './navbar/home/TopNavbar';
 
 const HomeLayout = () => {
   return (

@@ -36,6 +36,37 @@ const AdminSidebar = ({ t, openSidebar }) => {
                         <li>
                             <div onClick={() => setOpenUserManagement(!openUserManagement)} className="flex items-center justify-content-between cursor-pointer">
                                 {/* <i className="bi bi-gear-fill"></i> */}
+                                    <span className="material-symbols-outlined">swap_driving_apps_wheel</span>
+                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('drivingLicense')}</span>
+                                <span className={`text-sm rotate-180 ml-2 ${openUserManagement ? 'rotate-0' : ''}`}>
+                                    <i className="bi bi-chevron-down"></i>
+                                </span>
+                            </div>
+                            {openUserManagement && (
+                                <ul id="example-collapse-text" className="pl-10 h-auto visible">
+                                    {hasPermission('permitted') && (
+                                        <li>
+                                            <NavLink to="/applicant-panel/driving-license/new-driving-license/application-pre-requisites">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('newDrivingLicense')}</span>
+                                            </NavLink>
+                                        </li>
+                                    )}
+                                    {/* {hasPermission('permitted') && (
+                                        <li>
+                                            <NavLink to="/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">Fees and Taxes</span>
+                                            </NavLink>
+                                        </li>
+                                    )} */}
+                                </ul>
+                            )}
+                        </li>
+                    )}
+
+                    {hasPermission('permitted') && (
+                        <li>
+                            <div onClick={() => setOpenUserManagement(!openUserManagement)} className="flex items-center justify-content-between cursor-pointer">
+                                {/* <i className="bi bi-gear-fill"></i> */}
                                     <span className="material-symbols-outlined">directions_car</span>
                                 <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('vehicleRegistration')}</span>
                                 <span className={`text-sm rotate-180 ml-2 ${openUserManagement ? 'rotate-0' : ''}`}>
@@ -51,6 +82,13 @@ const AdminSidebar = ({ t, openSidebar }) => {
                                             </NavLink>
                                         </li>
                                     )}
+                                    {/* {hasPermission('permitted') && (
+                                        <li>
+                                            <NavLink to="/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">Fees and Taxes</span>
+                                            </NavLink>
+                                        </li>
+                                    )} */}
                                 </ul>
                             )}
                         </li>

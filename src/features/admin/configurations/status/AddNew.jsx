@@ -161,13 +161,13 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
 
                                 <Form.Group className="mb-3" controlId="colorName">
                                     <Form.Label>{t('colorName')}</Form.Label>
-                                    <Field type="text" name="colorName" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="text" name="colorName" className="form-control" placeholder="Enter color name" />
                                     <ErrorMessage name="colorName" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="priority">
                                     <Form.Label>{t('priority')}</Form.Label>
-                                    <Field type="number" min="1" name="priority" className="form-control" placeholder="Enter status group code" />
+                                    <Field type="number" min="1" name="priority" className="form-control" placeholder="Enter priority number" />
                                     <ErrorMessage name="priority" component="div" className="text-danger" />
                                 </Form.Group>
 

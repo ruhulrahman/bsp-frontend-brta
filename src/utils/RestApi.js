@@ -2,7 +2,7 @@ import axios from 'axios'
 import { toaster } from './helpers.js';
 
 export const baseURL = 'http://localhost:8080'
-// export const baseURL = 'http://192.168.121.25:8090/vehims-0.0.1'
+// export const baseURL = 'http://192.168.121.25:8090/bsp-0.0.2'
 
 const accessToken = localStorage.getItem('token')
 

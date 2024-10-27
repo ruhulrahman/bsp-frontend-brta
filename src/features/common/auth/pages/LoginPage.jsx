@@ -36,6 +36,7 @@ const LoginPage = ({ t }) => {
             const { data: result } = await RestApi.post('api/auth/v1/login', values)
             console.log('result', result)
                 await localStorage.setItem('token', result.tokenInfo?.accessToken)
+                await localStorage.setItem('userTypeCode', result.userInfo?.userTypeCode)
                 await dispatch(setToken(result.tokenInfo?.accessToken));
                 await dispatch(setTokenInfo(result.tokenInfo));
                 await dispatch(setUserPermissions(result.tokenInfo?.permissions));

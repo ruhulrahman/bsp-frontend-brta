@@ -15,11 +15,16 @@ import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { useNavigate } from 'react-router-dom';
-import SearchComponent from '@/features/common/list/SearchComponent';
+import SearchComponent from '../../common/list/SearchComponent';
+import ApplicationForward from '../vehicle-registration/applicationForVehicleRegistration/ApplicationForward';
+import ApplicationForwardInspector from '../vehicle-registration/applicationForVehicleRegistration/ApplicationForwardInspector';
+import ApplicationForwardRevenue from '../vehicle-registration/applicationForVehicleRegistration/ApplicationForwardRevenue';
+import useCommonFunctions from '@/hooks/useCommonFunctions';
 
-const UserList = ({ t }) => {
+const VehicleRegistrationApprovalList = ({ t }) => {
 
     const navigate = useNavigate()
+    const { hasPermission } = useCommonFunctions();
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns, permissionTypeList } = useSelector((state) => state.common)
@@ -179,10 +184,10 @@ const UserList = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            // const { data } = await RestApi.get('api/v1/applicant/vehicle/registration-application', values, { params })
-            const { data } = await RestApi.post('api/reg/applications/v1/vehicles/auth-user/registration-application', values, { params })
+            const { data } = await RestApi.post('api/reg/applications/v1/vehicles', values, { params })
             dispatch(setListData(data.content));
-            setPaginationData(data)
+            setPaginationData(data);
+            console.log(data.content);
         } catch (error) {
             console.log('error', error)
         } finally {
@@ -197,6 +202,9 @@ const UserList = ({ t }) => {
     }
 
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpenApproval, setModalOpenApproval] = useState(false);
+    const [modalOpenRevenue, setModalOpenRevenue] = useState(false);
+    const [modalOpenInspection, setModalOpenInspection] = useState(false);
     const [editData, setEditData] = useState(null);
 
     const handleOpenAddModal = () => {
@@ -209,12 +217,41 @@ const UserList = ({ t }) => {
         setModalOpen(true);
     };
 
+    const openModal = (item, modalName) => {
+        if (modalName == 'approval') {
+            setModalOpenApproval(true);
+        } else if (modalName == 'revenue') {
+            setModalOpenRevenue(true);
+        } else if (modalName == 'inspection') {
+            setModalOpenInspection(true);
+        }
+        setEditData(item);
+    };
+
+    const CloseModal = (item, modalName) => {
+        if (modalName == 'approval') {
+            setModalOpenApproval(false);
+        } else if (modalName == 'revenue') {
+            setModalOpenRevenue(false);
+        } else if (modalName == 'inspection') {
+            setModalOpenInspection(false);
+        }
+        setEditData('');
+    };
+
+    const handleOpenViewDetailsModal = (item) => {
+        setEditData(item);
+        setModalOpen(true);
+    };
+
     const handleCloseModal = () => {
         setModalOpen(false);
         setEditData(null); // Reset edit data
     };
+    const handleSave = async (values, setSubmitting, resetForm) => {
 
 
+    };
 
     return (
         <>
@@ -252,8 +289,6 @@ const UserList = ({ t }) => {
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
                             <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
-                        {/* <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button> */}
-                        <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)}>{t('newVehicleRegistration')}</button>
                     </div>
                 </div>
                 <div className="p-0 overflow-scroll relative min-h-[300px]">
@@ -270,7 +305,7 @@ const UserList = ({ t }) => {
                                 <th>Manufacturing Year</th>
                                 <th>Application Date</th>
                                 <th>Application Status</th>
-                                <th className='text-left'>Actions</th>
+                                <th className='text-center'>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -286,26 +321,38 @@ const UserList = ({ t }) => {
                                     <td>{item.manufacturingYear}</td>
                                     <td>{item.applicationDate}</td>
                                     <td>{item.applicationStatusName}</td>
-                                    <td className='text-left'>
+                                    <td className='text-center'>
+                                        {hasPermission('vehicle_application_approval') && (
+                                            <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                                <button onClick={() => openModal(item, 'approval')} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
+                                                    <i className="fa fa-eye"></i>
+                                                </button>
+                                            </OverlayTrigger>
+                                        )}
+                                        {hasPermission('vehicle_inspection_submission') && (
+                                            <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                                <button onClick={() => openModal(item, 'inspection')} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
+                                                    <i className="fa fa-eye"></i>
+                                                </button>
+                                            </OverlayTrigger>
+                                        )}
+                                        {hasPermission('vehicle_revenue_check_submission') && (
+                                            <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                                <button onClick={() => openModal(item, 'revenue')} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
+                                                    <i className="fa fa-eye"></i>
+                                                </button>
+                                            </OverlayTrigger>
+                                        )}
+                                        {/* <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                            <button onClick={() => handleOpenViewDetailsModal(item)} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
+                                                <i className="fa fa-eye"></i>
+                                            </button>
+                                        </OverlayTrigger> */}
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/${item.serviceRequestId}`)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-user/${false}/${item.id}`)} className='btn btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>
-                                        {item.applicationStatusCode === 'vehicle_app_primary_approved' && (
-                                            <OverlayTrigger overlay={<Tooltip>{t('Submit Application')}</Tooltip>}>
-                                                <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/${item.serviceRequestId}`)} className='btn btn-sm text-[12px] btn-outline-primary ml-1'>
-                                                    Submit Application
-                                                </button>
-                                            </OverlayTrigger>
-                                        )}
-                                        {item.applicationStatusCode === 'vehicle_app_final_approved' && (
-                                            <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
-                                                <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/reports/${item.serviceRequestId}`)} className='btn btn-sm text-[12px] btn-outline-dark ml-1'>
-                                                    Report
-                                                </button>
-                                            </OverlayTrigger>
-                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -330,9 +377,30 @@ const UserList = ({ t }) => {
                         </div>
                     </div>
                 </div>
+
+                <ApplicationForward
+                    show={modalOpenApproval}
+                    onHide={handleCloseModal}
+                    onSave={handleSave}
+                    editData={editData}
+                />
+
+                <ApplicationForwardInspector
+                    show={modalOpenInspection}
+                    onHide={handleCloseModal}
+                    onSave={handleSave}
+                    editData={editData}
+                />
+
+                <ApplicationForwardRevenue
+                    show={modalOpenRevenue}
+                    onHide={handleCloseModal}
+                    onSave={handleSave}
+                    editData={editData}
+                />
             </div>
         </>
     )
 }
 
-export default withNamespaces()(UserList)
+export default withNamespaces()(VehicleRegistrationApprovalList)

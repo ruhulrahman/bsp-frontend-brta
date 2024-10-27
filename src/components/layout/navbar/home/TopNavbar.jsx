@@ -2,9 +2,12 @@ import logo from '@/assets/images/logo.png';
 import i18n from '@/i18n';
 import React from 'react';
 import { withNamespaces } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const TopNavbar = ({ t }) => {
+
+    const { authUser } = useSelector((state) => state.auth) || {};
 
     const setLanguage = (language) => {
         localStorage.setItem('preferredLanguage', language);
@@ -21,13 +24,18 @@ const TopNavbar = ({ t }) => {
 
     const navigate = useNavigate();
 
-    const isAuthenticated = localStorage.getItem('token');
-
-    // useEffect(() => {
-    //   if (isAuthenticated) {
-    //     navigate('/admin/dashboard');
-    //   }
-    // }, []);
+    const isAuthenticated = localStorage.getItem('token') && localStorage.getItem('userTypeCode') ? true : false;
+    const userTypeCode = localStorage.getItem('userTypeCode')
+  
+    let dashboardRedirectUrl = ''
+  
+    if (userTypeCode === 'system_admin') {
+      dashboardRedirectUrl = '/admin/dashboard'
+    } else if (userTypeCode === 'system_user') {
+      dashboardRedirectUrl = '/system-user/dashboard'
+    } else if (userTypeCode === 'applicant') {
+      dashboardRedirectUrl = '/applicant-panel/dashboard'
+    }
 
     return (
         <>
@@ -57,7 +65,7 @@ const TopNavbar = ({ t }) => {
                         }
                         {isAuthenticated &&
                             <>
-                                <NavLink className='font-dm text-sm btn btn-dark' to="/admin/dashboard">{t('dashboard')}</NavLink>
+                                <NavLink className='font-dm text-sm btn btn-dark' to={dashboardRedirectUrl}>{t('dashboard')}</NavLink>
                             </>
                         }
                         {preferredLanguage === 'en' &&

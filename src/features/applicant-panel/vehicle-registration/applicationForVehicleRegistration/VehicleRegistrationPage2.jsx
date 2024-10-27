@@ -18,14 +18,12 @@ import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
 const VehicleRegistrationPage2 = ({ t }) => {
 
-    let { id, isViewable } = useParams()
+    let { serviceRequestId, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
     const navigate = useNavigate();
 
     const { activeStatusList, loading, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
-
-    const findItem = listData?.find((item) => item.id == id)
 
     const [initialValues, setInitialValues] = useState({
         vehicleTypeId: '',
@@ -174,13 +172,13 @@ const VehicleRegistrationPage2 = ({ t }) => {
 
     // Fetch the role by id after the parent-child list is ready
     useEffect(() => {
-        if (id) {
-            getVehicleInfoById(id);
+        if (serviceRequestId) {
+            getVehicleInfoById(serviceRequestId);
         } else {
             navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
             setInitialValues(resetValues);
         }
-    }, [id, officeList]);
+    }, [serviceRequestId, officeList]);
 
     const getOfficeList = async () => {
 
@@ -203,15 +201,20 @@ const VehicleRegistrationPage2 = ({ t }) => {
         }
     }
 
-    const getVehicleInfoById = async (id) => {
+    const getVehicleInfoById = async (serviceRequestId) => {
 
         try {
-            const { data } = await RestApi.get(`api/v1/applicant/vehicle/${id}`)
-            if (data && data.pageCompleted < 1) {
+            // const { apiResponse } = await RestApi.get(`api/v1/applicant/vehicle/${id}`)
+
+            const { data } = await RestApi.get(`api/v1/applicant/vehicle/service/${serviceRequestId}`)
+
+            const apiResponse = Object.assign({}, data.applicantNidInfo, data.vehicleInfo, data, {serviceRequestId: data.id});
+
+            if (apiResponse && apiResponse.pageCompleted < 1) {
                 navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
             }
-            setInitialValues(data);
-            console.log('data', data)
+            setInitialValues(apiResponse);
+            console.log('apiResponse', apiResponse)
 
         } catch (error) {
             console.log('error', error)

@@ -20,11 +20,22 @@ const LoginLayout = () => {
 
   const navigate = useNavigate();
 
-  const isAuthenticated = localStorage.getItem('token');
+  const isAuthenticated = localStorage.getItem('token') && localStorage.getItem('userTypeCode') ? true : false;
+  const userTypeCode = localStorage.getItem('userTypeCode')
+
+  let dashboardRedirectUrl = ''
+
+  if (userTypeCode === 'system_admin') {
+    dashboardRedirectUrl = '/admin/dashboard'
+  } else if (userTypeCode === 'system_user') {
+    dashboardRedirectUrl = '/system-user/dashboard'
+  } else if (userTypeCode === 'applicant') {
+    dashboardRedirectUrl = '/applicant-panel/dashboard'
+  }
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/admin/dashboard');
+      navigate(dashboardRedirectUrl);
     }
   }, []);
 

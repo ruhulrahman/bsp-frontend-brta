@@ -16,7 +16,7 @@ const AdminSidebar = ({ t, openSidebar }) => {
                 <ul className='admin-sidebar-ul w-full mb-[50px]'>
                     {hasPermission('permitted') && (
                         <li>
-                            <NavLink to="/applicant-panel/dashboard">
+                            <NavLink to="/system-user-panel/dashboard">
                                 <i className="bi bi-house-door-fill"></i>
                                 <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('dashboard')}</span>
                             </NavLink>
@@ -25,7 +25,7 @@ const AdminSidebar = ({ t, openSidebar }) => {
 
                     {hasPermission('profile') && (
                         <li>
-                            <NavLink to="/applicant-panel/profile">
+                            <NavLink to="/system-user-panel/profile">
                                 <i className="bi bi-person-fill"></i>
                                 <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('profile')}</span>
                             </NavLink>
@@ -46,8 +46,22 @@ const AdminSidebar = ({ t, openSidebar }) => {
                                 <ul id="example-collapse-text" className="pl-10 h-auto visible">
                                     {hasPermission('permitted') && (
                                         <li>
-                                            <NavLink to="/applicant-panel/vehicle-registration/application-for-vehicle-registration/application-list">
+                                            <NavLink to="/system-user-panel/vehicle-registration/application-for-vehicle-registration/application-list">
                                                 <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('applicationForVehicleRegistration')}</span>
+                                            </NavLink>
+                                        </li>
+                                    )}
+                                    {/* {hasPermission('permitted') && (
+                                        <li>
+                                            <NavLink to="/system-user-panel/vehicle-registration/application-for-vehicle-registration/application-forward-list">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('applicationForward')}</span>
+                                            </NavLink>                                            
+                                        </li>
+                                    )} */}
+                                    {hasPermission('application_for_vehicle_registration') && (
+                                        <li>                                            
+                                            <NavLink to="/system-user-panel/vehicle-registration/approval-1">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('vehicleRegistrationList')}</span>
                                             </NavLink>
                                         </li>
                                     )}

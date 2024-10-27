@@ -7,6 +7,12 @@ import Profile from '../features/common/profile-management/pages/Profile.jsx';
 import VehicleRegistrationApplications from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/ApplicationList.jsx';
 import VehicleRegistrationPage1 from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage1.jsx';
 import VehicleRegistrationPage2 from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage2.jsx';
+import ApplicationForwardList from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/ApplicationForwardList.jsx';
+import ApplicationForward from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/ApplicationForward.jsx';
+import VehicleInspection from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleInspection.jsx';
+import RevenueCheck from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/RevenueCheck.jsx';
+import VehicleApprove from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleApprove.jsx';
+import VehicleRegistrationApprovalList from '../features/system-user-panel/vehicleRegistrationApproval/VehicleRegistrationApprovalList.jsx';
 
 const SystemUserRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -17,6 +23,12 @@ const SystemUserRoutes = [
     { path: 'vehicle-registration/application-for-vehicle-registration/application-list', element: <VehicleRegistrationApplications /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/:id?', element: <VehicleRegistrationPage1 /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2/:id?', element: <VehicleRegistrationPage2 /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/application-forward-list', element: <ApplicationForwardList /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/application-forward', element: <ApplicationForward /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-inspection', element: <VehicleInspection /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/revenue-check', element: <RevenueCheck /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-approve', element: <VehicleApprove /> },
+    { path: 'vehicle-registration/approval-1', element: <VehicleRegistrationApprovalList />}
   ];
   
   const privateRoutes = [

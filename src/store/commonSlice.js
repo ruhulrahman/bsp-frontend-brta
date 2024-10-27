@@ -71,6 +71,11 @@ const initialState = {
         locationTypeList: [],
         routePermitTypes: [],
         paymentStatusList: [],
+        revenueCheckStatusList: [],
+        inspectionStatusList: [],
+        vehicleApplicationCheckStatusList: [],
+        userList:[],
+        ownerTypeList: [],
     },
     activeStatusList: [
         {

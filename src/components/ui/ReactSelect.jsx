@@ -54,11 +54,14 @@ const ReactSelect = ({
   // }
 
   const currentLanguage = i18n.language;
+  let customOptions = []
 
-  const customOptions = options.length && options.map((option) => ({
-    value: option.id,
-    label: currentLanguage === 'en' ? option?.nameEn : option?.nameBn,
-  }));
+  if (options && options.length) {
+    customOptions = options.map((option) => ({
+      value: option.id,
+      label: currentLanguage === 'en' ? option?.nameEn : option?.nameBn,
+    }));
+  }
 
   return (
     <Select
