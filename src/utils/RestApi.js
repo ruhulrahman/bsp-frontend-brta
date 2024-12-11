@@ -1,8 +1,11 @@
 import axios from 'axios'
 import { toaster } from './helpers.js';
 
-export const baseURL = 'http://localhost:8080'
-// export const baseURL = 'http://192.168.121.25:8090/bsp-0.0.2'
+// export const baseURL = 'http://localhost:8080'
+// export const baseURL = 'http://192.168.121.25:8090/bsp-0.0.3'
+const baseURL = import.meta.env.MODE === 'production' 
+    ? import.meta.env.VITE_PROD_BASE_URL 
+    : import.meta.env.VITE_DEV_BASE_URL;
 
 const accessToken = localStorage.getItem('token')
 

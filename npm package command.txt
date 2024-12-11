@@ -19,3 +19,6 @@ npm install @heroicons/react
 npm i formik
 npm i yup
 npm install react-quill --save
+npm i print-js
+npm i react-qr-code
+npm install react-barcode

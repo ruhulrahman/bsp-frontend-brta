@@ -1,7 +1,7 @@
 import Checkbox from '@/components/ui/Checkbox';
 import ReactSelect from '@/components/ui/ReactSelect';
 import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
@@ -10,67 +10,108 @@ import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
+import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import { useParams, useNavigate } from 'react-router-dom';
 import helper, { toaster } from '@/utils/helpers.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
+import dummyUserImage from '@/assets/images/dummy-user.png';
+
+import manPhoto from '@/assets/images/man.png';
+import profileBackground from '@/assets/images/profile-background.png';
 
 const DrivingLicenseApplicationPage1 = ({ t }) => {
 
-    let { serviceRequestId, isViewable } = useParams()
+    let { serviceRequestNo, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const { activeStatusList, loading, listData, dropdowns } = useSelector((state) => state.common)
+    const { activeStatusList, loading, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
+    const { authUser } = useSelector((state) => state.auth) || {};
+
     const [initialValues, setInitialValues] = useState({
-        billOfEntryNumber: '',
-        billOfEntryDate: '',
-        billOfEntryOfficeCode: '',
-        hsCode: '',
-        importerId: '',
-        makerId: '',
-        makerCountryId: '',
-        exporterId: '',
-        agent: '',
-        productLocation: '',
-        productDescription: '',
-        invoiceNumber: '',
-        invoiceDate: '',
-        chassisNumber: '',
-        engineNumber: '',
-        pageCompleted: 1,
+        serviceRequestNo: '',
+        dlInfoId: '',
+        orgId: '',
+        applicantImage: '',
+        applicantNidInfo: {
+            nidNumber: '',
+            dob: '',
+            nameBn: '',
+            nameEn: '',
+            fatherOrHusbandNameEn: '',
+            fatherOrHusbandNameBn: '',
+            motherNameEn: '',
+            motherNameBn: '',
+            addressEn: '',
+            addressBn: '',
+            mobile: '',
+            genderId: '',
+        },
+        // dlInformation Start ======
+        dlLanguageId: 60,
+        applicationTypeId: 49,
+        applicantTypeId: '',
+        licenseTypeId: '',
+        bloodGroupId: '',
+        dlVehicleClassIds: [],
+        issuedOfficeId: '',
+        eduQualificationId: '',
+        occupationId: '',
+        nationalityId: '',
+        maritalStatusId: '',
+        spouseName: '',
+        spouseContactNo: '',
+        isOtherCitizenship: '',
+        // dlInformation End ======
+        stageCompleted: 1,
     })
 
     const resetValues = {
-        billOfEntryNumber: '',
-        billOfEntryDate: '',
-        billOfEntryOfficeCode: '',
-        hsCode: '',
-        importerId: '',
-        makerId: '',
-        makerCountryId: '',
-        exporterId: '',
-        agent: '',
-        productLocation: '',
-        productDescription: '',
-        invoiceNumber: '',
-        invoiceDate: '',
-        chassisNumber: '',
-        engineNumber: '',
-        pageCompleted: 1,
+        serviceRequestNo: '',
+        dlInfoId: '',
+        orgId: '',
+        applicantImage: '',
+        applicantNidInfo: {
+            nidNumber: '',
+            dob: '',
+            nameBn: '',
+            nameEn: '',
+            fatherOrHusbandNameEn: '',
+            fatherOrHusbandNameBn: '',
+            motherNameEn: '',
+            motherNameBn: '',
+            addressEn: '',
+            addressBn: '',
+            mobile: '',
+            genderId: '',
+            photo: '',
+        },
+        // dlInformation Start ======
+        dlLanguageId: '',
+        applicationTypeId: '',
+        applicantTypeId: '',
+        licenseTypeId: '',
+        bloodGroupId: '',
+        dlVehicleClassIds: [],
+        issuedOfficeId: '',
+        eduQualificationId: '',
+        occupationId: '',
+        nationalityId: '',
+        maritalStatusId: '',
+        spouseName: '',
+        spouseContactNo: '',
+        isOtherCitizenship: '',
+        // dlInformation End ======
+        stageCompleted: 1,
     }
 
     const validationSchema = Yup.object().shape({
-        billOfEntryNumber: Yup.string().required('Bill of entry is required'),
-        billOfEntryDate: Yup.string().required('Bill of entry date is required'),
-        makerCountryId: Yup.string().required('Maker Country is required'),
-        invoiceNumber: Yup.string().required('Invoice number is required'),
-        invoiceDate: Yup.string().required('Invoice date is required'),
-        chassisNumber: Yup.string().required('Chassis number is required'),
-        engineNumber: Yup.string().required('Engine number is required'),
+        // vehicleTypeId: Yup.string().required('The Field is required'),
     });
 
     const handleReset = (resetForm) => {
@@ -80,294 +121,619 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
     };
 
 
-    const [parentChildPermissionList, setParentChildPermissionList] = useState([]);
-
-
-    const [officeList, setOfficeList] = useState([]);
-
     const [commonDropdowns, setCommonDropdowns] = useState({
         exporterList: [],
-        importerList: []
+        importerList: [],
+        assembleOperationList: [],
+        vehicleMakerList: [],
+        vehicleColorList: [],
+        vehicleClassList: [],
+        fuelTypeList: [],
+        vehicleBrandList: [],
     });
 
     useEffect(() => {
-        getOfficeList();
-        getVehicleRegistrationRelatedDropdwonList();
+        setInitialValues(resetValues);
+        getUserNidInfo();
     }, []);
 
-    // Fetch the role by id after the parent-child list is ready
-    useEffect(() => {
-        if (serviceRequestId) {
-            getVehicleInfoById(serviceRequestId);
-        } else {
-            setInitialValues(resetValues);
-        }
-    }, [serviceRequestId, officeList]);
 
-    const getOfficeList = async () => {
+    const getUserNidInfo = async () => {
 
         try {
-            const { data } = await RestApi.get(`api/v1/admin/common/get-active-orgation-list`)
-            console.log('data', data)
-            setOfficeList(data);
+            const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-nid-info`)
+            // setInitialValues(data);
+            setInitialValues({ ...initialValues, applicantNidInfo: data });
+            getDLServiceRequestByAuthUser();
         } catch (error) {
             console.log('error', error)
         }
     }
 
-    const getVehicleRegistrationRelatedDropdwonList = async () => {
+    const [isSubmittedApplication, setIsSubmittedApplication] = useState(false);
 
-        try {
-            const { data } = await RestApi.get(`api/v1/admin/common/get-vehile-registration-related-dropdown-list`)
-            setCommonDropdowns(data);
-        } catch (error) {
-            console.log('error', error)
-        }
-    }
-
-    const getVehicleInfoById = async (serviceRequestId) => {
-
+    const getDLServiceRequestByAuthUser = async (serviceRequestNo) => {
+        dispatch(setLoading(true));
         try {
             // const { data } = await RestApi.get(`api/v1/applicant/vehicle/${id}`)
-            const { data } = await RestApi.get(`api/v1/applicant/vehicle/service/${serviceRequestId}`)
+            const { data } = await RestApi.get(`api/driving-license/v1/get-application-details-by-user`)
 
-            const apiResponse = Object.assign({}, data.applicantNidInfo, data.vehicleInfo, data, {serviceRequestId: data.id});
+            if (data.isServiceRequest) {
+                toaster('Another new driving license application found against this user !', 'error')
+                setIsSubmittedApplication(true)
+            } else {
 
-            setInitialValues(apiResponse);
-            console.log('apiResponse', apiResponse)
+                const apiResponse = {
+                    ...data.dlServiceRequestResponse.dlInformation,
+                    ...data.dlServiceRequestResponse,
+                    isOtherCitizenship: data.dlServiceRequestResponse.dlInformation.isOtherCitizenship // This should be `true` or `false`
+                };
 
-        } catch (error) {
-            console.log('error', error)
-        }
-    }
-
-    const onSubmit = async (values, setSubmitting, resetForm) => {
-
-        try {
-            let result = await RestApi.post('api/v1/applicant/vehicle/registration-application-page1', values)
-
-            if (result.data.success) {
-                toaster(result.data.message)
-                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2/${result.data.data.id}`)
+                // if (apiResponse && apiResponse.pageCompleted < 1) {
+                //     navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
+                // }
+                setInitialValues(apiResponse);
             }
 
         } catch (error) {
             console.log('error', error)
-            // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
+            // navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
+        } finally {
+            dispatch(setLoading(false));
+        }
+    }
+
+    const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
+
+        try {
+            let { data } = await RestApi.post('api/driving-license/v1/application-page1', values)
+
+            if (data.success) {
+                toaster(data.message)
+                navigate(`/applicant-panel/driving-license/new-driving-license/application-page2/${data.data.serviceRequestNo}`)
+            }
+
+        } catch (error) {
+            console.log('error', error)
+            setErrors(helper.getErrorMessage(error))
         } finally {
             setSubmitting(false)
         }
-    };
+    }
 
     return (
         <div>
-            <div>
+            <div className="container-fluid mx-auto max-w-screen-4xl px-4 lg:px-8 xl:px-16">
                 <CardHeader>
                     {/* <CardTitle className='mb-2'>{id ? t('edit') : t('add_new')} {t('user')}</CardTitle> */}
-                    <CardTitle className='mb-2'>{t('applicationForVehicleRegistration')} - {t('page')} - {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}</CardTitle>
+                    <CardTitle className='mb-2'>{t('newDrivingLicenseApplication')} - {t('page')} - {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}</CardTitle>
                 </CardHeader>
                 <div>
                     <Formik
                         initialValues={initialValues}
                         enableReinitialize={true}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                        onSubmit={async (values, { setSubmitting, resetForm, setErrors }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
-                            onSubmit(values, setSubmitting, resetForm);
+                            onSubmit(values, setSubmitting, resetForm, setErrors);
                         }}
                     >
-                        {({ values, resetForm, isSubmitting, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
-                            <FormikForm>
-                                <Loading loading={loading} loadingText={t('submitting')} />
+                        {({ values, resetForm, isSubmitting, handleChange, handleBlur, handleSubmit, setFieldValue }) => {
 
-                                <Card className='mb-3'>
-                                    <CardBody>
-                                        <div className="row">
+                            const [drivingLicenseClassList, setDrivingLicenseClassList] = useState([]);
+                            useEffect(() => {
+                                if (values.licenseTypeId) {
+                                    const selectLicenseType = dropdowns.drivingLicenseTypeList.find(item => item.id === values.licenseTypeId)
+                                    if (selectLicenseType) {
+                                        if (selectLicenseType.statusCode === 'dl_non_professional') {
+                                            const vehicleClassList = dropdowns.drivingLicenseClassList.filter(item => {
+                                                if (item.statusCode != 'dl_class_medium' && item.statusCode != 'dl_class_heavy' && item.statusCode != 'dl_class_three_wheeler') {
+                                                    return item
+                                                }
+                                            });
 
-                                            {/* <h4 className="my-2 font-bold text-green-900">{t('billOfEntry')}</h4>
-                                            <hr className='my-3' /> */}
+                                            setDrivingLicenseClassList(vehicleClassList);
+                                        } else {
+                                            const vehicleClassList = dropdowns.drivingLicenseClassList.filter(item => {
+                                                if (item.statusCode != 'dl_class_medium' && item.statusCode != 'dl_class_heavy') {
+                                                    return item
+                                                }
+                                            });
 
-                                            <div className="col-md-6 col-sm-12">
+                                            setDrivingLicenseClassList(vehicleClassList);
+                                        }
+                                    }
+                                }
+                            }, [values.licenseTypeId]);
 
-                                                <h4 className="my-2 font-bold text-green-900">{t('billOfEntry')}</h4>
-                                                <hr className='my-3' />
+                            const [showSpouseSection, setShowSpouseSection] = useState(false);
+                            useEffect(() => {
+                                if (values.maritalStatusId) {
+                                    const selectStatus = dropdowns.maritalStatusList.find(item => item.id === values.maritalStatusId)
+                                    if (selectStatus) {
+                                        if (selectStatus.statusCode === 'marital_status_married') {
+                                            setShowSpouseSection(true);
+                                        } else {
+                                            setShowSpouseSection(false);
+                                        }
+                                    }
+                                }
+                            }, [values.maritalStatusId]);
 
-                                                <div className="row mb-3">
+                            const fileInputRef = useRef(null);
 
-                                                    <div className="col-md-12 col-lg-12 col-xl-6">
-                                                        <Form.Group className="mb-3" controlId="billOfEntryNumber">
-                                                            <Form.Label>{t('billOfEntryNumber')} <span className='text-red-500'>*</span></Form.Label>
-                                                            <Field disabled={isViewable} type="text" name="billOfEntryNumber" className="form-control" placeholder="Enter bill Of Entry Number" />
-                                                            <ErrorMessage name="billOfEntryNumber" component="div" className="text-danger" />
-                                                        </Form.Group>
+                            // Trigger file input on button click
+                            const handleButtonClick = () => {
+                                fileInputRef.current.click();
+                            };
+
+                            const [userUploadImage, setUserUploadImage] = useState(null);
+
+                            // Handle file change event
+                            const handleFileChange = (event) => {
+                                const file = event.target.files[0];
+                                if (file) {
+                                    console.log("Selected file:", file.name); // Replace with your file handling logic
+                                    setUserUploadImage(file)
+                                }
+                            };
+
+                            return (
+                                <FormikForm>
+                                    <Loading loading={loading} loadingText={t('submitting')} />
+
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <div className="card p-[16px] bg-cover rounded-[15px] border-none" style={{ backgroundImage: `url(${profileBackground})` }} id="profile">
+                                                <div className="row">
+                                                    <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                                        <div className="flex items-center justify-start">
+                                                            <div className="flex-none">
+                                                                {/* <img src={dummyUserImage} className='w-[133px] h-[133px] border-3 border-white rounded-full' alt="Profile Photo" /> */}
+
+                                                                {userUploadImage && (
+                                                                    <img src={URL.createObjectURL(userUploadImage)} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
+                                                                )}
+                                                                {!userUploadImage && (
+                                                                    <img src={dummyUserImage} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
+                                                                )}
+
+                                                                <div className="w-[50px] m-auto mt-2">
+                                                                    {/* Hidden file input */}
+                                                                    <input
+                                                                        type="file"
+                                                                        ref={fileInputRef}
+                                                                        onChange={handleFileChange}
+                                                                        style={{ display: 'none' }}
+                                                                    />
+
+                                                                    {/* Custom button */}
+                                                                    <button type="button" onClick={handleButtonClick} className="btn btn-sm rounded-full bg-white border border-gray-50 hover:!bg-gray-100  absolute left-[120px] top-[110px]">
+                                                                        <i className="fa fa-camera"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex-1 my-auto max-w-[700px] mx-[16px]">
+                                                                {/* <h3 className="text-[22px] xs:text-[16px]">Md. Habib Ullah Sarker</h3> */}
+                                                                {/* <p className="text-[#778293] text-[16px] xs:text-[14px]">Joined on 15 Jan, 2024</p> */}
+                                                                <h3 className="text-[22px] xs:text-[16px]">{currentLanguage === 'bn' ? authUser?.nameBn : authUser?.nameEn}</h3>
+                                                                <p className="text-[#778293] text-[16px] xs:text-[14px]">Joined on {helper.dDate(authUser?.createdAt, 'DD MMM, YYYY')}</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
-
-                                                    <div className="col-md-12 col-lg-12 col-xl-6">
-                                                        <Form.Group className="mb-3" controlId="billOfEntryDate">
-                                                            <Form.Label>{t('billOfEntryDate')} <span className='text-red-500'>*</span></Form.Label>
-                                                            <Field disabled={isViewable} type="date" name="billOfEntryDate" className="form-control" />
-                                                            <ErrorMessage name="billOfEntryDate" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-md-12 col-lg-12 col-xl-6">
-                                                        <Form.Group className="mb-3" controlId="billOfEntryOfficeCode">
-                                                            <Form.Label>{t('entryOfficeCode')}</Form.Label>
-                                                            <Field disabled={isViewable} type="text" name="billOfEntryOfficeCode" className="form-control" placeholder="Enter Entry Office Code" />
-                                                            <ErrorMessage name="billOfEntryOfficeCode" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-md-12 col-lg-12 col-xl-6">
-                                                        <Form.Group className="mb-3" controlId="hsCode">
-                                                            <Form.Label>{t('hsCode')}</Form.Label>
-                                                            <Field disabled={isViewable} type="text" name="hsCode" className="form-control" placeholder="Enter hs Code" />
-                                                            <ErrorMessage name="hsCode" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-md-12 col-lg-12 col-xl-6">
-                                                        <Form.Group className="mb-3" controlId="agent">
-                                                            <Form.Label>{t('agent')}</Form.Label>
-                                                            <Field disabled={isViewable} type="text" name="agent" className="form-control" placeholder="Enter agent" />
-                                                            <ErrorMessage name="agent" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-md-12 col-lg-12 col-xl-6">
-                                                        <Form.Group className="mb-3" controlId="productLocation">
-                                                            <Form.Label>{t('productLocation')}</Form.Label>
-                                                            <Field disabled={isViewable} type="text" name="productLocation" className="form-control" placeholder="Enter product location" />
-                                                            <ErrorMessage name="productLocation" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-md-12">
-                                                        <Form.Group className="mb-3" controlId="productDescription">
-                                                            <Form.Label>{t('productDescription')}</Form.Label>
-                                                            <Field disabled={isViewable} type="text" name="productDescription" className="form-control" placeholder="Enter product description" />
-                                                            <ErrorMessage name="productDescription" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-
-                                                    <div className="col-md-12">
-                                                        <Form.Group className="mb-3" controlId="exporterId">
-                                                            <Form.Label>{t('exporterName')}</Form.Label>
-                                                            <Field
-                                                                disabled={isViewable}
-                                                                name="exporterId"
-                                                                component={ReactSelect}
-                                                                options={commonDropdowns.exporterList}
-                                                                placeholder={t('selectExporterName')}
-                                                                value={values.exporterId}
-                                                                onChange={(option) => {
-                                                                    setFieldValue('exporterId', option ? option.value : '')
-                                                                }} // Update Formik value
-                                                            />
-                                                            <ErrorMessage name="exporterId" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-md-12">
-                                                        <Form.Group className="mb-3" controlId="importerId">
-                                                            <Form.Label>{t('importerName')}</Form.Label>
-                                                            <Field
-                                                                disabled={isViewable}
-                                                                name="importerId"
-                                                                component={ReactSelect}
-                                                                options={commonDropdowns.importerList}
-                                                                placeholder={t('selectImporterName')}
-                                                                value={values.importerId}
-                                                                onChange={(option) => {
-                                                                    setFieldValue('importerId', option ? option.value : '')
-                                                                }} // Update Formik value
-                                                            />
-                                                            <ErrorMessage name="importerId" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-md-12">
-                                                        <Form.Group className="mb-3" controlId="makerCountryId">
-                                                            <Form.Label>{t('makerCountry')}</Form.Label>
-                                                            <Field
-                                                                disabled={isViewable}
-                                                                name="makerCountryId"
-                                                                component={ReactSelect}
-                                                                options={dropdowns.countryList}
-                                                                placeholder={t('selectMakerCountry')}
-                                                                value={values.makerCountryId}
-                                                                onChange={(option) => {
-                                                                    setFieldValue('makerCountryId', option ? option.value : '')
-                                                                }} // Update Formik value
-                                                            />
-                                                            <ErrorMessage name="makerCountryId" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
                                                 </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='mb-3 mt-[24px] card px-[24px] border-none'>
+                                        <div>
+
+                                            {/* <div className="row">
+                                                <div className="col-md-12">
+                                                    <div className="w-[300px] ml-auto">
+                                                        <div className='w-[250px]'>
+                                                            {userUploadImage && (
+                                                                <img src={URL.createObjectURL(userUploadImage)} alt="" className="w-[150px] h-[150px] rounded-full bg-white shadow-xl m-auto" />
+                                                            )}
+                                                            {!userUploadImage && (
+                                                                <img src={dummyUserImage} alt="" className="w-[150px] h-[150px] rounded-full bg-white shadow-xl m-auto" />
+                                                            )}
+                                                        </div>
+                                                        <div className="w-[250px] m-auto mt-2">
+                                                            <input
+                                                                type="file"
+                                                                ref={fileInputRef}
+                                                                onChange={handleFileChange}
+                                                                style={{ display: 'none' }}
+                                                            />
+
+                                                            <button type="button" onClick={handleButtonClick} className="btn border border-gray-50 hover:bg-gray-100">
+                                                                Click to change photo
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> */}
+
+                                            <div className="row">
+
+                                                {/* <h4 className="my-2 font-bold text-green-900">{t('nidInformation')}</h4> */}
+                                                <h3 className="text-xl text-green-600 mb-6 pt-[24px]">{t('nidInformation')}</h3>
+                                                {/* <hr className='mb-3' /> */}
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('nationalIdentityNo')}</Form.Label>
+                                                        <Field disabled={true} type="number" name="applicantNidInfo.nidNumber" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('date_of_birth')}</Form.Label>
+                                                        <Field disabled={true} type="date" name="applicantNidInfo.dob" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('name')} ({t('en')})</Form.Label>
+                                                        <Field disabled={true} type="text" name="applicantNidInfo.nameEn" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('name')} ({t('bn')})</Form.Label>
+                                                        <Field disabled={true} type="text" name="applicantNidInfo.nameBn" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('fatherHusbandName')} ({t('bn')})</Form.Label>
+                                                        <Field disabled={true} type="text" name="applicantNidInfo.fatherOrHusbandNameBn" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('motherName')} ({t('bn')})</Form.Label>
+                                                        <Field disabled={true} type="text" name="applicantNidInfo.motherNameBn" className="form-control" />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('fatherHusbandName')} ({t('en')}) <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="applicantNidInfo.fatherOrHusbandNameEn" className="form-control" placeholder={t('enterSomething')} />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('motherName')} ({t('en')}) <span className='text-red-500'>*</span></Form.Label>
+                                                        <Field disabled={isViewable} type="text" name="applicantNidInfo.motherNameEn" className="form-control" placeholder={t('enterSomething')} />
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('gender')}</Form.Label>
+                                                        {dropdowns.genderList && dropdowns.genderList.map((item, index) => (
+                                                            <>
+                                                                <button key={item.id} disabled className='btn btn-sm btn-outline-secondary ml-2'>
+                                                                    <Field disabled={isViewable} type="radio" name="applicantNidInfo.genderId" value={item.id} id={`gender-${item.id}`} className="form-check-input" />
+                                                                    <span className='ml-1 mr-4'>{currentLanguage === 'bn' ? item.nameBn : item.nameEn}</span>
+                                                                </button>
+                                                            </>
+                                                        ))}
+                                                    </Form.Group>
+                                                </div>
+
+                                                <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label>{t('Mobile No')} ({t('en')})</Form.Label>
+                                                        <Field disabled={true} type="text" name="applicantNidInfo.mobile" className="form-control" placeholder={t('enterSomething')} />
+                                                    </Form.Group>
+                                                </div>
+
                                             </div>
 
-                                            <div className="col-md-6 col-sm-12">
 
-                                                <h4 className="my-2 font-bold text-green-900">{t('billOfInvoiceEntry')}</h4>
-                                                <hr className='my-3' />
 
+
+
+                                        </div>
+                                    </div>
+
+
+                                    <div className="row mt-[24px]">
+                                        <div className="col-md-12">
+                                            <div className="card px-[24px] border-none">
+                                                <h3 className="text-xl text-green-600 mb-6 pt-[24px]">{t('Driving License Information')}</h3>
                                                 <div className="row">
-                                                    <div className="col-md-12">
-                                                        <Form.Group className="mb-3" controlId="invoiceNumber">
-                                                            <Form.Label>{t('invoiceNumber')} <span className='text-red-500'>*</span></Form.Label>
-                                                            <Field disabled={isViewable} type="text" name="invoiceNumber" className="form-control" placeholder="Enter invoice number" />
-                                                            <ErrorMessage name="invoiceNumber" component="div" className="text-danger" />
+
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="dlLanguageId">
+                                                            <Form.Label>{t('Driving License Language')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="dlLanguageId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.languageList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.dlLanguageId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('dlLanguageId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="nationalityId" component="div" className="text-danger" />
                                                         </Form.Group>
                                                     </div>
 
-                                                    <div className="col-md-12">
-                                                        <Form.Group className="mb-3" controlId="invoiceDate">
-                                                            <Form.Label>{t('invoiceDate')} <span className='text-red-500'>*</span></Form.Label>
-                                                            <Field disabled={isViewable} type="date" name="invoiceDate" className="form-control" placeholder="Enter invoice date" />
-                                                            <ErrorMessage name="invoiceDate" component="div" className="text-danger" />
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="applicationTypeId">
+                                                            <Form.Label>{t('Application Type')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={true}
+                                                                name="applicationTypeId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.drivingLicenseApplicationTypeList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.applicationTypeId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('applicationTypeId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="applicationTypeId" component="div" className="text-danger" />
                                                         </Form.Group>
                                                     </div>
 
-                                                    <div className="col-md-12">
-                                                        <Form.Group className="mb-3" controlId="chassisNumber">
-                                                            <Form.Label>{t('chassisNumber')} <span className='text-red-500'>*</span></Form.Label>
-                                                            <Field disabled={isViewable} type="text" name="chassisNumber" className="form-control" placeholder="Enter chassis number" />
-                                                            <ErrorMessage name="chassisNumber" component="div" className="text-danger" />
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="applicantTypeId">
+                                                            <Form.Label>{t('Applicant Type')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="applicantTypeId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.applicantTypeList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.applicantTypeId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('applicantTypeId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="applicantTypeId" component="div" className="text-danger" />
                                                         </Form.Group>
                                                     </div>
 
-                                                    <div className="col-md-12">
-                                                        <Form.Group className="mb-3" controlId="engineNumber">
-                                                            <Form.Label>{t('engineNumber')} <span className='text-red-500'>*</span></Form.Label>
-                                                            <Field disabled={isViewable} type="text" name="engineNumber" className="form-control" placeholder="Enter engine number" />
-                                                            <ErrorMessage name="engineNumber" component="div" className="text-danger" />
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="licenseTypeId">
+                                                            <Form.Label>{t('Driving License Type')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="licenseTypeId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.drivingLicenseTypeList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.licenseTypeId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('licenseTypeId', option ? option.value : '')
+                                                                    setFieldValue('dlVehicleClassIds', [])
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="licenseTypeId" component="div" className="text-danger" />
                                                         </Form.Group>
                                                     </div>
+
+                                                    {values.licenseTypeId && (
+                                                        <div className="col-sm-12 col-lg-12 col-xl-12">
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label>{t('Vehicle Class')} <span className='text-red-500'>*</span></Form.Label>
+
+                                                                {drivingLicenseClassList && drivingLicenseClassList.map((item, index) => (
+                                                                    <label key={item.id} className='btn btn-sm btn-outline-default ml-2'>
+                                                                        <Field
+                                                                            disabled={isViewable}
+                                                                            type="checkbox"
+                                                                            id={`vehicle-class-${item.id}`}
+                                                                            name="dlVehicleClassIds"
+                                                                            value={item.id}
+                                                                            checked={values.dlVehicleClassIds.length && values.dlVehicleClassIds.includes(item.id)}
+                                                                            onChange={() => {
+                                                                                const currentIndex = values.dlVehicleClassIds.indexOf(item.id);
+                                                                                const newClassIds = [...values.dlVehicleClassIds];
+
+                                                                                if (currentIndex === -1) {
+                                                                                    // Checkbox is checked, add id
+                                                                                    newClassIds.push(item.id);
+                                                                                } else {
+                                                                                    // Checkbox is unchecked, remove id
+                                                                                    newClassIds.splice(currentIndex, 1);
+                                                                                }
+
+                                                                                setFieldValue("dlVehicleClassIds", newClassIds);
+                                                                            }}
+                                                                            className="form-check-input" />
+                                                                        <span className='ml-1 mr-4 text-[14px]'>{currentLanguage === 'bn' ? item.nameBn : item.nameEn}</span>
+                                                                    </label>
+                                                                ))}
+                                                                <ErrorMessage name="dlVehicleClassIds" component="div" className="text-danger" />
+                                                            </Form.Group>
+                                                        </div>
+                                                    )}
+
                                                 </div>
                                             </div>
                                         </div>
-                                    </CardBody>
-                                </Card>
-
-
-                                <div className="row mt-2 mb-6">
-                                    <div className="col-md-12 text-right">
-                                        {isViewable ? (
-                                            <button className='btn btn-secondary btn-rounded btn-xs' onClick={() => navigate(`/admin/user-management/user-list`)}>{t('back')}</button>
-                                        ) : (
-                                            <>
-                                                <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
-                                                <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
-                                            </>
-                                        )}
                                     </div>
-                                </div>
-                            </FormikForm>
-                        )}
+
+
+                                    <div className="row mt-[24px]">
+                                        <div className="col-md-12">
+                                            <div className="card px-[24px] border-none">
+                                                <h3 className="text-xl text-green-600 mb-6 pt-[24px]">{t('Applicant Basic Information')}</h3>
+                                                <div className="row">
+
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="eduQualificationId">
+                                                            <Form.Label>{t('Educational Qualification')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="eduQualificationId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.educationalQualificationList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.eduQualificationId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('eduQualificationId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="eduQualificationId" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
+
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="occupationId">
+                                                            <Form.Label>{t('Occupation')} <span className='text-red-500'>*</span></Form.Label>
+                                                            
+                                                            <Field
+                                                                name="occupationId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.occupationList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.occupationId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('occupationId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="occupationId" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
+
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="nationalityId">
+                                                            <Form.Label>{t('Nationality')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="nationalityId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.countryList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.nationalityId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('nationalityId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="nationalityId" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
+
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="bloodGroupId">
+                                                            <Form.Label>{t('bloodGroup')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="bloodGroupId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.bloodList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.bloodGroupId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('bloodGroupId', option ? option.value : '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="bloodGroupId" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
+
+                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                        <Form.Group className="mb-3" controlId="maritalStatusId">
+                                                            <Form.Label>{t('Marital Status')} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Field
+                                                                disabled={isViewable}
+                                                                name="maritalStatusId"
+                                                                component={ReactSelect}
+                                                                options={dropdowns.maritalStatusList}
+                                                                placeholder={t('pleaseSelectOne')}
+                                                                value={values.maritalStatusId}
+                                                                onChange={(option) => {
+                                                                    setFieldValue('maritalStatusId', option ? option.value : '')
+                                                                    setFieldValue('spouseName', '')
+                                                                    setFieldValue('spouseContactNo', '')
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name="maritalStatusId" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
+
+                                                    {showSpouseSection && (
+                                                        <>
+                                                            <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                                <Form.Group className="mb-3" controlId="spouseName">
+                                                                    <Form.Label>{t('Spouse Name')} ({t('en')})</Form.Label>
+                                                                    <Field disabled={isViewable} type="text" name="spouseName" className="form-control" placeholder={t('enterSomething')} />
+                                                                    <ErrorMessage name="spouseName" component="div" className="text-danger" />
+                                                                </Form.Group>
+                                                            </div>
+
+                                                            <div className="col-sm-12 col-lg-6 col-xl-6">
+                                                                <Form.Group className="mb-3" controlId="spouseContactNo">
+                                                                    <Form.Label>{t('Spouse Contact')} ({t('en')})</Form.Label>
+                                                                    <Field disabled={isViewable} type="text" name="spouseContactNo" className="form-control" placeholder={t('enterSomething')} />
+                                                                    <ErrorMessage name="spouseContactNo" component="div" className="text-danger" />
+                                                                </Form.Group>
+                                                            </div>
+                                                        </>
+                                                    )}
+
+                                                    <div className="col-sm-12 col-lg-12 col-xl-12">
+                                                        <Form.Group className="mb-3">
+                                                            <Form.Label>{t('Other Citizenship')} <span className='text-red-500'>*</span></Form.Label>
+                                                            {yesNoList && yesNoList.map((item, index) => (
+                                                                <label key={item.id} className='btn btn-sm btn-outline-default ml-2'>
+                                                                    <Field
+                                                                        disabled={isViewable}
+                                                                        type="radio"
+                                                                        id={`isOtherCitizenship-${item.id}`}
+                                                                        name="isOtherCitizenship"
+                                                                        value={item.value} // Convert to "true" or "false" as string
+                                                                        checked={values.isOtherCitizenship === item.value} // Check if boolean matches
+                                                                        onChange={() => setFieldValue("isOtherCitizenship", item.value)}
+                                                                        className="form-check-input"
+                                                                    />
+                                                                    <span className='ml-1 mr-4 text-[14px]'>{currentLanguage === 'bn' ? item.nameBn : item.nameEn}</span>
+                                                                </label>
+                                                            ))}
+                                                            <ErrorMessage name="isOtherCitizenship" component="div" className="text-danger" />
+                                                        </Form.Group>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="row mt-[24px] mb-6">
+                                        <div className="col-md-12 text-right">
+                                            {!isSubmittedApplication && (
+                                                <>
+                                                    <button className='btn btn-secondary btn-rounded btn-xs mr-1' onClick={() => navigate(`/applicant-panel/driving-license/new-driving-license/application-pre-requisites`)}>{t('previous')}</button>
+                                                    <button type='submit' disabled={isSubmitting} className='btn btn-success btn-rounded btn-xs'>{t('saveAndNext')}</button>
+                                                    <button type='reset' onClick={() => handleReset(resetForm)} className='btn btn-outline-black btn-rounded btn-xs ml-2'>{t('reset')}</button>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                </FormikForm>
+                            )
+                        }}
                     </Formik>
                 </div>
             </div>

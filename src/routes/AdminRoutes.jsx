@@ -27,6 +27,10 @@ import PermissionList from '../features/admin/user-management/permission/Permiss
 import RoleListPage from '../features/admin/user-management/role/RoleListPage.jsx';
 import AddOrUpdateRole from '../features/admin/user-management/role/AddOrUpdateRole.jsx';
 import AddOrUpdateUser from '../features/admin/user-management/user/AddOrUpdateUser.jsx';
+import DrivingRelatedFees from '../features/admin/serviceFees/DrivingRelatedServiceFees/List.jsx';
+import VehicleRelatedFees from '../features/admin/serviceFees/VehicleRelatedServiceFees/List.jsx';
+import OfficeJurisdictionList from '../features/admin/configurations/officeJurisdiction/OfficeJurisdictionList.jsx';
+import ExamCenterList from '../features/admin/configurations/officeExamCenter/ExamCenterList.jsx';
 
 const adminRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -50,6 +54,11 @@ const adminRoutes = [
     { path: 'configurations/vehicle-maker-list', element: <VehicleMakerList /> },
     { path: 'configurations/vehicle-brand-list', element: <VehicleBrandList /> },
     { path: 'configurations/vehicle-class-list', element: <VehicleClassList /> },
+    { path: 'configurations/office-jurisdiction-list', element: <OfficeJurisdictionList /> },
+    { path: 'configurations/exam-center-list', element: <ExamCenterList /> },
+
+    { path: 'service-fees/driving-related-fees', element: <DrivingRelatedFees /> },
+    { path: 'service-fees/vehicle-related-fees', element: <VehicleRelatedFees /> },
 
     { path: 'user-management/permission-list', element: <PermissionList /> },
     { path: 'user-management/role-list', element: <RoleListPage /> },

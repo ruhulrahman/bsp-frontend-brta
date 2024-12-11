@@ -5,20 +5,29 @@ import { withNamespaces } from 'react-i18next';
 import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
 import { Container, Row, Col, Table } from 'react-bootstrap';
+import Barcode from 'react-barcode'
 
 const MainContent = ({ t }) => {
 
     return (
         <div className="container mx-auto p-4 space-y-6">
 
-            
+
             {/* Card 1: Vehicle Details */}
             <div className="border rounded-lg shadow-lg p-4 bg-white max-w-md mx-auto">
                 <h5 className="text-center font-bold text-lg">Certificate of Registration</h5>
                 <h6 className="text-center text-sm text-gray-500 mb-2">Bangladesh Road Transport Authority</h6>
 
                 <div className="text-center mb-2">
-                    <div className="bg-gray-300 h-16 w-1/2 mx-auto rounded-md"></div> {/* Placeholder for QR/Barcode */}
+                    {/* <div className="bg-gray-300 h-16 w-1/2 mx-auto rounded-md"></div>  */}
+                    {/* Placeholder for QR/Barcode */}
+                    <div className="mx-auto d-flex align-items-center justify-content-center">
+                        <Barcode value="Name: Ruhul Amin"
+                            displayValue={false}
+                            width={2} // Customize the barcode width if desired
+                            height={50} // Customize the barcode height if desired
+                        />
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-sm">
@@ -99,8 +108,8 @@ const MainContent = ({ t }) => {
                 </footer>
             </div>
 
-            
-        
+
+
         </div>
     )
 }

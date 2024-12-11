@@ -349,7 +349,7 @@ const FiscalYearList = ({ t }) => {
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
-                            <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
+                            <button className="btn btn-success btn-rounded btn-sm mr-2" onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
 
                         <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button>
@@ -395,12 +395,12 @@ const FiscalYearList = ({ t }) => {
                                     </td>
                                     <td className='text-center'>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>
                                         <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
-                                            <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
+                                            <button onClick={() => deleteData(item)} className='btn btn-sm  btn-rounded text-[12px] btn-outline-danger ml-1'>
                                                 <i className="fa fa-trash"></i>
                                             </button>
                                         </OverlayTrigger>

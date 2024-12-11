@@ -120,9 +120,9 @@ const User = ({ t }) => {
                     />
                 </div>
             </div>
-            <div className="p-0 overflow-scroll relative min-h-[300px]">
+            <div className="p-0 overflow-auto min-h-[300px]">
                 <Loading loading={loading} />
-                <table className="mt-2 text-left table table-responsive min-w-max">
+                <table className="table-auto min-w-full text-left border border-gray-200">
                     <thead>
                         <tr>
                             <th>{t('name')}</th>

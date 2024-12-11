@@ -40,16 +40,8 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
     return (
         <div className={`flex ${openSidebar ? 'ml-[265px]' : 'ml-[0px]'}`}>
             <div onClick={!openSidebar ? onToggleSidebar : undefined} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500w-auto`}>
-                {/* {openSidebar && currentLanguage === 'bn' && (
-                    <h2 className="font-semibold mr-2">{t('brtaServicePortal')}</h2>
-                )}
-
-                {openSidebar && currentLanguage === 'en' && (
-                    <h2 className="text-xl font-semibold mr-2">{t('brtaServicePortal')}</h2>
-                )} */}
-
                 <OverlayTrigger placement="bottom" overlay={<Tooltip>{openSidebar ? t('hideSidebar') : t('showSidebar')}</Tooltip>}>
-                    <button onClick={onToggleSidebar} id="menu-button" className="btn btn-dark btn-sm flex-auto">
+                    <button onClick={onToggleSidebar} id="menu-button" className="btn btn-dark btn-sm w-[40px]">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                         </svg>
@@ -57,7 +49,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                 </OverlayTrigger>
             </div>
             <Disclosure as="nav" className="bg-gray-800 flex-initial w-full">
-                <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                <div className="mx-auto px-2 sm:px-6 lg:px-8">
                     <div className="relative flex h-16 items-center justify-between">
                         <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                             {/* Mobile menu button*/}
@@ -70,12 +62,10 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                         </div>
                         <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                             <div className="flex flex-shrink-0 items-center">
-                                {!openSidebar && logoBrta && <img className="h-8 w-auto" src={logoBrta} alt="BRTA" />}
-                                {/* <img
-                                    alt="Your Company"
-                                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                                    className="h-8 w-auto"
-                                /> */}
+                                {!openSidebar && logoBrta && <Link to="/">
+                                    <img className="h-[40px] w-auto" src={logoBrta} alt="BRTA" />
+                                </Link>}
+
                             </div>
                             <div className="hidden sm:ml-6 sm:block">
                                 <div className="flex space-x-4">
@@ -110,33 +100,28 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                 </button>} */}
 
                             {preferredLanguage === 'en' &&
-                                <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
-                                    <span className="text-md">{t('bangla')}</span>
+                                <button onClick={() => changeLanguage('bn')} className='btn border hover:bg-gray-200 text-gray-400 ml-5 text-xs-sm md:text-md-lg '>
+                                    <i className="fa-solid fa-globe"></i>
+                                    <span className="ml-2">{t('bangla')}</span>
                                 </button>}
                             {preferredLanguage === 'bn' &&
-                                <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
-                                    <span className="text-md">{t('lang')}</span>
+                                <button onClick={() => changeLanguage('en')} className='btn border hover:bg-gray-200 text-gray-400 text-xs-sm md:text-md-lg '>
+                                    <i className="fa-solid fa-globe"></i>
+                                    <span className="ml-2">{t('lang')}</span>
                                 </button>}
 
                             <button
                                 type="button"
-                                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 w-[45px] ml-2 mr-1 "
                             >
                                 <span className="absolute -inset-1.5" />
                                 <span className="sr-only">View notifications</span>
                                 <BellIcon aria-hidden="true" className="h-6 w-6" />
                             </button>
-
-                            <div className='text-gray-300 flex flex-col'>
-                                {/* <span className='text-[14px]'>Ruhul Amin</span> */}
-                                <span className='text-[14px]'>{currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}</span>
-                                <span className='text-[12px] text-green-200 text-right leadin'>{t('applicant')}</span>
-                            </div>
-
                             {/* Profile dropdown */}
-                            <Menu as="div" className="relative ml-3">
+                            <Menu as="div" className="relative">
                                 <div>
-                                    <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                    <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 w-[45px]">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
                                         <img
@@ -161,7 +146,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                         </Link>
                                     </MenuItem>
                                     <MenuItem>
-                                        <Link to="/admin/change-password" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                                        <Link to="/applicant-panel/change-password" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
                                             {t('change_password')}
                                         </Link>
                                     </MenuItem>
@@ -175,6 +160,14 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                     </MenuItem>
                                 </MenuItems>
                             </Menu>
+                            
+
+                            <div className='text-gray-300 text-left'>
+                                {/* <span className='text-[14px]'>Ruhul Amin</span> */}
+                                <p className='text-[14px]'>{currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}</p>
+                                <p className='text-[12px] text-green-200 leadin'>{t('applicant')}</p>
+                            </div>
+
                         </div>
                     </div>
                 </div>

@@ -108,20 +108,8 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
     const [officeList, setOfficeList] = useState([]);
 
-    const [commonDropdowns, setCommonDropdowns] = useState({
-        exporterList: [],
-        importerList: [],
-        assembleOperationList: [],
-        vehicleMakerList: [],
-        vehicleColorList: [],
-        vehicleClassList: [],
-        fuelTypeList: [],
-        vehicleBrandList: [],
-    });
-
     useEffect(() => {
         getOfficeList();
-        getVehicleRegistrationRelatedDropdwonList();
     }, []);
 
     // Fetch the role by id after the parent-child list is ready
@@ -144,38 +132,8 @@ const VehicleRegistrationPage3 = ({ t }) => {
         }
     }
 
-    const getVehicleRegistrationRelatedDropdwonList = async () => {
-
-        try {
-            const { data } = await RestApi.get(`api/v1/admin/common/get-vehile-registration-related-dropdown-list`)
-            setCommonDropdowns(data);
-        } catch (error) {
-            console.log('error', error)
-        }
-    }
-
     const [districtList, setDistrictList] = useState([]);
     const [thanaList, setThanaList] = useState([]);
-
-    const getDistrictListByParentId = async (parentId) => {
-
-        try {
-            const { data } = await RestApi.get(`api/v1/admin/common/get-locations-by-parent-location-id/${parentId}`)
-            setDistrictList(data.locationList);
-        } catch (error) {
-            console.log('error', error)
-        }
-    }
-
-    const getThanaListByParentId = async (parentId) => {
-
-        try {
-            const { data } = await RestApi.get(`api/v1/admin/common/get-locations-by-parent-location-id/${parentId}`)
-            setThanaList(data.locationList);
-        } catch (error) {
-            console.log('error', error)
-        }
-    }
 
     const [organization, setOrganization] = useState({
         id: '',
@@ -183,12 +141,12 @@ const VehicleRegistrationPage3 = ({ t }) => {
         nameBn: '',
     });
 
-    const getOrgnationNameByThanaId = async (thanaId) => {
+    const getOrgnationNameByThanaId = async (thanaId, setFieldValue) => {
 
         try {
             const data = await RestApi.get(`api/v1/admin/common/get-organization-by-thana-id/${thanaId}`)
             setOrganization(data.data);
-            setInitialValues({ ...initialValues, orgId: data.data.id });
+            setFieldValue('orgId', data.organization.id);
         } catch (error) {
             console.log('error', error)
         }
@@ -267,6 +225,39 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                 }
                             }, [values.vehicleOwner?.ownerTypeId]);
 
+                            useEffect(() => {
+                                if (values.addressInfo.divisionId) {
+                                    getLocationListByParentId(values.addressInfo.divisionId, 'district');
+                                }
+                            }, [values.addressInfo.divisionId]);
+
+                            useEffect(() => {
+                                if (values.addressInfo.districtId) {
+                                    getLocationListByParentId(values.addressInfo.districtId, 'thana');
+                                }
+                            }, [values.addressInfo.districtId]);
+
+                            const getLocationListByParentId = async (parentId, locationType = 'district') => {
+
+                                try {
+                                    const { data } = await RestApi.get(`api/v1/admin/common/get-locations-by-parent-location-id/${parentId}`)
+                                    if (locationType == 'district') {
+                                        setDistrictList(data.locationList);
+                                    } else if (locationType == 'thana') {
+                                        setThanaList(data.locationList);
+                                    }
+                                } catch (error) {
+                                    console.log('error', error)
+                                }
+                            }
+
+                            useEffect(() => {
+                                if (values.addressInfo.locationId) {
+                                    getOrgnationNameByThanaId(values.addressInfo.locationId, setFieldValue);
+                                }
+                            }, [values.addressInfo.locationId]);
+
+
                             return (
                                 <FormikForm>
                                     <Loading loading={loading} loadingText={t('submitting')} />
@@ -287,7 +278,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
                                                 <div className="col-sm-12 col-lg-6 col-xl-6">
                                                     <Form.Group className="mb-3">
-                                                        <Form.Label>{t('Date Of Birth')}</Form.Label>
+                                                        <Form.Label>{t('date_of_birth')}</Form.Label>
                                                         <Field disabled={true} type="date" name="applicantNidInfo.dob" className="form-control" />
                                                     </Form.Group>
                                                 </div>
@@ -308,7 +299,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
                                                 <div className="col-sm-12 col-lg-6 col-xl-6">
                                                     <Form.Group className="mb-3">
-                                                        <Form.Label>{t('Father/Husband Name')} {t('bn')}</Form.Label>
+                                                        <Form.Label>{t('fatherHusbandName')} {t('bn')}</Form.Label>
                                                         <Field disabled={true} type="text" name="applicantNidInfo.fatherOrHusbandNameBn" className="form-control" />
                                                     </Form.Group>
                                                 </div>
@@ -420,7 +411,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
                                                 <div className="col-sm-12 col-lg-6 col-xl-6">
                                                     <Form.Group className="mb-3" controlId="addressInfo.divisionId">
-                                                        <Form.Label>{t('Division')}</Form.Label>
+                                                        <Form.Label>{t('division')}</Form.Label>
                                                         <Field
                                                             disabled={isViewable}
                                                             name="addressInfo.divisionId"
@@ -431,7 +422,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                             onChange={(option) => {
                                                                 const selectedValue = option ? option.value : '';
                                                                 setFieldValue('addressInfo.divisionId', selectedValue);
-                                                                getDistrictListByParentId(selectedValue);
+                                                                // getDistrictListByParentId(selectedValue);
                                                             }}
                                                         />
                                                         <ErrorMessage name="addressInfo.divisionId" component="div" className="text-danger" />
@@ -451,7 +442,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                             onChange={(option) => {
                                                                 const selectedValue = option ? option.value : '';
                                                                 setFieldValue('addressInfo.districtId', selectedValue);
-                                                                getThanaListByParentId(selectedValue);
+                                                                // getThanaListByParentId(selectedValue);
                                                             }}
                                                         />
                                                         <ErrorMessage name="addressInfo.districtId" component="div" className="text-danger" />
@@ -459,28 +450,28 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                 </div>
 
                                                 <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                    <Form.Group className="mb-3" controlId="addressInfo.thanaId">
-                                                        <Form.Label>{t('Thana')}</Form.Label>
+                                                    <Form.Group className="mb-3" controlId="addressInfo.locationId">
+                                                        <Form.Label>{t('thana')}</Form.Label>
                                                         <Field
                                                             disabled={isViewable}
-                                                            name="addressInfo.thanaId"
+                                                            name="addressInfo.locationId"
                                                             component={ReactSelect}
                                                             options={thanaList}
                                                             placeholder={t('pleaseSelectOne')}
-                                                            value={values.addressInfo?.thanaId}
+                                                            value={values.addressInfo?.locationId}
                                                             onChange={(option) => {
                                                                 const selectedValue = option ? option.value : '';
-                                                                setFieldValue('addressInfo.thanaId', selectedValue);
-                                                                getOrgnationNameByThanaId(selectedValue);
+                                                                setFieldValue('addressInfo.locationId', selectedValue);
+                                                                // getOrgnationNameByThanaId(selectedValue, values);
                                                             }}
                                                         />
-                                                        <ErrorMessage name="addressInfo.thanaId" component="div" className="text-danger" />
+                                                        <ErrorMessage name="addressInfo.locationId" component="div" className="text-danger" />
                                                     </Form.Group>
                                                 </div>
 
                                                 <div className="col-sm-12 col-lg-6 col-xl-6">
                                                     <Form.Group className="mb-3" controlId="addressInfo.postCode">
-                                                        <Form.Label>{t('Post Code')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Form.Label>{t('postCode')} <span className='text-red-500'>*</span></Form.Label>
                                                         <Field disabled={isViewable} type="text" name="addressInfo.postCode" className="form-control" placeholder={t('enterSomething')} />
                                                         <ErrorMessage name="addressInfo.postCode" component="div" className="text-danger" />
                                                     </Form.Group>
@@ -496,7 +487,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
                                                 <div className="col-sm-12 col-lg-6 col-xl-6">
                                                     <Form.Group className="mb-3" controlId="addressInfo.roadBlockSectorColony">
-                                                        <Form.Label>{t('Road/Block/Sector/Colony')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Form.Label>{t('roadBlockSectorColony')} <span className='text-red-500'>*</span></Form.Label>
                                                         <Field disabled={isViewable} type="text" name="addressInfo.roadBlockSectorColony" className="form-control" placeholder={t('enterSomething')} />
                                                         <ErrorMessage name="addressInfo.roadBlockSectorColony" component="div" className="text-danger" />
                                                     </Form.Group>

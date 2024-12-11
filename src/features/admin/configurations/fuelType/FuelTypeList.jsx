@@ -15,8 +15,11 @@ import { withNamespaces } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import AddNew from './AddNew';
+import useCommonFunctions from '@/hooks/useCommonFunctions';
+
 
 const FuelTypeList = ({ t }) => {
+    const { hasPermission } = useCommonFunctions();
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
@@ -350,7 +353,7 @@ const FuelTypeList = ({ t }) => {
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
-                            <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
+                            <button className="btn btn-success btn-rounded btn-sm mr-2" onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
 
                         <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button>
@@ -362,9 +365,9 @@ const FuelTypeList = ({ t }) => {
                         />
                     </div>
                 </div>
-                <div className="p-0 overflow-scroll relative min-h-[300px]">
+                <div className="p-0 overflow-auto min-h-[300px]">
                     <Loading loading={loading} />
-                    <table className="mt-2 text-left table table-responsive min-w-max">
+                    <table className="table-auto min-w-full text-left border border-gray-200">
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>
@@ -387,16 +390,20 @@ const FuelTypeList = ({ t }) => {
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
                                     <td>
-                                        <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
-                                                <i className="fa fa-pen"></i>
-                                            </button>
-                                        </OverlayTrigger>
-                                        <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
-                                            <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
-                                                <i className="fa fa-trash"></i>
-                                            </button>
-                                        </OverlayTrigger>
+                                        {hasPermission('edit_fuel_type') &&
+                                            <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
+                                                <button onClick={() => handleOpenEditModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-info'>
+                                                    <i className="fa fa-pen"></i>
+                                                </button>
+                                            </OverlayTrigger>
+                                        }
+                                        {hasPermission('permitted') &&
+                                            <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
+                                                <button onClick={() => deleteData(item)} className='btn btn-sm  btn-rounded text-[12px] btn-outline-danger ml-1'>
+                                                    <i className="fa fa-trash"></i>
+                                                </button>
+                                            </OverlayTrigger>
+                                        }
                                     </td>
                                 </tr>
                             ))}
@@ -408,7 +415,6 @@ const FuelTypeList = ({ t }) => {
                                     </td>
                                 </tr>
                             )}
-
                         </tbody>
                     </table>
                 </div>

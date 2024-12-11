@@ -8,6 +8,7 @@ const AdminSidebar = ({ t, openSidebar }) => {
     const { hasPermission } = useCommonFunctions();
 
     const [openConfiguration, setOpenConfiguration] = useState(false);
+    const [openServiceFees, setOpenServiceFees] = useState(false);
     const [openUserManagement, setOpenUserManagement] = useState(false);
 
     return (
@@ -69,13 +70,6 @@ const AdminSidebar = ({ t, openSidebar }) => {
                                         <li>
                                             <NavLink to="/admin/configurations/status-list">
                                                 <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('status')}</span>
-                                            </NavLink>
-                                        </li>
-                                    )}
-                                    {hasPermission('vehicle_types') && (
-                                        <li>
-                                            <NavLink to="/admin/configurations/vehicle-type-list">
-                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('vehicleTypes')}</span>
                                             </NavLink>
                                         </li>
                                     )}
@@ -142,6 +136,27 @@ const AdminSidebar = ({ t, openSidebar }) => {
                                             </NavLink>
                                         </li>
                                     )}
+                                    {hasPermission('vehicle_types') && (
+                                        <li>
+                                            <NavLink to="/admin/configurations/vehicle-type-list">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('vehicleTypes')}</span>
+                                            </NavLink>
+                                        </li>
+                                    )}
+                                    {hasPermission('permitted') && (
+                                        <li>
+                                            <NavLink to="/admin/configurations/office-jurisdiction-list">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('officeJurisdiction')}</span>
+                                            </NavLink>
+                                        </li>
+                                    )}
+                                    {hasPermission('permitted') && (
+                                        <li>
+                                            <NavLink to="/admin/configurations/exam-center-list">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('examCenterList')}</span>
+                                            </NavLink>
+                                        </li>
+                                    )}
                                     {hasPermission('notification_template') && (
                                         <li>
                                             <NavLink to="/admin/configurations/notification-template-list">
@@ -161,6 +176,38 @@ const AdminSidebar = ({ t, openSidebar }) => {
                         </li>
 
                     )}
+
+                    {hasPermission('permitted') && (
+                        <li>
+                            <div onClick={() => setOpenServiceFees(!openServiceFees)} className="flex items-center justify-content-between cursor-pointer">
+                                <i className="bi bi-gear-fill"></i>
+                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('serviceFees')}</span>
+                                <span className={`text-sm rotate-180 ml-2 ${openServiceFees ? 'rotate-0' : ''}`}>
+                                    <i className="bi bi-chevron-down"></i>
+                                </span>
+                            </div>
+                            {openServiceFees && (
+                                <ul id="example-collapse-text" className="pl-10" style={{ height: 'auto', visibilty: 'visible' }}>
+                                    {hasPermission('permitted') && (
+                                        <li>
+                                            <NavLink to="/admin/service-fees/driving-related-fees">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('drivingRelatedServiceFees')}</span>
+                                            </NavLink>
+                                        </li>
+                                    )}
+                                    {hasPermission('permitted') && (
+                                        <li>
+                                            <NavLink to="/admin/service-fees/vehicle-related-fees">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('vehicleRelatedServiceFees')}</span>
+                                            </NavLink>
+                                        </li>
+                                    )}
+                                </ul>
+                            )}
+                        </li>
+
+                    )}
+
                     {hasPermission('user_mangement') && (
                         <li>
                             <div onClick={() => setOpenUserManagement(!openUserManagement)} className="flex items-center justify-content-between cursor-pointer">

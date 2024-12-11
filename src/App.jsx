@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 // import './App.css'
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, HashRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
 import { withNamespaces } from 'react-i18next';
 
@@ -20,9 +20,12 @@ function App() {
   }, [setLanguage]);
 
   return (
-    <Router basename="/bsp">
-      <AppRoutes />
-    </Router>
+      // <Router basename="/bsp">
+      //   <AppRoutes />
+      // </Router>
+    <HashRouter>
+        <AppRoutes />
+    </HashRouter>
   )
 }
 

@@ -71,7 +71,7 @@ const ApplicationForwardRevenue = ({ t, show, onHide, onSave, editData }) => {
                                         <div className="col-md-6">
                                             <h1 className='font-semibold mb-3'>CC: {editData.ccOrKw}</h1>
                                             <h1 className='font-semibold mb-3'>Manufacturing Year: {editData.manufacturingYear}</h1>
-                                            <h1 className='font-semibold mb-3'>Application Date: {editData.applicationDate}</h1>
+                                            <h1 className='font-semibold mb-3'>Application Date: {helper.dDate(editData.applicationDate)}</h1>
                                             <h1 className='font-semibold mb-3'>Application Status: {editData.applicationStatusName}</h1>
                                         </div>
                                     </div>

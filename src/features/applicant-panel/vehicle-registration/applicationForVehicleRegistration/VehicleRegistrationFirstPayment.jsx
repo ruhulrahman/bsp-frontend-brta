@@ -150,8 +150,8 @@ const VehicleRegistrationFirstPayment = ({ t }) => {
                                 <Card className='mb-3'>
                                     <CardBody>
                                         <div>
-                                            <div className="p-0 overflow-scroll relative min-h-[300px]">
-                                                <table className="mt-2 text-left table table-responsive min-w-max">
+                                            <div className="p-0 overflow-auto min-h-[300px]">
+                                                <table className="table-auto min-w-full text-left border border-gray-200">
                                                     <thead>
                                                         <tr>
                                                             <th>Serial</th>

@@ -19,7 +19,8 @@ const publicRoutes = [
     },
     {
       path: '/login',
-      element: <LoginLayout />,
+      element: <HomeLayout />,
+      // element: <LoginLayout />,
       children: [
         { path: '', element: <LoginPage /> },
       ],
@@ -30,7 +31,7 @@ const publicRoutes = [
     },
     {
       path: '/register',
-      element: <LoginLayout />,
+      element: <HomeLayout />,
       children: [
         { path: '', element: <RegistrationPage /> },
       ],

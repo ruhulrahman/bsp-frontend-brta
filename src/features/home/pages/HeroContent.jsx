@@ -6,22 +6,23 @@ import slider4 from '@/assets/images/slider/slider-4.jpg';
 import slider6 from '@/assets/images/slider/slider-6.jpg';
 import LoginBackground from '@/assets/images/login-background.png';
 import { withNamespaces } from 'react-i18next';
+import carDrive from '@/assets/images/home/car-drive.png';
 
 const HeroContent = ({ t }) => {
 
     return (
-        <div className="flex flex-col md:flex-row max-h-[500px] bg-gray-100 mt-3">
-            {/* Left Content */}
-            <div className="md:w-1/2 flex flex-col justify-center p-8 bg-white">
-                {/* <h1 className="text-3xl font-bold text-center mb-4 text-green-500">বিআরটিএ সার্ভিস পোর্টালে স্বাগতম</h1> */}
-                <h1 className="text-3xl font-bold text-center mb-4 text-green-500">{t('welcome_to_brta')}</h1>
-                <p className="text-justify leading-7">{t('hero_content')}</p>
-            </div>
-
-            {/* Right Content (Slider) */}
-            <div className="md:w-1/2 p-8">
-                <img src={slider6} className='w-full max-h-[100%]' alt="Third slide" />
-                {/* <HeroSlider /> */}
+        <div className="container-fluid bg-[#405869] text-white lg:max-h-[395px] 3xl:h-auto">
+            <div className="row py-2">
+                <div className="col-md-12">
+                    <div className="sm:flex-col xs:flex xs:flex-col lg:flex-row">
+                        <div className="flex-none z-[49] xs:max-w-[200px] md:max-w-[350px] lg:max-w-[400px] xl:max-w-[600px] mx-auto">
+                            <img src={carDrive} className="w-full xs:mx-auto xs:mb-[50px] md:w-full" alt="Card photo" />
+                        </div>
+                        <div className="flex-1 my-auto mx-auto lg:max-w-[800px] xl:max-w-[1000px] 3xl:max-w-[1500px] 4xl:max-w-[2500px]">
+                            <p className="text-justify xl:mt-[-100px] 3xl:mt-[-120px] 3xl:text-[40px]  lg:text-[25px] md:text-[20px] md:leading-2">{t('hero_content')}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

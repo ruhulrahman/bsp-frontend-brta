@@ -295,6 +295,59 @@ export default {
       toaster('Service Unavailable', 'error')
     }
     return error
+  },
+  generateUniqueId: function (type = 'normal') {
+    if (type === 'short') return Date.now().toString(36);
+    if (type === 'normal') return Date.now().toString(36) + Math.random().toString(36).substring(2);
+    if (type === 'long') return crypto.randomUUID();
+  },
+  getErrorMessage: function (error) {
+    console.log('error checking message', error);
+    if (error.response && error.response.data) {
+      // Map API errors to Formik fields
+      const apiErrors = error.response.data; // Assuming API returns a field-wise error object
+      if (apiErrors) {
+        return apiErrors; // Map errors to form fields
+      } else if (error.response.data.message) {
+        return { form: error.response.data.message }; // Global form error
+      }
+    } else {
+      // Set a global form error if no field-specific errors exist
+      return { form: 'An unexpected error occurred. Please try again.' };
+    }
+  },
+  masked: function (input) {
+    const str = input.toString();
+    if (str.length <= 4) {
+      return str;
+    }
+
+    const firstTwo = str.slice(0, 2); // First 2 characters
+    const lastTwo = str.slice(-2); // Last 2 characters
+    const maskedPart = '*'.repeat(str.length - 4); // Middle part replaced with *
+    console.log('maskedPart', maskedPart)
+
+    return firstTwo + maskedPart + lastTwo;
+  },
+  replaceRegularExpression: function (input) {
+    /* 
+        Explanation:
+        [-\/\\,\s\[\]\(\)]:
+        
+        -: Matches hyphen/dash.
+        \/: Matches forward slash.
+        \\: Matches backslash (requires escaping with \\ because \ is a special character in regex).
+        ,: Matches comma.
+        \s: Matches any whitespace character (spaces, tabs, newlines).
+        \[\]: Matches square brackets [ and ] (requires escaping with \).
+        \(\): Matches parentheses ( and ) (requires escaping with \).
+        g (global flag):
+        
+        Ensures that all occurrences in the string are replaced, not just the first.
+    */
+    const sanitizedValue = input.replace(/[-\/\\,\s\[\]\(\)]/g, "_");
+
+    return sanitizedValue
   }
 }
 
@@ -314,7 +367,3 @@ export const isEmptyObject = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
 };
 
-// Function to generate a unique ID (could be used for unique keys or IDs)
-export const generateUniqueId = () => {
-  return Math.random().toString(36).substr(2, 9);
-};

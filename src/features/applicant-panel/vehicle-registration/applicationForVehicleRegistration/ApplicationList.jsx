@@ -15,7 +15,7 @@ import helper, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { useNavigate } from 'react-router-dom';
-import SearchComponent from '@/features/common/list/SearchComponent';
+import SearchComponent from '../../../common/list/VehicleRegistrationListSearchComponent';
 
 const UserList = ({ t }) => {
 
@@ -214,51 +214,55 @@ const UserList = ({ t }) => {
         setEditData(null); // Reset edit data
     };
 
-
-
     return (
         <>
             {showFilter &&
-                <div className="card bg-gray-300 mb-3">
-                    <div className="card-body p-2">
-                        <div className="row mb-1">
-                            <div className="col">
-                                <h5 className='text-dark font-semibold'>{t('search_filter')}</h5>
-                            </div>
-                        </div>
-                        <Formik
-                            initialValues={searchValues}
-                            onSubmit={(values, { resetForm }) => {
-                                // console.log('Form Submitted', values);
-                                searchData(values);
-                            }}
-                        >
-                            {({ values, resetForm, setFieldValue }) => (
-                                <FormikForm>
-                                    <SearchComponent onSearch={setSearchValues} />
-                                </FormikForm>
-                            )}
-                        </Formik>
-                    </div>
-                </div>
+                <Formik
+                    initialValues={searchValues}
+                    onSubmit={(values, { resetForm }) => {
+                        // console.log('Form Submitted', values);
+                        searchData(values);
+                    }}
+                >
+                    {({ values, resetForm, setFieldValue }) => (
+                        <FormikForm>
+                            <SearchComponent values={values} clearData={() => handleReset(resetForm)} />
+                        </FormikForm>
+                    )}
+                </Formik>
             }
-            <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
-                <div className='row m-1'>
+            <div className=" text-slate-700 card border-none bg-white shadow-md rounded-xl">
+                {/* <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
                         <h3 className="text-lg font-semibold text-slate-800">{t('vehicleRegistrationApplicationList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
-                            <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
+                            <button className="btn btn-success btn-rounded btn-sm mr-2" onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
-                        {/* <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button> */}
+                        <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)}>{t('newVehicleRegistration')}</button>
+                    </div>
+                </div> */}
+
+                <div className="flex flex-wrap items-center justify-between p-2">
+                    <div className="w-full sm:w-2/3">
+                        <h3 className="text-lg font-semibold text-green-600">{t('vehicleRegistrationApplicationList')}</h3>
+                        <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                    </div>
+                    <div className="w-full sm:w-1/3 text-right mt-2 sm:mt-0">
+                        <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
+                            <button className="btn btn-success btn-rounded btn-sm mr-2" onClick={toggleFilter}>
+                                <i className="fa fa-filter"></i>
+                            </button>
+                        </OverlayTrigger>
                         <button className='btn btn-black btn-rounded btn-sm' onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)}>{t('newVehicleRegistration')}</button>
                     </div>
                 </div>
-                <div className="p-0 overflow-scroll relative min-h-[300px]">
+
+                <div className="p-0 overflow-auto min-h-[300px]">
                     <Loading loading={loading} />
-                    <table className="mt-2 text-left table table-responsive min-w-max">
+                    <table className="table-auto min-w-full text-left border border-gray-200">
                         <thead>
                             <tr>
                                 <th>Serial</th>
@@ -284,24 +288,24 @@ const UserList = ({ t }) => {
                                     <td>{item.vehicleClassName}</td>
                                     <td>{item.ccOrKw}</td>
                                     <td>{item.manufacturingYear}</td>
-                                    <td>{item.applicationDate}</td>
+                                    <td>{helper.dDate(item.applicationDate)}</td>
                                     <td>{item.applicationStatusName}</td>
                                     <td className='text-left'>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/${item.serviceRequestId}`)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                            <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/${item.serviceRequestId}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>
                                         {item.applicationStatusCode === 'vehicle_app_primary_approved' && (
                                             <OverlayTrigger overlay={<Tooltip>{t('Submit Application')}</Tooltip>}>
-                                                <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/${item.serviceRequestId}`)} className='btn btn-sm text-[12px] btn-outline-primary ml-1'>
+                                                <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/${item.serviceRequestId}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-primary ml-1'>
                                                     Submit Application
                                                 </button>
                                             </OverlayTrigger>
                                         )}
                                         {item.applicationStatusCode === 'vehicle_app_final_approved' && (
                                             <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
-                                                <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/reports/${item.serviceRequestId}`)} className='btn btn-sm text-[12px] btn-outline-dark ml-1'>
+                                                <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/reports/${item.serviceRequestId}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-dark ml-1'>
                                                     Report
                                                 </button>
                                             </OverlayTrigger>

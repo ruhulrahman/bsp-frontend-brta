@@ -12,7 +12,8 @@ import ApplicationForward from '../features/system-user-panel/vehicle-registrati
 import VehicleInspection from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleInspection.jsx';
 import RevenueCheck from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/RevenueCheck.jsx';
 import VehicleApprove from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleApprove.jsx';
-import VehicleRegistrationApprovalList from '../features/system-user-panel/vehicleRegistrationApproval/VehicleRegistrationApprovalList.jsx';
+import VehicleRegistrationApprovalList from '../features/system-user-panel/vehicle-registration/approval/ApplicationList.jsx';
+import DrivingLicenseApplicationList from '../features/system-user-panel/drivingLicense/ApplicationList.jsx';
 
 const SystemUserRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -28,7 +29,8 @@ const SystemUserRoutes = [
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-inspection', element: <VehicleInspection /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/revenue-check', element: <RevenueCheck /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-approve', element: <VehicleApprove /> },
-    { path: 'vehicle-registration/approval-1', element: <VehicleRegistrationApprovalList />}
+    { path: 'vehicle-registration/approval-1', element: <VehicleRegistrationApprovalList />},
+    { path: 'driving-license-registration/application-for-driving-license', element: <DrivingLicenseApplicationList />},
   ];
   
   const privateRoutes = [

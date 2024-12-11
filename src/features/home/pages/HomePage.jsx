@@ -4,6 +4,8 @@ import { toaster } from '../../../utils/helpers.js';
 // import SweetAlert from 'react-bootstrap-sweetalert';
 import Select from 'react-select';
 import HeroContent from './HeroContent.jsx';
+import CertificateSection from './CertificateSection.jsx';
+// import FooterSection from './FooterSection.jsx';
 
 const customStyles = {
     control: (provided, state) => ({
@@ -56,10 +58,10 @@ const HomePage = () => {
       ]
 
     return (
-        <div className="container mx-auto">
-            {/* <h1 className="text-3xl font-bold text-center mb-4 text-green-500 mt-3">Welcome to BRTA Service Portal</h1> */}
+        <>
             <HeroContent />
-        </div>
+            <CertificateSection />
+        </>
     )
 }
 

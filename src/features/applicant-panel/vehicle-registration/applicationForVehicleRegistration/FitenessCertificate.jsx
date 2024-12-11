@@ -1,13 +1,20 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
-import React from 'react';
+import React, { useState } from 'react';
 import { withNamespaces } from 'react-i18next';
 import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
 import { Container, Row, Col, Table } from 'react-bootstrap';
+import QRCode from "react-qr-code";
 
 const MainContent = ({ t }) => {
-    
+
+    const [qrCodeValue, setQrCodeValue] = useState(`
+        Registration Number: DHAKA METRO-THA-13-3000
+        Fitness Period: 08-FEB-2017 :: 08-FEB-2018
+        Owner Name: PALLI KARMA SHAHYAK FOUNDATION
+    `)
+
     return (
         <Container className="max-w-[800px] mx-auto p-6 border-2 border-gray-400 bg-white rounded-lg shadow-md english-font bangla-font">
 
@@ -28,11 +35,11 @@ const MainContent = ({ t }) => {
             </div>
             {/* Header Section */}
 
-            
+
 
             <div className="row border-b-2 pb-2 mb-2">
                 <div className="col-md-12">
-                <p><span className="font-semibold">Fitness Period:</span> 08-FEB-2017 :: 08-FEB-2018</p>
+                    <p><span className="font-semibold">Fitness Period:</span> 08-FEB-2017 :: 08-FEB-2018</p>
                 </div>
             </div>
 
@@ -82,11 +89,21 @@ const MainContent = ({ t }) => {
                 </tbody>
             </Table>
 
-            {/* Footer Section */}
-            <div className="text-right mt-4">
-                <p>মোটরযান পরিদর্শক কর্তৃক স্বাক্ষরিত</p>
-                <p>ঢাকা মেট্রো-1</p>
+            <div className="row">
+                <div className="col-md-6">
+
+                    <div className="w-32 h-32 border d-flex align-items-center justify-content-center mx-auto">
+                        <QRCode value={qrCodeValue} />
+                    </div>
+                </div>
+                <div className="col-md-6">
+                    <div className="text-right mt-4">
+                        <p>মোটরযান পরিদর্শক কর্তৃক স্বাক্ষরিত</p>
+                        <p>ঢাকা মেট্রো-1</p>
+                    </div>
+                </div>
             </div>
+
         </Container>
     )
 }

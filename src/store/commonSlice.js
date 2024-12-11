@@ -76,6 +76,19 @@ const initialState = {
         vehicleApplicationCheckStatusList: [],
         userList:[],
         ownerTypeList: [],
+        // Driving License Related Start =====================================
+        occupationList: [],
+        educationalQualificationList: [],
+        maritalStatusList: [],
+        languageList: [],
+        drivingLicenseClassList: [],
+        drivingLicenseTypeList: [],
+        addressTypeList: [],
+        drivingLicenseApplicationTypeList: [],
+        applicantTypeList: [],
+        drivingLicenseApplicationStatusList: [],
+        relationshipList: [],
+        // Driving License Related End =====================================
     },
     activeStatusList: [
         {

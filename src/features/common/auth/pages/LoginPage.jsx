@@ -31,25 +31,25 @@ const LoginPage = ({ t }) => {
 
     const onSubmit = async (values) => {
         setLoading(true);
-        
+
         try {
             const { data: result } = await RestApi.post('api/auth/v1/login', values)
             console.log('result', result)
-                await localStorage.setItem('token', result.tokenInfo?.accessToken)
-                await localStorage.setItem('userTypeCode', result.userInfo?.userTypeCode)
-                await dispatch(setToken(result.tokenInfo?.accessToken));
-                await dispatch(setTokenInfo(result.tokenInfo));
-                await dispatch(setUserPermissions(result.tokenInfo?.permissions));
-                toaster('Your are logged in successfully')
+            await localStorage.setItem('token', result.tokenInfo?.accessToken)
+            await localStorage.setItem('userTypeCode', result.userInfo?.userTypeCode)
+            await dispatch(setToken(result.tokenInfo?.accessToken));
+            await dispatch(setTokenInfo(result.tokenInfo));
+            await dispatch(setUserPermissions(result.tokenInfo?.permissions));
+            toaster('Your are logged in successfully')
 
-                if (result.userInfo?.userTypeCode === 'applicant') {
-                    navigate('/applicant-panel/dashboard');
-                } else if (result.userInfo?.userTypeCode === 'system_admin') {
-                    navigate('/admin/dashboard');
-                } else if (result.userInfo?.userTypeCode === 'system_user') {
-                    navigate('/system-user-panel/dashboard');
-                }
-                // navigate('/admin/dashboard');
+            if (result.userInfo?.userTypeCode === 'applicant') {
+                navigate('/applicant-panel/dashboard');
+            } else if (result.userInfo?.userTypeCode === 'system_admin') {
+                navigate('/admin/dashboard');
+            } else if (result.userInfo?.userTypeCode === 'system_user') {
+                navigate('/system-user-panel/dashboard');
+            }
+            // navigate('/admin/dashboard');
         } catch (error) {
             console.log('error', error)
             setErrorMessage(error.response.data)
@@ -61,16 +61,11 @@ const LoginPage = ({ t }) => {
     };
 
     return (
-        <div className="relative py-3 sm:max-w-xs sm:mx-auto">
-            <div className="min-h-96 px-8 py-6 mt-4 text-left bg-white dark:bg-gray-900  rounded-xl shadow-lg">
-                <div className="flex flex-col justify-center items-center h-full select-none">
-                    <div className="flex flex-col items-center justify-center gap-2 mb-8">
-                        <Link to="/">
-                            <img src={logo} alt="Logo" className="w-14" />
-                        </Link>
-                        <p className="m-0 text-[16px] font-semibold dark:text-white">{t('dont_have_an_account')}</p>
-                        <span className="m-0 text-xs max-w-[90%] text-center text-[#8B8E98]">{t('login_to_the_portal_to_access_your_account_and_get_access_to_all_the_services')}</span>
-                    </div>
+        <div className="relative py-4 sm:max-w-xs sm:mx-auto mb-[150px]">
+            <div className="min-h-96 px-8 py-8 mt-4 text-left bg-white dark:bg-gray-900  rounded-xl">
+                <div className="flex flex-col items-center justify-center">
+                    <h2 className='text-center font-bold text-[30px] mb-[16px]'>{t('login')}</h2>
+                    <span className="text-xs text-center text-[#8B8E98] mb-[32px]">{t('login_to_the_portal_to_access_your_account_and_get_access_to_all_the_services')}</span>
                 </div>
 
                 {errorMessage && <div className="text-red-500">Username or password not match</div>}
@@ -85,17 +80,17 @@ const LoginPage = ({ t }) => {
                 >
                     {({ values, resetForm }) => (
                         <FormikForm>
-                            <Form.Group className="mb-3" controlId="username">
+                            <Form.Group className="mb-[24px]" controlId="username">
                                 <Form.Label>{t('username')}</Form.Label>
-                                <Field type="text" name="usernameOrEmail" className="form-control" placeholder="Enter username or email" />
+                                <Field type="text" name="usernameOrEmail" className="form-control h-[40px] placeholder:text-gray-400 placeholder:font-light" placeholder="Enter username or email" />
                                 <ErrorMessage name="usernameOrEmail" component="div" className="text-danger" />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="password">
+                            <Form.Group className="mb-[24px]" controlId="password">
                                 <Form.Label>{t('password')}</Form.Label>
-                                <Field type="password" name="password" className="form-control" placeholder="Enter password" />
+                                <Field type="password" name="password" className="form-control h-[40px] placeholder:text-gray-400 placeholder:font-light" placeholder="Enter password" />
                                 <ErrorMessage name="password" component="div" className="text-danger" />
                             </Form.Group>
-                            <button type='submit' className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">{t('login')}</button>
+                            <button type='submit' className="btn btn-success w-full">{t('login')}</button>
                         </FormikForm>
                     )}
                 </Formik>

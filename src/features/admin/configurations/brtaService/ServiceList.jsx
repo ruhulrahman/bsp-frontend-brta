@@ -15,6 +15,7 @@ import { withNamespaces } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import AddNew from './AddNew';
+import ViewDetails from './ViewDetails';
 
 const ServiceList = ({ t }) => {
 
@@ -253,6 +254,18 @@ const ServiceList = ({ t }) => {
         setModalOpen(true);
     };
 
+    const [viewModalOpen, setViewModalOpen] = useState(false);
+    const [viewData, setViewData] = useState(null);
+    const handleOpenViewDetailsModal = (item) => {
+        setViewData(item);
+        setViewModalOpen(true);
+    };
+
+    const handleCloseViewDetailsModal = () => {
+        setViewModalOpen(false);
+        setViewData(null); // Reset edit data
+    }
+
     const handleOpenEditModal = (item) => {
         setEditData(item);
         setModalOpen(true);
@@ -288,7 +301,7 @@ const ServiceList = ({ t }) => {
         }
     };
 
-    
+
     const [allServiceList, setAllServiceList] = useState([]);
     const getAllServiceList = async () => {
 
@@ -337,17 +350,17 @@ const ServiceList = ({ t }) => {
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
-                                        <Form.Group className="mb-3" controlId="parentServiceId">
-                                        <Field
-                                        name="parentServiceId"
-                                        component={ReactSelect}
-                                        options={allServiceList}
-                                        placeholder={t('selectStatusGroup')}
-                                        value={values.parentServiceId}
-                                        onChange={(option) => {
-                                            setFieldValue('parentServiceId', option ? option.value : '')
-                                        }} // Update Formik value
-                                    />
+                                            <Form.Group className="mb-3" controlId="parentServiceId">
+                                                <Field
+                                                    name="parentServiceId"
+                                                    component={ReactSelect}
+                                                    options={allServiceList}
+                                                    placeholder={t('selectStatusGroup')}
+                                                    value={values.parentServiceId}
+                                                    onChange={(option) => {
+                                                        setFieldValue('parentServiceId', option ? option.value : '')
+                                                    }} // Update Formik value
+                                                />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
@@ -389,7 +402,7 @@ const ServiceList = ({ t }) => {
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
-                            <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
+                            <button className="btn btn-success btn-rounded btn-sm mr-2" onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
 
                         <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button>
@@ -399,9 +412,17 @@ const ServiceList = ({ t }) => {
                             onSave={handleSave}
                             editData={editData}
                         />
+
+
+                        <ViewDetails
+                            show={viewModalOpen}
+                            onHide={handleCloseViewDetailsModal}
+                            onSave={handleSave}
+                            viewData={viewData}
+                        />
                     </div>
                 </div>
-                <div className="p-0 overflow-scroll relative min-h-[300px]">
+                <div className="p-0 overflow-auto min-h-[300px]">
                     <Loading loading={loading} />
                     <table className="mt-2 text-left table table-responsive">
                         <thead>
@@ -411,8 +432,9 @@ const ServiceList = ({ t }) => {
                                 <th>{t('name') + ` (${t('bn')})`}</th>
                                 <th>{t('serviceCode')}</th>
                                 <th>{t('parentService')}</th>
+                                <th className='w-[40px] text-center'>{t('p')}</th>
                                 <th>{t('status')}</th>
-                                <th>{t('action')}</th>
+                                <th className='w-[150px] text-center'>{t('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -431,18 +453,28 @@ const ServiceList = ({ t }) => {
                                     </td>
                                     <td>
                                         {currentLanguage === 'en' ? item.parentService?.nameEn : item.parentService?.nameBn}
-                                        </td>
+                                    </td>
+                                    <td>
+                                        {currentLanguage === 'en' ? item.priority : toBengaliNumber(item.priority)}
+                                    </td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
-                                    <td>
+                                    <td className='text-right'>
+                                        {item.childServiceIds && item.childServiceIds.length > 0 && (
+                                            <OverlayTrigger overlay={<Tooltip>{t('childServices')}</Tooltip>}>
+                                                <button onClick={() => handleOpenViewDetailsModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-dark mr-1'>
+                                                    <i className="fa fa-eye"></i>
+                                                </button>
+                                            </OverlayTrigger>
+                                        )}
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>
                                         <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
-                                            <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1 mt-1'>
+                                            <button onClick={() => deleteData(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-danger ml-1 mt-1'>
                                                 <i className="fa fa-trash"></i>
                                             </button>
                                         </OverlayTrigger>

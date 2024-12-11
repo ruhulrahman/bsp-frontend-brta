@@ -1,4 +1,5 @@
 import Checkbox from '@/components/ui/Checkbox';
+import ReactSelect from '@/components/ui/ReactSelect';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
@@ -10,7 +11,7 @@ import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 
-const AddNew = ({ t, show, onHide, onSave, editData }) => {
+const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
 
     const { activeStatusList, loading, listData } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
@@ -18,14 +19,18 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const [initialValues, setInitialValues] = useState({
         nameBn: '',
         nameEn: '',
+        vehicleClassIds: [],
         isActive: true,
     })
 
     const resetValues = {
         nameBn: '',
         nameEn: '',
+        vehicleClassIds: [],
         isActive: true,
     };
+
+    const vehicleClassList = props.vehicleClassList
 
     useEffect(() => {
 
@@ -37,8 +42,9 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     }, [editData, show]);
 
     const validationSchema = Yup.object().shape({
-        nameBn: Yup.string().required('Name is required'),
-        nameEn: Yup.string().required('Name is required'),
+        nameBn: Yup.string().required('Name (Bangla) is required'),
+        nameEn: Yup.string().required('Name (English) is required'),
+        vehicleClassIds: Yup.array().required('Minimum one vehicle class is required'),
         isActive: Yup.string().required('Is active is required'),
     });
 
@@ -82,6 +88,25 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <Form.Label>{t('name')} ({t('bn')})</Form.Label>
                                     <Field type="text" name="nameBn" className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="nameBn" component="div" className="text-danger" />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="vehicleClassIds">
+                                    <Form.Label>{t('vehicleClasses')}</Form.Label>
+                                    <Field
+                                        isMulti={true}
+                                        name="vehicleClassIds"
+                                        component={ReactSelect}
+                                        options={vehicleClassList}
+                                        placeholder={t('selectVehicleClass')}
+                                        value={values.vehicleClassIds}
+                                        onChange={(selectedOptions) => {
+                                            setFieldValue(
+                                                'vehicleClassIds',
+                                                selectedOptions ? selectedOptions.map((option) => option.value) : []
+                                            );
+                                        }}
+                                    />
+                                    <ErrorMessage name="vehicleClassIds" component="div" className="text-danger" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="isActive">

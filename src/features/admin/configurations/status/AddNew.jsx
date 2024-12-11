@@ -46,6 +46,9 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                 ...editData,
                 statusGroupId: editData?.statusGroupId,
             }
+            // const nameField = updatedData.statusCode.trim()
+            // const sanitizedValue = nameField.replace(/[-\/\s]/g, "_");
+            // updatedData.statusCode = sanitizedValue.toLowerCase();
             setInitialValues(updatedData);
         } else {
             setInitialValues(resetValues)
@@ -137,11 +140,9 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     <Field type="text" name="nameEn" value={values.nameEn} onChange={(e) => {
                                         handleChange(e); // This updates Formik's state
                                         const nameField = e.target.value.trim()
-                                        const nameSplit = nameField.split(' ')
-                                        let result = nameSplit.join("_");
-                                        console.log("nameSplit", nameSplit); // Custom logic here
+                                        const sanitizedValue = nameField.replace(/[-\/\s]/g, "_");
                                         if (!values.id) {
-                                            setFieldValue('statusCode', result.toLowerCase());
+                                            setFieldValue('statusCode', sanitizedValue.toLowerCase());
                                         }
                                     }} className="form-control" placeholder="Enter name" />
                                     <ErrorMessage name="nameEn" component="div" className="text-danger" />
@@ -156,6 +157,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                 <Form.Group className="mb-3" controlId="statusCode">
                                     <Form.Label>{t('statusCode')}</Form.Label>
                                     <Field disabled={values.id != null} type="text" name="statusCode" className="form-control" placeholder="Enter status group code" />
+                                    {/* <Field type="text" name="statusCode" className="form-control" placeholder="Enter status group code" /> */}
                                     <ErrorMessage name="statusCode" component="div" className="text-danger" />
                                 </Form.Group>
 

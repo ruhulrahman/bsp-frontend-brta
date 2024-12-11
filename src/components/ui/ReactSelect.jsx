@@ -3,6 +3,7 @@ import Select from 'react-select';
 import i18n from '@/i18n';
 
 const ReactSelect = ({
+  isMulti = false,
   options,
   value,
   onChange,
@@ -17,13 +18,13 @@ const ReactSelect = ({
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      minHeight: '30px', // Set the minimum height of the input
-      height: '30px',    // Set the overall height of the control
+      minHeight: isMulti ? 'auto' : '30px', // Set the minimum height of the input
+      height: isMulti ? 'auto' : '30px',    // Set the overall height of the control
       padding: '0',      // Remove any extra padding
     }),
     valueContainer: (provided, state) => ({
       ...provided,
-      height: '30px',    // Adjust the container height
+      height: isMulti ? 'auto' : '30px',    // Adjust the container height
       padding: '0 6px',  // Adjust padding inside the value container
     }),
     input: (provided, state) => ({
@@ -33,7 +34,7 @@ const ReactSelect = ({
     }),
     indicatorsContainer: (provided, state) => ({
       ...provided,
-      height: '30px',    // Adjust the height of the indicators (like the dropdown arrow)
+      height: isMulti ? 'auto' : '30px',    // Adjust the height of the indicators (like the dropdown arrow)
     }),
     option: (provided, state) => ({
       ...provided,
@@ -55,6 +56,7 @@ const ReactSelect = ({
 
   const currentLanguage = i18n.language;
   let customOptions = []
+  let multiValues = []
 
   if (options && options.length) {
     customOptions = options.map((option) => ({
@@ -63,11 +65,18 @@ const ReactSelect = ({
     }));
   }
 
+  if (customOptions && customOptions.length && isMulti) {
+    multiValues = customOptions.filter((option) =>
+      value?.includes(option.value)
+    )
+  }
+
   return (
     <Select
+      isMulti={isMulti}
       isDisabled={disabled}
       options={customOptions}
-      value={(value !== null && value !== '') && customOptions ? customOptions.find(option => option.value === value) : value} // Set selected value
+      value={isMulti ? multiValues : ((value !== null && value !== '') && customOptions ? customOptions.find(option => option.value === value) : value)} // Set selected value
       onChange={onChange} // Handle value change
       onBlur={onBlur} // Handle blur event
       placeholder={placeholder} // Placeholder text

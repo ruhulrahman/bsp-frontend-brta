@@ -53,13 +53,29 @@ const VehicleTypeList = ({ t }) => {
         setCurrentPage(page)
     };
 
-    // useEffect(() => {
-    //     dispatch(setResetPagination())
-    // }, []);
+    useEffect(() => {
+        getVehicleClassList()
+    }, []);
+
+
+    const [vehicleClassList, setVehicleClassList] = useState([])
+
+    const getVehicleClassList = async () => {
+
+        try {
+            const { data } = await RestApi.get(`api/v1/admin/common/get-vehicle-active-list`)
+            setVehicleClassList(data.vehicleClassList);
+            getListData()
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
 
     useEffect(() => {
         getListData()
-    }, [currentPage]);
+    }, [currentPage, vehicleClassList]);
+
 
     // Render pagination using React Bootstrap Pagination
     const renderPagination = () => {
@@ -180,6 +196,21 @@ const VehicleTypeList = ({ t }) => {
         dispatch(setListData([]));
         try {
             const { data } = await RestApi.get('api/v1/admin/configurations/vehicle-type/list', { params })
+            if (data.content.length > 0) {
+                const mappedData = data.content.map((item, index) => {
+                    item.sl = slOffset + index
+                    item.vehicleClassList = []
+                    if (item.vehicleClassIds && item.vehicleClassIds.length > 0) {
+                        item.vehicleClassIds.forEach((vehileClassId) => {
+                            const vehicleClassObject = vehicleClassList.find((vClassItem) => vClassItem.id == vehileClassId)
+                            item.vehicleClassList.push(vehicleClassObject)
+                        })
+                    }
+                    return Object.assign({}, item)
+                })
+                console.log('mappedData', mappedData)
+                dispatch(setListData(mappedData));
+            }
             dispatch(setListData(data.content));
             setPaginationData(data)
         } catch (error) {
@@ -350,7 +381,7 @@ const VehicleTypeList = ({ t }) => {
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
-                            <button className='btn btn-info btn-rounded btn-sm mr-2' onClick={toggleFilter}><i className="fa fa-filter"></i></button>
+                            <button className="btn btn-success btn-rounded btn-sm mr-2" onClick={toggleFilter}><i className="fa fa-filter"></i></button>
                         </OverlayTrigger>
 
                         <button className='btn btn-black btn-rounded btn-sm' onClick={handleOpenAddModal}>{t('add_new')}</button>
@@ -359,19 +390,21 @@ const VehicleTypeList = ({ t }) => {
                             onHide={handleCloseModal}
                             onSave={handleSave}
                             editData={editData}
+                            vehicleClassList={vehicleClassList}
                         />
                     </div>
                 </div>
-                <div className="p-0 overflow-scroll relative min-h-[300px]">
+                <div className="p-0 overflow-auto min-h-[300px]">
                     <Loading loading={loading} />
-                    <table className="mt-2 text-left table table-responsive min-w-max">
+                    <table className="table-auto min-w-full text-left border border-gray-200">
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>
                                 <th>{t('name') + ` (${t('en')})`}</th>
                                 <th>{t('name') + ` (${t('bn')})`}</th>
+                                <th>{t('vehicleClasses')}</th>
                                 <th>{t('status')}</th>
-                                <th>{t('action')}</th>
+                                <th className='w-[90px] text-center'>{t('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -384,16 +417,21 @@ const VehicleTypeList = ({ t }) => {
                                     <td>{item.nameEn}</td>
                                     <td>{item.nameBn}</td>
                                     <td>
+                                        {item.vehicleClassList && item.vehicleClassList.length > 0 && item.vehicleClassList.map((vClassItem, vClassIndex) => (
+                                            <span key={vClassIndex} className='badge bg-secondary rounded-full mr-1'>{vClassItem?.nameEn}</span>
+                                        ))}
+                                    </td>
+                                    <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
                                     <td>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>
                                         <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
-                                            <button onClick={() => deleteData(item)} className='btn btn-sm text-[12px] btn-outline-danger ml-1'>
+                                            <button onClick={() => deleteData(item)} className='btn btn-sm  btn-rounded text-[12px] btn-outline-danger ml-1'>
                                                 <i className="fa fa-trash"></i>
                                             </button>
                                         </OverlayTrigger>

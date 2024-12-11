@@ -1,11 +1,29 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
-import React from 'react';
+import React, { useState } from 'react';
 import { withNamespaces } from 'react-i18next';
 import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
+import QRCode from "react-qr-code";
 
 const TaxTokenPrintSectionWithoutImage = ({ t }) => {
+
+    const [qrCodeValue, setQrCodeValue] = useState(`
+        Registration Number: DHAKA METRO-THA-13-3000
+        TAX Token Period: 08-FEB-2017 :: 08-FEB-2018
+        Tax Token Number: 172957695
+    `)
+
+    const pageSize = (size = 'a4') => {
+        if (size == 'a4') {
+            return { width: '210mm', height: '297mm' }
+        } else if (size == 'legal') {
+            return { width: '216mm', height: '365mm' }
+        }
+    }
+
+    const legalSize = pageSize('a4')
+    
     return (
         <div className="max-w-[800px] mx-auto p-6 border-2 border-gray-400 bg-white rounded-lg shadow-md english-font bangla-font">
             {/* Header Section */}
@@ -107,7 +125,11 @@ const TaxTokenPrintSectionWithoutImage = ({ t }) => {
                     {/* Barcode and footer logos */}
                     {/* <img src="barcode.png" alt="Barcode" className="h-12 mx-auto" /> */}
                 </div>
+                <div className="w-32 h-32 border d-flex align-items-center justify-content-center mx-auto">
+                    <QRCode value={qrCodeValue} />
+                </div>
             </div>
+
 
             <div className="text-center mt-4 bg-gray-100 p-3">
                 <p className="text-xs font-bold">Operation & Maintenance by: iBAS</p>
