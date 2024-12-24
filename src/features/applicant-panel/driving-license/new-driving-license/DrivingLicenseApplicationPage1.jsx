@@ -272,13 +272,64 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
                             const [userUploadImage, setUserUploadImage] = useState(null);
 
                             // Handle file change event
-                            const handleFileChange = (event) => {
-                                const file = event.target.files[0];
-                                if (file) {
-                                    console.log("Selected file:", file.name); // Replace with your file handling logic
-                                    setUserUploadImage(file)
+                            const handleFileChange = async (event) => {
+                                const selectedFile = event.target.files[0];
+
+                                const allowedTypes = ["image/jpeg", "image/png"];
+                                console.log('selectedFile', selectedFile)
+                                if (!allowedTypes.includes(selectedFile.type)) {
+                                    // setError("Invalid file type. Only JPEG, PNG, and PDF files are allowed.");
+                                    toaster("Invalid file type. Only JPEG, and PNG files are allowed.", 'error');
+                                    return;
                                 }
-                            };
+
+                                // Validate file size (e.g., 600 KB limit)
+                                const maxSizeInBytes = 600 * 1024; // 600 KB
+                                if (selectedFile.size > maxSizeInBytes) {
+                                    // setError("File size exceeds 600 KB.");
+                                    toaster("Photo size should be less than 600 KB.", 'error');
+                                    return;
+                                }
+
+                                if (selectedFile) {
+                                    console.log("Selected file:", selectedFile.name); // Replace with your file handling logic
+                                    setUserUploadImage(URL.createObjectURL(selectedFile))
+
+                                    dispatch(setLoading(true));
+
+                                    try {
+                                        const formData = new FormData();
+                                        formData.append("attachment", selectedFile);
+                                        const { data } = await RestApi.post(`api/v1/admin/user-management/user/upload-profile-photo`, formData, {
+                                            headers: { "Content-Type": "multipart/form-data" }
+                                        })
+                                        toaster('Photo uploaded successfully')
+                                        getUserProfilePhoto()
+                                    } catch (error) {
+                                        console.log('error', error)
+                                        toaster(error.response.data, 'error')
+                                    } finally {
+                                        dispatch(setLoading(false));
+                                    }
+                                }
+                            }
+
+                            useEffect(() => {
+                                getUserProfilePhoto()
+                            },[])
+
+                            const getUserProfilePhoto = async () => {
+
+                                try {
+                                    const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-profile-photo`,{
+                                        responseType: "text", // Use "arraybuffer" for PDFs and "text" for Base64
+                                    })
+                                    const userPhoto = `data:image/jpeg;base64,${data}`
+                                    setUserUploadImage(userPhoto)
+                                } catch (error) {
+                                    console.log('error', error)
+                                }
+                            }
 
                             return (
                                 <FormikForm>
@@ -294,7 +345,7 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
                                                                 {/* <img src={dummyUserImage} className='w-[133px] h-[133px] border-3 border-white rounded-full' alt="Profile Photo" /> */}
 
                                                                 {userUploadImage && (
-                                                                    <img src={URL.createObjectURL(userUploadImage)} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
+                                                                    <img src={userUploadImage} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
                                                                 )}
                                                                 {!userUploadImage && (
                                                                     <img src={dummyUserImage} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
@@ -304,15 +355,19 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
                                                                     {/* Hidden file input */}
                                                                     <input
                                                                         type="file"
+                                                                        name="userImage"
+                                                                        accept="image/jpeg, image/png"
                                                                         ref={fileInputRef}
                                                                         onChange={handleFileChange}
                                                                         style={{ display: 'none' }}
                                                                     />
 
                                                                     {/* Custom button */}
-                                                                    <button type="button" onClick={handleButtonClick} className="btn btn-sm rounded-full bg-white border border-gray-50 hover:!bg-gray-100  absolute left-[120px] top-[110px]">
-                                                                        <i className="fa fa-camera"></i>
-                                                                    </button>
+                                                                    <OverlayTrigger overlay={<Tooltip>{t('Upload Photo')}</Tooltip>}>
+                                                                        <button type="button" onClick={handleButtonClick} className="btn btn-sm rounded-full bg-white border border-gray-50 hover:!bg-gray-100  absolute left-[120px] top-[110px]">
+                                                                            <i className="fa fa-camera"></i>
+                                                                        </button>
+                                                                    </OverlayTrigger>
                                                                 </div>
                                                             </div>
                                                             <div className="flex-1 my-auto max-w-[700px] mx-[16px]">
@@ -601,7 +656,7 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
                                                     <div className="col-sm-12 col-lg-6 col-xl-6">
                                                         <Form.Group className="mb-3" controlId="occupationId">
                                                             <Form.Label>{t('Occupation')} <span className='text-red-500'>*</span></Form.Label>
-                                                            
+
                                                             <Field
                                                                 name="occupationId"
                                                                 component={ReactSelect}

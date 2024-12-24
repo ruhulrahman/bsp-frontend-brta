@@ -30,36 +30,6 @@ const PaymentForDLSmartCard = ({ t }) => {
     let { serviceRequestNo, isViewable } = useParams();
     isViewable = isViewable === 'true' ? true : false
 
-    const [paymentData, setPaymentData] = useState([
-        {
-            sl: '1',
-            feeName: 'ISSUE OF PLASTIC CARD DRIVING LICENSE (Non-Prof)',
-            feeAmount: 3000,
-            vat: 450,
-            totalAmount: 3450,
-        },
-        {
-            sl: '2',
-            feeName: 'Application Fee',
-            feeAmount: 300,
-            vat: 45,
-            totalAmount: 345,
-        },
-        {
-            sl: '3',
-            feeName: 'Card Fee',
-            feeAmount: 610,
-            vat: 92,
-            totalAmount: 702,
-        },
-        {
-            sl: '4',
-            feeName: 'Card Delivery Fee',
-            feeAmount: 60,
-            vat: 0,
-            totalAmount: 60,
-        },
-    ]);
 
     const [tin, setTin] = useState('');
     const [nid, setNid] = useState('');
@@ -139,6 +109,8 @@ const PaymentForDLSmartCard = ({ t }) => {
 
     const [isSubmitting, setSubmitting] = useState(false)
     const payNowServiceFee = async () => {
+        
+        setSubmitting(true);
 
         try {
 

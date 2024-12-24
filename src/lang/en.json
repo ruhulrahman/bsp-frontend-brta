@@ -322,6 +322,7 @@
   "fuelUsed": "Fuel Used",
   "totalSeat": "Seats (Inc. Driver)",
   "hirePurchase": "Hire Purchase",
+  "selectHirePurchase": "Select Hire Purchase",
   "hire": "Hire",
   "maxLadenWeight": "Max. Laden Weight",
   "unladenWeight": "Unladen Weight",
@@ -419,5 +420,9 @@
   "kw":"KW",
   "otherFields":"Other Fields",
   "fields":"Fields",
+  "selectAirCondition": "Select Air Conditioner (AC)",
+  "selectHire": "Select Hire",
+  "vehicleRegistrationMarkList": "Vehicle Registration Mark List",
+  "vehicleRegistrationMark": "Vehicle Registration Mark",
   "guardianName":"Guardian's Name"
 }

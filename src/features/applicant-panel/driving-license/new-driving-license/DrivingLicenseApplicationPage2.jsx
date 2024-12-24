@@ -1,7 +1,7 @@
 import Checkbox from '@/components/ui/Checkbox';
 import ReactSelect from '@/components/ui/ReactSelect';
 import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { withNamespaces } from 'react-i18next';
@@ -16,6 +16,7 @@ import helper, { toaster } from '@/utils/helpers.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
+import FileViewer from '@/components/common/FileViewer';
 
 const DrivingLicenseApplicationPage2 = ({ t }) => {
 
@@ -137,6 +138,7 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
         getUserNidInfo();
         setInitialValues(resetValues);
         getDLServiceRequestByAuthUser();
+        getDlServiceMediasByServiceRequestNo();
     }, []);
 
     const getUserNidInfo = async () => {
@@ -235,12 +237,25 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
         }
     }
 
+
     const onSubmit = async (values, setSubmitting, resetForm) => {
 
         try {
             let { data } = await RestApi.post('api/driving-license/v1/application-page2', values)
 
             if (data.success) {
+                if (!selectedMedicleFile.mediaId) {
+                    toaster('Please upload Medical File', 'error')
+                    return;
+                }
+                if (!selectedEducationFile.mediaId) {
+                    toaster('Please upload Education File', 'error')
+                    return;
+                }
+                if (!selectedNationalIdFile.mediaId) {
+                    toaster('Please upload National Id File', 'error')
+                    return;
+                }
                 toaster(data.message)
                 navigate(`/applicant-panel/driving-license/new-driving-license/payment-for-learner/${data.data.serviceRequestNo}`)
             }
@@ -253,8 +268,321 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
         }
     };
 
+    const [selectedFiles, setSelectedFiles] = useState([
+        {
+            mediaId: null,
+            documentTypeId: 8,
+            documentType: 'Medical Certificate',
+            attachmentFile: null,
+            fileName: '',
+            fileUrl: null,
+        },
+        {
+            mediaId: null,
+            documentTypeId: 10,
+            documentType: 'National ID',
+            attachmentFile: null,
+            fileName: '',
+            fileUrl: null,
+        },
+        {
+            mediaId: null,
+            documentTypeId: 11,
+            documentType: 'Utility Bill(Gas/Electricity/Wasa)',
+            attachmentFile: null,
+            fileName: '',
+            fileUrl: null,
+        },
+    ]);
+
+    // const handleFileChange = (e, documentTypeId) => {
+    //     setSelectedFiles((prevFiles) =>
+    //         prevFiles.map((file, i) =>
+    //             i === documentTypeId
+    //                 ? { ...file, attachmentFile: e.target.files[0], fileName: e.target.files[0].name, fileUrl: URL.createObjectURL(e.target.files[0]) }
+    //                 : file
+    //         )
+    //     )
+    // }
+
+    const medicleFileResetValues = {
+        mediaId: null,
+        documentTypeId: 25,
+        documentType: 'Medical Certificate',
+        attachmentFile: null,
+        fileName: '',
+        fileUrl: null,
+    }
+
+    const educationFileResetValues = {
+        mediaId: null,
+        documentTypeId: 26,
+        documentType: 'Educational Certificate',
+        attachmentFile: null,
+        fileName: '',
+        fileUrl: null,
+    }
+
+    const nationalIdFileResetValues = {
+        mediaId: null,
+        documentTypeId: 27,
+        documentType: 'National ID',
+        attachmentFile: null,
+        fileName: '',
+        fileUrl: null,
+    }
+
+    const utilityBillFileResetValues = {
+        mediaId: null,
+        documentTypeId: 28,
+        documentType: 'Utility Bill(Gas/Electricity/Wasa)',
+        attachmentFile: null,
+        fileName: '',
+        fileUrl: null,
+    }
+
+    const [selectedMedicleFile, setSelectedMedicleFile] = useState(medicleFileResetValues)
+    const [selectedEducationFile, setSelectedEducationFile] = useState(educationFileResetValues)
+    const [selectedNationalIdFile, setSelectedNationalIdFile] = useState(nationalIdFileResetValues)
+    const [selectedUtilityBillFile, setSelectedUtilityBillFile] = useState(utilityBillFileResetValues)
+
+    const getDlServiceMediasByServiceRequestNo = async () => {
+
+        dispatch(setLoading(true));
+
+        setSelectedMedicleFile(medicleFileResetValues)
+        setSelectedEducationFile(educationFileResetValues)
+        setSelectedNationalIdFile(nationalIdFileResetValues)
+        setSelectedUtilityBillFile(utilityBillFileResetValues)
+
+        try {
+            const { data } = await RestApi.get(`api/driving-license/v1/get-dl-service-medias-by-service-request-no/${serviceRequestNo}`)
+
+            console.log('data', data)
+            if (data && data.length > 0) {
+                data.filter(item => item.documentTypeId === 25).length > 0 ? setSelectedMedicleFile({ ...selectedMedicleFile, ...data.filter(item => item.documentTypeId === 25)[0] }) : null;
+                data.filter(item => item.documentTypeId === 26).length > 0 ? setSelectedEducationFile({ ...selectedEducationFile, ...data.filter(item => item.documentTypeId === 26)[0] }) : null;
+                data.filter(item => item.documentTypeId === 27).length > 0 ? setSelectedNationalIdFile({ ...selectedNationalIdFile, ...data.filter(item => item.documentTypeId === 27)[0] }) : null;
+                data.filter(item => item.documentTypeId === 28).length > 0 ? setSelectedUtilityBillFile({ ...selectedUtilityBillFile, ...data.filter(item => item.documentTypeId === 28)[0] }) : null;
+            }
+
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            dispatch(setLoading(false));
+        }
+    }
+
+    const handleFileChange = (e, documentTypeId) => {
+        const selectedFile = e.target.files[0];
+
+        // Validate file type
+        const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+        console.log('selectedFile', selectedFile)
+        if (!allowedTypes.includes(selectedFile.type)) {
+            // setError("Invalid file type. Only JPEG, PNG, and PDF files are allowed.");
+            toaster("Invalid file type. Only JPEG, PNG, and PDF files are allowed.", 'error');
+            return;
+        }
+
+        // Validate file size (e.g., 600 KB limit)
+        const maxSizeInBytes = 600 * 1024; // 600 KB
+        if (selectedFile.size > maxSizeInBytes) {
+            // setError("File size exceeds 600 KB.");
+            toaster("Invalid file size. File size should be less than 600 KB.", 'error');
+            return;
+        }
+
+        const selectedFileUrl = URL.createObjectURL(e.target.files[0]);
+
+        if (documentTypeId === 25) {
+            setSelectedMedicleFile({
+                ...selectedMedicleFile,
+                attachmentFile: selectedFile,
+                fileName: selectedFile.name,
+                fileUrl: selectedFileUrl
+            })
+        } else if (documentTypeId === 26) {
+            setSelectedEducationFile({
+                ...selectedEducationFile,
+                attachmentFile: selectedFile,
+                fileName: selectedFile.name,
+                fileUrl: selectedFileUrl,
+            })
+        } else if (documentTypeId === 27) {
+            setSelectedNationalIdFile({
+                ...selectedNationalIdFile,
+                attachmentFile: selectedFile,
+                fileName: selectedFile.name,
+                fileUrl: selectedFileUrl,
+            })
+        } else if (documentTypeId === 28) {
+            setSelectedUtilityBillFile({
+                ...selectedUtilityBillFile,
+                attachmentFile: selectedFile,
+                fileName: selectedFile.name,
+                fileUrl: selectedFileUrl,
+            })
+        }
+    }
+
+    const handleFileUpload = async (documentTypeId) => {
+
+        const formData = new FormData();
+        formData.append("serviceRequestNo", serviceRequestNo);
+
+        if (documentTypeId === 25) {
+            if (!selectedMedicleFile.attachmentFile) {
+                toaster("Please select a file!", 'error');
+                return;
+            }
+            formData.append("mediaId", selectedMedicleFile.mediaId);
+            formData.append("documentTypeId", selectedMedicleFile.documentTypeId);
+            formData.append("attachment", selectedMedicleFile.attachmentFile);
+        } else if (documentTypeId === 26) {
+            if (!selectedEducationFile.attachmentFile) {
+                toaster("Please select a file!", 'error');
+                return;
+            }
+            formData.append("mediaId", selectedEducationFile.mediaId);
+            formData.append("documentTypeId", selectedEducationFile.documentTypeId);
+            formData.append("attachment", selectedEducationFile.attachmentFile);
+        } else if (documentTypeId === 27) {
+            if (!selectedNationalIdFile.attachmentFile) {
+                toaster("Please select a file!", 'error');
+                return;
+            }
+            formData.append("mediaId", selectedNationalIdFile.mediaId);
+            formData.append("documentTypeId", selectedNationalIdFile.documentTypeId);
+            formData.append("attachment", selectedNationalIdFile.attachmentFile);
+        } else if (documentTypeId === 28) {
+            if (!selectedUtilityBillFile.attachmentFile) {
+                toaster("Please select a file!", 'error');
+                return;
+            }
+            formData.append("mediaId", selectedUtilityBillFile.mediaId);
+            formData.append("documentTypeId", selectedUtilityBillFile.documentTypeId);
+            formData.append("attachment", selectedUtilityBillFile.attachmentFile);
+        }
+
+        try {
+            const { data } = await RestApi.post(`api/driving-license/v1/learner-document-upload`, formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            })
+
+            setSelectedMedicleFile({ ...selectedMedicleFile, attachmentFile: null })
+            setSelectedEducationFile({ ...selectedEducationFile, attachmentFile: null })
+            setSelectedNationalIdFile({ ...selectedNationalIdFile, attachmentFile: null })
+            setSelectedUtilityBillFile({ ...selectedUtilityBillFile, attachmentFile: null })
+
+            getDlServiceMediasByServiceRequestNo()
+            console.log('data', data)
+            toaster(data.message)
+        } catch (error) {
+            console.log('error', error)
+            toaster(error.response.data, 'error')
+        }
+    }
+
+    const [openFileViewer, setOpenFileViewer] = useState(false);
+    const [fileViewerData, setFileViewerData] = useState({
+        fileUrl: '',
+        fileName: ''
+    });
+
+    const handleCloseModal = () => {
+        setOpenFileViewer(false);
+    };
+
+    const handleViewSelectedFile = async (selectedFile, fileName) => {
+        setFileViewerData({ fileUrl: selectedFile, fileName: fileName });
+        setOpenFileViewer(true);
+    }
+
+    const getFileViewByFileName = async (fileName) => {
+        try {
+            const isPdf = fileName.toLowerCase().endsWith(".pdf");
+
+            const response = await RestApi.get(`api/files/get-file-by-name/${fileName}`, {
+                responseType: isPdf ? "arraybuffer" : "text", // Use "arraybuffer" for PDFs and "text" for Base64
+            })
+
+            console.log('response.data', response.data)
+
+            if (fileName.endsWith(".pdf")) {
+                const blob = new Blob([response.data], { type: 'application/pdf' });
+                const url = window.URL.createObjectURL(blob);
+                // window.open(url, "_blank"); // Open the PDF in a new tab
+                setFileViewerData({ fileUrl: url, fileName: fileName });
+                setOpenFileViewer(true);
+            } else {
+                const base64String = await response.data; // Base64 is returned as plain text
+                // const image = new Image();
+                // image.src = `data:image/jpeg;base64,${base64String}`;
+                setFileViewerData({ fileUrl: `data:image/jpeg;base64,${base64String}`, fileName: fileName });
+                setOpenFileViewer(true);
+            }
+        } catch (error) {
+            console.error("Error fetching PDF:", error);
+        }
+    }
+
+    const handleFileDownload = async (fileName) => {
+        try {
+            const response = await RestApi.get(`api/files/download/${fileName}`, {
+                responseType: "blob", // Important for downloading files
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link);
+            link.click();
+        } catch (error) {
+            console.error("Error downloading file:", error);
+        }
+    }
+
+
+
+    const medicalFileRef = useRef(null);
+    const educationFileRef = useRef(null);
+    const nidFileRef = useRef(null);
+    const utilityBillFileRef = useRef(null);
+
+    const deleteFile = async (mediaId) => {
+        try {
+            await RestApi.delete(`api/files/delete-dl-service-document/${mediaId}`);
+            toaster("File deleted successfully")
+
+            // Clear the input field
+            if (medicalFileRef.current) {
+                medicalFileRef.current.value = "";
+            }
+            if (educationFileRef.current) {
+                educationFileRef.current.value = "";
+            }
+            if (nidFileRef.current) {
+                nidFileRef.current.value = "";
+            }
+            if (utilityBillFileRef.current) {
+                utilityBillFileRef.current.value = "";
+            }
+            getDlServiceMediasByServiceRequestNo()
+        } catch (error) {
+            console.error("Error deleting file:", error);
+            toaster(error.response.data.message)
+        }
+    }
+
     return (
         <div>
+            <FileViewer
+                show={openFileViewer}
+                onHide={handleCloseModal}
+                data={fileViewerData}
+            />
             <div className="container-fluid mx-auto max-w-screen-4xl px-4 lg:px-8 xl:px-16">
                 <CardHeader>
                     {/* <CardTitle className='mb-2'>{id ? t('edit') : t('add_new')} {t('user')}</CardTitle> */}
@@ -380,7 +708,7 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
                                 nameEn: '',
                                 nameBn: '',
                             });
-                        
+
                             const [examVenue, setExamVenue] = useState({
                                 id: '',
                                 nameEn: '',
@@ -887,17 +1215,42 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
                                                                         <div className="col-sm-6 col-md-4 col-form-label text-right font-semibold">
                                                                             <Form.Label>Medical Certificate <span className='text-danger'>*</span></Form.Label>
                                                                         </div>
-                                                                        <div className="col-sm-6 col-md-6">
-                                                                            <input
-                                                                                type="file"
-                                                                                name="file"
-                                                                                onChange={(event) => {
-                                                                                    const file = event.currentTarget.files[0];
-                                                                                    setFieldValue("file", file);  // Set file value in Formik state
-                                                                                }}
-                                                                                className="form-control max-w-[350px]"
-                                                                            />
-                                                                            <ErrorMessage name="file" component="div" className="text-danger mt-1" />
+                                                                        <div className="col-sm-6 col-md-6 d-flex">
+                                                                            <div>
+                                                                                <input
+                                                                                    type="file"
+                                                                                    accept="image/jpeg, image/png, application/pdf"
+                                                                                    ref={medicalFileRef}
+                                                                                    onChange={(e) => handleFileChange(e, 25)}
+                                                                                    className="form-control max-w-[350px]"
+                                                                                />
+                                                                                <ErrorMessage name="file" component="div" className="text-danger mt-1" />
+                                                                            </div>
+                                                                            <div className='ml-2'>
+                                                                                {selectedMedicleFile.attachmentFile && (
+                                                                                    <>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Save File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-info' onClick={() => handleFileUpload(selectedMedicleFile.documentTypeId)}><i className="fa fa-save"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => handleViewSelectedFile(selectedMedicleFile.fileUrl, selectedMedicleFile.fileName)}><i className="fa fa-eye"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                    </>
+                                                                                )}
+                                                                                {selectedMedicleFile.mediaId && !selectedMedicleFile.attachmentFile && (
+                                                                                    <>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Download File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-warning ml-2' onClick={() => handleFileDownload(selectedMedicleFile.fileName)}><i className="fa fa-download"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => getFileViewByFileName(selectedMedicleFile.fileName)}><i className="fa fa-eye"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Delete File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-danger ml-2' onClick={() => deleteFile(selectedMedicleFile.mediaId)}><i className="fa fa-minus"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                    </>
+                                                                                )}
+                                                                            </div>
                                                                         </div>
                                                                     </Form.Group>
                                                                 </div>
@@ -907,17 +1260,42 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
                                                                         <div className="col-sm-6 col-md-4 col-form-label text-right font-semibold">
                                                                             <Form.Label>Educational Certificate <span className='text-danger'>*</span></Form.Label>
                                                                         </div>
-                                                                        <div className="col-sm-6 col-md-6">
-                                                                            <input
-                                                                                type="file"
-                                                                                name="file"
-                                                                                onChange={(event) => {
-                                                                                    const file = event.currentTarget.files[0];
-                                                                                    setFieldValue("file", file);  // Set file value in Formik state
-                                                                                }}
-                                                                                className="form-control max-w-[350px]"
-                                                                            />
-                                                                            <ErrorMessage name="file" component="div" className="text-danger mt-1" />
+                                                                        <div className="col-sm-6 col-md-6 d-flex">
+                                                                            <div>
+                                                                                <input
+                                                                                    type="file"
+                                                                                    accept="image/jpeg, image/png, application/pdf"
+                                                                                    ref={educationFileRef}
+                                                                                    onChange={(e) => handleFileChange(e, 26)}
+                                                                                    className="form-control max-w-[350px]"
+                                                                                />
+                                                                                <ErrorMessage name="file" component="div" className="text-danger mt-1" />
+                                                                            </div>
+                                                                            <div className='ml-2'>
+                                                                                {selectedEducationFile.attachmentFile && (
+                                                                                    <>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Save File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-info' onClick={() => handleFileUpload(selectedEducationFile.documentTypeId)}><i className="fa fa-save"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => getFileViewByFileName(selectedEducationFile.fileName)}><i className="fa fa-eye"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                    </>
+                                                                                )}
+                                                                                {selectedEducationFile.mediaId && !selectedEducationFile.attachmentFile && (
+                                                                                    <>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Download File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-warning ml-2' onClick={() => handleFileDownload(selectedEducationFile.fileName)}><i className="fa fa-download"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => getFileViewByFileName(selectedEducationFile.fileName)}><i className="fa fa-eye"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Delete File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-danger ml-2' onClick={() => deleteFile(selectedEducationFile.mediaId)}><i className="fa fa-minus"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                    </>
+                                                                                )}
+                                                                            </div>
                                                                         </div>
                                                                     </Form.Group>
                                                                 </div>
@@ -927,17 +1305,43 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
                                                                         <div className="col-sm-6 col-md-4 col-form-label text-right font-semibold">
                                                                             <Form.Label>National ID <span className='text-danger'>*</span></Form.Label>
                                                                         </div>
-                                                                        <div className="col-sm-6 col-md-6">
-                                                                            <input
-                                                                                type="file"
-                                                                                name="file"
-                                                                                onChange={(event) => {
-                                                                                    const file = event.currentTarget.files[0];
-                                                                                    setFieldValue("file", file);  // Set file value in Formik state
-                                                                                }}
-                                                                                className="form-control max-w-[350px]"
-                                                                            />
-                                                                            <ErrorMessage name="file" component="div" className="text-danger mt-1" />
+                                                                        <div className="col-sm-6 col-md-6 d-flex">
+                                                                            <div>
+                                                                                <input
+                                                                                    type="file"
+                                                                                    accept="image/jpeg, image/png, application/pdf"
+                                                                                    ref={nidFileRef}
+                                                                                    onChange={(e) => handleFileChange(e, 27)}
+                                                                                    className="form-control max-w-[350px]"
+                                                                                />
+                                                                                <ErrorMessage name="file" component="div" className="text-danger mt-1" />
+                                                                            </div>
+                                                                            <div className='ml-2'>
+                                                                                {/* {selectedNationalIdFile.attachmentFile} */}
+                                                                                {selectedNationalIdFile.attachmentFile && (
+                                                                                    <>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Save File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-info' onClick={() => handleFileUpload(selectedNationalIdFile.documentTypeId)}><i className="fa fa-save"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => handleViewSelectedFile(selectedNationalIdFile.fileUrl, selectedNationalIdFile.fileName)}><i className="fa fa-eye"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                    </>
+                                                                                )}
+                                                                                {selectedNationalIdFile.mediaId && !selectedNationalIdFile.attachmentFile && (
+                                                                                    <>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Download File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-warning ml-2' onClick={() => handleFileDownload(selectedNationalIdFile.fileName)}><i className="fa fa-download"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => getFileViewByFileName(selectedNationalIdFile.fileName)}><i className="fa fa-eye"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Delete File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-danger ml-2' onClick={() => deleteFile(selectedNationalIdFile.mediaId)}><i className="fa fa-minus"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                    </>
+                                                                                )}
+                                                                            </div>
                                                                         </div>
                                                                     </Form.Group>
                                                                 </div>
@@ -945,19 +1349,44 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
                                                                 <div className="row">
                                                                     <Form.Group className="row mb-3 items-center" controlId="fileUpload">
                                                                         <div className="col-sm-6 col-md-4 col-form-label text-right font-semibold">
-                                                                            <Form.Label>Utility Bill(Gas/Electricity/Wasa) <span className='text-danger'>*</span></Form.Label>
+                                                                            <Form.Label>Utility Bill(Gas/Electricity/Wasa)</Form.Label>
                                                                         </div>
-                                                                        <div className="col-sm-6 col-md-6">
-                                                                            <input
-                                                                                type="file"
-                                                                                name="file"
-                                                                                onChange={(event) => {
-                                                                                    const file = event.currentTarget.files[0];
-                                                                                    setFieldValue("file", file);  // Set file value in Formik state
-                                                                                }}
-                                                                                className="form-control max-w-[350px]"
-                                                                            />
-                                                                            <ErrorMessage name="file" component="div" className="text-danger mt-1" />
+                                                                        <div className="col-sm-6 col-md-6 d-flex">
+                                                                            <div>
+                                                                                <input
+                                                                                    type="file"
+                                                                                    accept="image/jpeg, image/png, application/pdf"
+                                                                                    ref={utilityBillFileRef}
+                                                                                    onChange={(e) => handleFileChange(e, 28)}
+                                                                                    className="form-control max-w-[350px]"
+                                                                                />
+                                                                                <ErrorMessage name="file" component="div" className="text-danger mt-1" />
+                                                                            </div>
+                                                                            <div className='ml-2'>
+                                                                                {selectedUtilityBillFile.attachmentFile && (
+                                                                                    <>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Save File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-info' onClick={() => handleFileUpload(selectedUtilityBillFile.documentTypeId)}><i className="fa fa-save"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => handleViewSelectedFile(selectedUtilityBillFile.fileUrl, selectedUtilityBillFile.fileName)}><i className="fa fa-eye"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                    </>
+                                                                                )}
+                                                                                {selectedUtilityBillFile.mediaId && !selectedUtilityBillFile.attachmentFile && (
+                                                                                    <>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Download File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-warning ml-2' onClick={() => handleFileDownload(selectedUtilityBillFile.fileName)}><i className="fa fa-download"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => getFileViewByFileName(selectedUtilityBillFile.fileName)}><i className="fa fa-eye"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Delete File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-danger ml-2' onClick={() => deleteFile(selectedUtilityBillFile.mediaId)}><i className="fa fa-minus"></i></button>
+                                                                                        </OverlayTrigger>
+                                                                                    </>
+                                                                                )}
+                                                                            </div>
                                                                         </div>
                                                                     </Form.Group>
                                                                 </div>

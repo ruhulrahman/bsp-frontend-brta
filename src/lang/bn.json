@@ -416,8 +416,12 @@
   "cc":"সিসি",
   "seat":"সিট",
   "weight":"ওজন",
-  "kw":"কি.ওয়াট",
+  "kw":"কি.ও৯াট",
   "otherFields":"অন্যান্য ক্ষেত্র",
   "fields":"ক্ষেত্র",
+  "selectAirCondition": "এয়ার কন্ডিশনার (এসি) নির্বাচন করুন",
+  "selectHire": "ভাড়ায় চালিত নির্বাচন করুন",
+  "vehicleRegistrationMarkList": "যানবাহন নিবন্ধন চিহ্ন তালিকা",
+  "vehicleRegistrationMark": "যানবাহন নিবন্ধন চিহ্ন",
   "guardianName":"অভিভাবকের নাম"
 }

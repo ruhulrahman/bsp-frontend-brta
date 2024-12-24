@@ -3,7 +3,7 @@ import ReactSelect from '@/components/ui/ReactSelect';
 import i18n from '@/i18n';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import { toaster } from '@/utils/helpers.js';
 import { toBengaliNumber } from 'bengali-number';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
@@ -15,12 +15,11 @@ import { withNamespaces } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import AddNew from './AddNew';
-import ViewDetails from './ViewDetails';
 
-const VehicleRelatedServiceFeesList = ({ t }) => {
+const VehicleRegistrationMarkList = ({ t }) => {
 
     const dispatch = useDispatch();
-    const { activeStatusList, loading, dropdowns, listData, windowSize, yesNoList, pagination, showFilter } = useSelector((state) => state.common)
+    const { activeStatusList, loading, listData, dropdowns, windowSize, pagination, showFilter } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
     const toggleFilter = () => {
@@ -54,30 +53,29 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
         setCurrentPage(page)
     };
 
-    // useEffect(() => {
-    //     dispatch(setResetPagination())
-    // }, []);
-
     useEffect(() => {
-        getListData()
-        getAllServiceList()
-    }, [currentPage]);
+        getVehicleClassList()
+    }, []);
 
-    const [allServiceList, setAllServiceList] = useState([]);
-    const getAllServiceList = async () => {
 
-        const parentServiceCode = 'vehicle_related_fees'
+    const [vehicleClassList, setVehicleClassList] = useState([])
+
+    const getVehicleClassList = async () => {
+
         try {
-            const { data } = await RestApi.get(`api/v1/admin/configurations/service/all-active-child-services-with-additional/${parentServiceCode}`)
-            if (data.success) {
-                if (data.data.length > 0) {
-                    setAllServiceList(data.data)
-                }
-            }
+            const { data } = await RestApi.get(`api/v1/admin/common/get-vehicle-active-list`)
+            setVehicleClassList(data.vehicleClassList);
+            getListData()
         } catch (error) {
             console.log('error', error)
         }
     }
+
+
+    useEffect(() => {
+        getListData()
+    }, [currentPage, vehicleClassList]);
+
 
     // Render pagination using React Bootstrap Pagination
     const renderPagination = () => {
@@ -160,22 +158,14 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
     };
 
     const [searchValues, setSearchValues] = useState({
-        serviceId: '',
-        effectiveStartDate: '',
-        effectiveEndDate: '',
+        nameEn: '',
         isActive: '',
-        isAirCondition: '',
-        isHire: '',
-    })
+    });
 
     const resetSearchValues = {
-        serviceId: '',
-        effectiveStartDate: '',
-        effectiveEndDate: '',
+        nameEn: '',
         isActive: '',
-        isAirCondition: '',
-        isHire: '',
-    }
+    };
 
     const handleReset = (resetForm) => {
         resetForm({
@@ -198,8 +188,6 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
         }
     }
 
-    const [serviceIds, setServiceIds] = useState([])
-
     const getListData = async (values = searchValues) => {
 
         const params = Object.assign({ page: currentPage, size: pagination.perPage }, values)
@@ -207,11 +195,26 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/vehicle-related-service-fees/list', { params })
-            console.log('data', data.data)
-            dispatch(setListData(data.data.list.content));
-            setPaginationData(data.data.list)
-            setServiceIds(data.data.serviceIds);
+            const { data } = await RestApi.get('api/v1/admin/configurations/vehicle-registration-mark/list', { params })
+            if (data.content.length > 0) {
+                const mappedData = data.content.map((item, index) => {
+                    item.sl = slOffset + index
+                    item.orgList = []
+                    if (item.orgIds && item.orgIds.length > 0) {
+                        item.orgIds.forEach((vehileClassId) => {
+                            const vehicleClassObject = dropdowns?.orgList?.find((vClassItem) => vClassItem.id == vehileClassId)
+                            if (vehicleClassObject) {
+                                item.orgList.push(vehicleClassObject)
+                            }
+                        })
+                    }
+                    return Object.assign({}, item)
+                })
+                console.log('mappedData', mappedData)
+                dispatch(setListData(mappedData));
+            }
+            dispatch(setListData(data.content));
+            setPaginationData(data)
         } catch (error) {
             console.log('error', error)
         } finally {
@@ -237,7 +240,7 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
 
                 dispatch(setLoading(true));
                 try {
-                    await RestApi.delete(`api/v1/admin/configurations/vehicle-related-service-fees/delete/${data.id}`)
+                    await RestApi.delete(`api/v1/admin/configurations/vehicle-registration-mark/delete/${data.id}`)
 
                     Swal.fire({
                         title: t('deleted'),
@@ -280,18 +283,6 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
         setModalOpen(true);
     };
 
-    const [viewModalOpen, setViewModalOpen] = useState(false);
-    const [viewData, setViewData] = useState(null);
-    const handleOpenViewDetailsModal = (item) => {
-        setViewData(item);
-        setViewModalOpen(true);
-    };
-
-    const handleCloseViewDetailsModal = () => {
-        setViewModalOpen(false);
-        setViewData(null); // Reset edit data
-    }
-
     const handleOpenEditModal = (item) => {
         setEditData(item);
         setModalOpen(true);
@@ -308,9 +299,9 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
         try {
             let result = ''
             if (values.id) {
-                result = await RestApi.put(`api/v1/admin/configurations/vehicle-related-service-fees/update/${values.id}`, values)
+                result = await RestApi.put(`api/v1/admin/configurations/vehicle-registration-mark/update/${values.id}`, values)
             } else {
-                result = await RestApi.post('api/v1/admin/configurations/vehicle-related-service-fees/create', values)
+                result = await RestApi.post('api/v1/admin/configurations/vehicle-registration-mark/create', values)
             }
 
             if (result.data.success) {
@@ -348,61 +339,9 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
                                 <FormikForm>
                                     <div className="row">
                                         <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="serviceId">
-                                                <Field
-                                                    name="serviceId"
-                                                    component={ReactSelect}
-                                                    options={allServiceList}
-                                                    placeholder={t('selectService')}
-                                                    value={values.serviceId}
-                                                    onChange={(option) => {
-                                                        setFieldValue('serviceId', option ? option.value : '')
-                                                    }} // Update Formik value
-                                                />
-                                                <ErrorMessage name="serviceId" component="div" className="text-danger" />
-                                            </Form.Group>
-                                        </div>
-                                        <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="vehicleTypeId">
-                                                <Field
-                                                    name="vehicleTypeId"
-                                                    component={ReactSelect}
-                                                    options={dropdowns.vehicleTypeList}
-                                                    placeholder={t('selectVehicleType')}
-                                                    value={values.vehicleTypeId}
-                                                    onChange={(option) => {
-                                                        setFieldValue('vehicleTypeId', option ? option.value : '')
-                                                    }}
-                                                />
-                                                <ErrorMessage name="vehicleTypeId" component="div" className="text-danger" />
-                                            </Form.Group>
-                                        </div>
-                                        <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="isAirCondition">
-                                                <Field
-                                                    name="isAirCondition"
-                                                    component={ReactSelect}
-                                                    options={yesNoList}
-                                                    placeholder={t('selectAirCondition')}
-                                                    value={values.isAirCondition}
-                                                    onChange={(option) => {
-                                                        setFieldValue('isAirCondition', option ? option.value : '')
-                                                    }}
-                                                />
-                                            </Form.Group>
-                                        </div>
-                                        <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="isHire">
-                                                <Field
-                                                    name="isHire"
-                                                    component={ReactSelect}
-                                                    options={yesNoList}
-                                                    placeholder={t('selectHire')}
-                                                    value={values.isHire}
-                                                    onChange={(option) => {
-                                                        setFieldValue('isHire', option ? option.value : '')
-                                                    }}
-                                                />
+                                            <Form.Group className="mb-3" controlId="nameEn">
+                                                <Field type="text" name="nameEn" className="form-control" placeholder={t('enterName')} />
+                                                <ErrorMessage name="nameEn" component="div" className="text-danger" />
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-3 col-sm-12">
@@ -419,12 +358,6 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
                                                 />
                                             </Form.Group>
                                         </div>
-                                        {/* <div className="col-md-3 col-sm-12">
-                                            <Form.Group className="mb-3" controlId="nameEn">
-                                                <Field type="text" name="nameEn" className="form-control" placeholder={t('enterName')} />
-                                                <ErrorMessage name="nameEn" component="div" className="text-danger" />
-                                            </Form.Group>
-                                        </div> */}
                                         <div className="col-md-3 col-sm-12">
                                             <div className="flex">
                                                 <div className="flex-1">
@@ -445,7 +378,7 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('vehicleRelatedServiceFees')}</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">{t('VehicleRegistrationMarkList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
@@ -459,36 +392,21 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
                             onHide={handleCloseModal}
                             onSave={handleSave}
                             editData={editData}
-                            serviceIds={serviceIds}
-                            allServiceList={allServiceList}
-                        />
-
-
-                        <ViewDetails
-                            show={viewModalOpen}
-                            onHide={handleCloseViewDetailsModal}
-                            onSave={handleSave}
-                            viewData={viewData}
+                            dropdowns={dropdowns}
                         />
                     </div>
                 </div>
                 <div className="p-0 overflow-auto min-h-[300px]">
                     <Loading loading={loading} />
-                    <table className="mt-2 text-left table table-responsive">
+                    <table className="table-auto min-w-full text-left border border-gray-200">
                         <thead>
                             <tr>
                                 <th>{t('sl')}</th>
-                                <th>{t('service')}</th>
-                                <th className='text-center'>{t('vehicleTypes')}</th>
-                                <th className='text-center'>{t('cc')}</th>
-                                <th className='text-center'>{t('seat')}</th>
-                                <th className='text-center'>{t('weight')}</th>
-                                <th className='text-center'>{t('kw')}</th>
-                                <th className='text-center'>{t('mainFee')}</th>
-                                <th className='text-center'>{t('effectiveStartDate')}</th>
-                                <th className='text-center'>{t('effectiveEndDate')}</th>
+                                <th>{t('name') + ` (${t('en')})`}</th>
+                                <th>{t('name') + ` (${t('bn')})`}</th>
+                                <th>{t('organizations')}</th>
                                 <th>{t('status')}</th>
-                                <th className='text-center min-w-[120px]'>{t('action')}</th>
+                                <th className='w-[90px] text-center'>{t('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -498,77 +416,24 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
                                     {/* <td>{slOffset + index}.</td> */}
                                     {/* <td>{toBengaliNumber(slOffset + index)}.</td> */}
                                     <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
-                                    <td>{currentLanguage === 'en' ? item.serviceNameEn : item.serviceNameBn}</td>
-                                    <td className='text-center'>
-                                        {
-                                            item.vehicleTypes && item.vehicleTypes.length > 0 && item.vehicleTypes.map((vehicleType) => (
-                                                <span className={`badge bg-secondary rounded-full mr-2`}> {currentLanguage === 'en' ? vehicleType.nameEn : vehicleType.nameBn}</span>
-                                            ))
-                                        }
+                                    <td>{item.nameEn}</td>
+                                    <td>{item.nameBn}</td>
+                                    <td>
+                                        {item.orgList && item.orgList.length > 0 && item.orgList.map((orgItem, orgIndex) => (
+                                            <span key={orgIndex} className='badge bg-secondary rounded-full mr-1'>{orgItem?.nameEn}</span>
+                                        ))}
                                     </td>
-                                    <td className='text-center'>
-                                        {item.ccMin && item.ccMax ? (
-                                            `${item.ccMin} - ${item.ccMax}`
-                                        ) : item.ccMin && !item.ccMax ? (
-                                            `Above ${item.ccMin}`
-                                        ) : !item.ccMin && item.ccMax ? (
-                                            `Below ${item.ccMax}`
-                                        ) : (
-                                            'N/A' // Default fallback if both ccMin and ccMax are missing
-                                        )}
-                                    </td>
-                                    <td className='text-center'>
-                                        {item.seatMin && item.seatMax ? (
-                                            `${item.seatMin} - ${item.seatMax}`
-                                        ) : item.seatMin && !item.seatMax ? (
-                                            `Above ${item.seatMin}`
-                                        ) : !item.seatMin && item.seatMax ? (
-                                            `Below ${item.seatMax}`
-                                        ) : (
-                                            'N/A' // Default fallback if both seatMin and seatMax are missing
-                                        )}
-                                    </td>
-                                    <td className='text-center'>
-                                        {item.weightMin && item.weightMax ? (
-                                            `${item.weightMin} - ${item.weightMax}`
-                                        ) : item.weightMin && !item.weightMax ? (
-                                            `Above ${item.weightMin}`
-                                        ) : !item.weightMin && item.weightMax ? (
-                                            `Below ${item.weightMax}`
-                                        ) : (
-                                            'N/A'
-                                        )}
-                                    </td>
-                                    <td className='text-center'>
-                                        {item.kwMin && item.kwMax ? (
-                                            `${item.kwMin} - ${item.kwMax}`
-                                        ) : item.kwMin && !item.kwMax ? (
-                                            `Above ${item.kwMin}`
-                                        ) : !item.kwMin && item.kwMax ? (
-                                            `Below ${item.kwMax}`
-                                        ) : (
-                                            'N/A'
-                                        )}
-                                    </td>
-                                    <td className='text-center'>{currentLanguage === 'en' ? item.mainFee : toBengaliNumber(item.mainFee)}</td>
-                                    <td className='text-center'>{helper.dDate(item.effectiveStartDate)}</td>
-                                    <td className='text-center'>{helper.dDate(item.effectiveEndDate)}</td>
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
-                                    <td className='text-center'>
+                                    <td>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => handleOpenViewDetailsModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-dark'>
-                                                <i className="fa fa-eye"></i>
-                                            </button>
-                                        </OverlayTrigger>
-                                        <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-info ml-1 mt-1'>
+                                            <button onClick={() => handleOpenEditModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>
                                         <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
-                                            <button onClick={() => deleteData(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-danger ml-1 mt-1'>
+                                            <button onClick={() => deleteData(item)} className='btn btn-sm  btn-rounded text-[12px] btn-outline-danger ml-1'>
                                                 <i className="fa fa-trash"></i>
                                             </button>
                                         </OverlayTrigger>
@@ -578,7 +443,7 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
 
                             {listData && listData.length === 0 && (
                                 <tr>
-                                    <td colSpan={12} className="text-center text-danger text-slate-500">
+                                    <td colSpan={6} className="text-center text-danger text-slate-500">
                                         <i className="fa fa-exclamation-circle"></i> {t('no_data_found')}
                                     </td>
                                 </tr>
@@ -601,4 +466,4 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(VehicleRelatedServiceFeesList)
+export default withNamespaces()(VehicleRegistrationMarkList)

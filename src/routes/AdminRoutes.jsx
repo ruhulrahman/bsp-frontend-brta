@@ -31,6 +31,7 @@ import DrivingRelatedFees from '../features/admin/serviceFees/DrivingRelatedServ
 import VehicleRelatedFees from '../features/admin/serviceFees/VehicleRelatedServiceFees/List.jsx';
 import OfficeJurisdictionList from '../features/admin/configurations/officeJurisdiction/OfficeJurisdictionList.jsx';
 import ExamCenterList from '../features/admin/configurations/officeExamCenter/ExamCenterList.jsx';
+import VehicleRegistrationMarkList from '../features/admin/configurations/vehicleRegistrationMark/VehicleRegistrationMarkList.jsx';
 
 const adminRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -56,6 +57,7 @@ const adminRoutes = [
     { path: 'configurations/vehicle-class-list', element: <VehicleClassList /> },
     { path: 'configurations/office-jurisdiction-list', element: <OfficeJurisdictionList /> },
     { path: 'configurations/exam-center-list', element: <ExamCenterList /> },
+    { path: 'configurations/vehicle-registration-mark-list', element: <VehicleRegistrationMarkList /> },
 
     { path: 'service-fees/driving-related-fees', element: <DrivingRelatedFees /> },
     { path: 'service-fees/vehicle-related-fees', element: <VehicleRelatedFees /> },

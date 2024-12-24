@@ -119,6 +119,7 @@ const NewDrivingLicenseFirstPayment = ({ t }) => {
     const [isSubmitting, setSubmitting] = useState(false)
 
     const payNowServiceFee = async () => {
+        setSubmitting(true);
 
         try {
 
@@ -161,7 +162,7 @@ const NewDrivingLicenseFirstPayment = ({ t }) => {
             setSubmitting(false);
             dispatch(setLoading(false));
         }
-    };
+    }
 
     return (
         <div>

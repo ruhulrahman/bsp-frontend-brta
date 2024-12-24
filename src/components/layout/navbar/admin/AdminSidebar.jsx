@@ -157,6 +157,13 @@ const AdminSidebar = ({ t, openSidebar }) => {
                                             </NavLink>
                                         </li>
                                     )}
+                                    {hasPermission('permitted') && (
+                                        <li>
+                                            <NavLink to="/admin/configurations/vehicle-registration-mark-list">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('vehicleRegistrationMark')}</span>
+                                            </NavLink>
+                                        </li>
+                                    )}
                                     {hasPermission('notification_template') && (
                                         <li>
                                             <NavLink to="/admin/configurations/notification-template-list">

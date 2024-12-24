@@ -10,7 +10,7 @@ import VehicleRegistrationPage1 from '../features/applicant-panel/vehicle-regist
 import VehicleRegistrationPage2 from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage2.jsx';
 import VehicleRegistrationPage3 from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage3.jsx';
 import VehicleRegistrationPage4 from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage4.jsx';
-import VehicleRegistrationFirstPayment from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationFirstPayment.jsx';
+import PaymentForVehicleInspection from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/PaymentForVehicleInspection.jsx';
 import VehileRegistrationRelatedReports from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehileRegistrationRelatedReports.jsx';
 import VehicleRegistrationSecondPayment from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationSecondPayment.jsx';
 import PaymentSuccessForVehicleRegistration from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/PaymentSuccess.jsx';
@@ -37,7 +37,7 @@ const applicantRoutes = [
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page2/:serviceRequestId?', element: <VehicleRegistrationPage2 /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page3/:serviceRequestId?', element: <VehicleRegistrationPage3 /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page4/:serviceRequestId?', element: <VehicleRegistrationPage4 /> },
-    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment/:serviceRequestId?', element: <VehicleRegistrationFirstPayment /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment/:serviceRequestId?', element: <PaymentForVehicleInspection /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/:serviceRequestId?', element: <VehicleRegistrationSecondPayment /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/reports/:serviceRequestId?', element: <VehileRegistrationRelatedReports /> },
     // { path: 'vehicle-registration/payment-success-page/paymentStep/:serviceRequestNo?', element: <PaymentSuccessForVehicleRegistration /> },
