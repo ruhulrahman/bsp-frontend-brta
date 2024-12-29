@@ -424,5 +424,14 @@
   "selectHire": "Select Hire",
   "vehicleRegistrationMarkList": "Vehicle Registration Mark List",
   "vehicleRegistrationMark": "Vehicle Registration Mark",
-  "guardianName":"Guardian's Name"
+  "guardianName":"Guardian's Name",
+  "serviceDocumentMapList":"Service Document Map List",
+  "serviceDocumentMap":"Service Document Map",
+  "serviceDocumentMaps":"Service Document Maps",
+  "document":"Document",
+  "documentRequired":"Document Required",
+  "documentNotRequired":"Document Not Required",
+  "documentType":"Document Type",
+  "selectDocumentType":"Select Document Type",
+  "selectDocument":"Select Document"
 }

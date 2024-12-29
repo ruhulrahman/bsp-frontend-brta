@@ -94,6 +94,13 @@ const AdminSidebar = ({ t, openSidebar }) => {
                                             </NavLink>
                                         </li>
                                     )}
+                                    {hasPermission('services') && (
+                                        <li>
+                                            <NavLink to="/admin/configurations/service-document-map-list">
+                                                <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('serviceDocumentMaps')}</span>
+                                            </NavLink>
+                                        </li>
+                                    )}
                                     {hasPermission('appointment_timeslots') && (
                                         <li>
                                             <NavLink to="/admin/configurations/appointment-timeslot-list">

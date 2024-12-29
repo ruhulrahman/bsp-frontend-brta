@@ -32,6 +32,7 @@ import VehicleRelatedFees from '../features/admin/serviceFees/VehicleRelatedServ
 import OfficeJurisdictionList from '../features/admin/configurations/officeJurisdiction/OfficeJurisdictionList.jsx';
 import ExamCenterList from '../features/admin/configurations/officeExamCenter/ExamCenterList.jsx';
 import VehicleRegistrationMarkList from '../features/admin/configurations/vehicleRegistrationMark/VehicleRegistrationMarkList.jsx';
+import ServiceDocumentMapList from '../features/admin/configurations/ServiceDocumentMap/ServiceDocumentMapList.jsx';
 
 const adminRoutes = [
     { path: 'dashboard', element: <DashboardPage /> },
@@ -46,6 +47,7 @@ const adminRoutes = [
     { path: 'configurations/vehicle-color-list', element: <VehicleColorList /> },
     { path: 'configurations/fuel-type-list', element: <FuelTypeList /> },
     { path: 'configurations/service-list', element: <ServiceList /> },
+    { path: 'configurations/service-document-map-list', element: <ServiceDocumentMapList /> },
     { path: 'configurations/notification-template-list', element: <NotificationTemplateList /> },
     { path: 'configurations/email-template-list', element: <EmailTemplateList /> },
     { path: 'configurations/add-or-update-email-template/:id?', element: <AddOrUpdateEmailTemplate /> },

@@ -423,5 +423,14 @@
   "selectHire": "ভাড়ায় চালিত নির্বাচন করুন",
   "vehicleRegistrationMarkList": "যানবাহন নিবন্ধন চিহ্ন তালিকা",
   "vehicleRegistrationMark": "যানবাহন নিবন্ধন চিহ্ন",
-  "guardianName":"অভিভাবকের নাম"
+  "guardianName":"অভিভাবকের নাম",
+  "serviceDocumentMapList":"পরিষেবা নথি সংযুক্তির তালিকা",
+  "serviceDocumentMap":"পরিষেবা নথি সংযুক্তি",
+  "serviceDocumentMaps":"পরিষেবা নথি সংযুক্তিসমূহ",
+  "document":"নথি",
+  "documentRequired":"নথি আবশ্যক",
+  "documentNotRequired":"নথি অবশ্যক নয়",
+  "documentType":"নথির ধরণ",
+  "selectDocumentType":"নথির ধরণ নির্বাচন করুন",
+  "selectDocument":"নথি নির্বাচন করুন"
 }
