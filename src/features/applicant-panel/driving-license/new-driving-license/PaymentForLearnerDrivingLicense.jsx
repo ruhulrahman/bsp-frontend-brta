@@ -126,6 +126,7 @@ const NewDrivingLicenseFirstPayment = ({ t }) => {
             let paidAmount = grandTotalItem.grandTotalAmount
 
             const requestBody = {
+                "serviceType": 'dl',
                 "serviceCode": 'before_driving_skills_test_fees',
                 "serviceRequestNo": serviceRequestNo,
                 "paymentid": helper.generateUniqueId(),

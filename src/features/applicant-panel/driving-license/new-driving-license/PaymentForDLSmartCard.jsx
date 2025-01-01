@@ -118,6 +118,7 @@ const PaymentForDLSmartCard = ({ t }) => {
             console.log("paidAmount: " + paidAmount);
 
             const requestBody = {
+                "serviceType": 'dl',
                 "serviceCode": 'after_driving_skills_test_fees',
                 "serviceRequestNo": serviceRequestNo,
                 "paymentid": helper.generateUniqueId(),

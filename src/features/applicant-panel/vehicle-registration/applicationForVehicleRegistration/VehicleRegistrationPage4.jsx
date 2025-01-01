@@ -21,6 +21,7 @@ import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 const VehicleRegistrationPage4 = ({ t }) => {
 
     let { serviceRequestId, isViewable } = useParams()
+    const [serviceRequestNo, setServiceRequestNo] = useState(null);
     isViewable = isViewable === 'true' ? true : false
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -32,17 +33,7 @@ const VehicleRegistrationPage4 = ({ t }) => {
         orgId: '',
         vehicleInfoId: '',
         serviceRequestId: '',
-        billOfEntry: '',
         pageCompleted: 4,
-        // billOfEntry: [
-        //     {
-        //         fileId: '',
-        //         file: '',
-        //         selectedFile: '',
-        //         fileName: '',
-        //         fileUrl: '',
-        //     }
-        // ],
         billOfEntry: {
             documentTypeId: 29,
             documentType: 'BILL OF ENTRY',
@@ -270,8 +261,10 @@ const VehicleRegistrationPage4 = ({ t }) => {
 
             const apiResponse = Object.assign({}, data.applicantNidInfo, data.vehicleInfo, data, { serviceRequestId: data.id });
 
+            console.log('apiResponse.serviceRequestNo', apiResponse.serviceRequestNo)
+            setServiceRequestNo(apiResponse.serviceRequestNo)
             if (apiResponse && apiResponse.pageCompleted < 1) {
-                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
+                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/${serviceRequestId}`)
             }
             // setInitialValues(apiResponse);
 
@@ -317,7 +310,10 @@ const VehicleRegistrationPage4 = ({ t }) => {
             }
         }
 
-        navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment/${serviceRequestId}`)
+        console.log('serviceRequestNo================', serviceRequestNo)
+
+        // navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment/${serviceRequestId}`)
+        navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment/${serviceRequestId}/${serviceRequestNo}`)
 
         // try {
         //     let result = await RestApi.post('api/v1/applicant/vehicle/registration-application-page4', values)
@@ -430,19 +426,7 @@ const VehicleRegistrationPage4 = ({ t }) => {
                             }
 
                             const clearRow = async (documentType) => {
-                                if (values.billOfEntry?.documentType === documentType) {
-
-                                    const newBillOfEntry = {
-                                        ...values.billOfEntry,
-                                        files: [{
-                                            attachmentFile: null,
-                                            fileName: '',
-                                            fileUrl: null,
-                                        }]
-                                    }
-
-                                    setInitialValues({ ...initialValues, billOfEntry: newBillOfEntry })
-                                }
+                                
                             }
 
                             // Handle File Selection
@@ -498,14 +482,6 @@ const VehicleRegistrationPage4 = ({ t }) => {
                                     setDocumentList(updatedDocumentList);
                                 }
 
-                                // if (values.billOfEntry?.documentType === documentType) {
-                                //     console.log('index', index)
-                                //     let newBillOfEntry = [...values.billOfEntry.files];
-                                //     newBillOfEntry[index].attachmentFile = selectedFile
-                                //     newBillOfEntry[index].fileName = selectedFile.name
-                                //     newBillOfEntry[index].fileUrl = selectedFileUrl
-                                //     setInitialValues({ ...values, billOfEntry: { ...values.billOfEntry, files: newBillOfEntry } })
-                                // }
                             }
 
                             const uploadVehicleServiceFile = async (documentTypeId, index) => {
@@ -573,7 +549,6 @@ const VehicleRegistrationPage4 = ({ t }) => {
                                                 <hr className='mb-3' />
 
                                                 <div className="col-sm-12 col-lg-12 col-xl-12 text-[14px]">
-
 
                                                     <FileViewer
                                                         show={modalOpen}
@@ -647,16 +622,6 @@ const VehicleRegistrationPage4 = ({ t }) => {
                                                                                         </OverlayTrigger>
                                                                                     )}
 
-                                                                                    {/* {!item.selectedFile && item.fileUrl && (
-                                                                                    <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => handleViewSelectedFile(item.selectedFile, item.fileName)}><i className="fa fa-eye"></i></button>
-                                                                                )}
-                                                                                {!item.selectedFile && item.fileName && (
-                                                                                    <button type='button' className='btn btn-sm btn-rounded btn-outline-warning ml-2' onClick={() => handleFileDownload(item.fileName)}><i className="fa fa-download"></i></button>
-                                                                                )}
-                                                                                <button type='button' className='btn btn-sm btn-rounded btn-outline-success ml-2' onClick={() => addNewRow(values.billOfEntry.documentType)}><i className="fa fa-plus"></i></button>
-                                                                                {values.billOfEntry?.files?.length > 1 && (
-                                                                                    <button type='button' className='btn btn-sm btn-rounded btn-outline-danger ml-2' onClick={() => removeRow(values.billOfEntry.documentType, index)}><i className="fa fa-minus"></i></button>
-                                                                                )} */}
                                                                                 </div>
                                                                             </div>
                                                                         </div>

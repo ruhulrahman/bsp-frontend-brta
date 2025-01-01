@@ -27,9 +27,7 @@ const PaymentForVehicleInspection = ({ t }) => {
     const dispatch = useDispatch();
     const { loading, windowSize, permissionTypeList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
-    let { serviceRequestId, isViewable } = useParams();
-
-
+    let { serviceRequestId, serviceRequestNo } = useParams();
 
     const [paymentData, setPaymentData] = useState([
         {
@@ -142,8 +140,9 @@ const PaymentForVehicleInspection = ({ t }) => {
             console.log("paidAmount: " + paidAmount);
 
             const requestBody = {
-                // "paymentid": generateGUID().slice(0,10),
-                "paymentid": null,
+                "serviceCode": 'after_driving_skills_test_fees',
+                "serviceRequestNo": serviceRequestNo,
+                "paymentid": helper.generateUniqueId(),
                 "paidamount": paidAmount,
                 "tin": tin,
                 "paymenttype": "1145101",
@@ -191,8 +190,9 @@ const PaymentForVehicleInspection = ({ t }) => {
             let paidAmount = grandTotalItem.grandTotalAmount
 
             const requestBody = {
+                "serviceType": 'vehicle',
                 "serviceCode": serviceCode,
-                // "serviceRequestNo": serviceRequestNo,
+                "serviceRequestNo": serviceRequestNo,
                 "paymentid": helper.generateUniqueId(),
                 "paidamount": paidAmount,
                 // "tin": tin,

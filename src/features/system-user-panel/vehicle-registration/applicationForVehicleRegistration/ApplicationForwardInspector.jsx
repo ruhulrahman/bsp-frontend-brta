@@ -11,11 +11,11 @@ import ReactSelect from '@/components/ui/ReactSelect';
 import * as Yup from 'yup';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import RestApi from '@/utils/RestApi';
-import { toaster } from '@/utils/helpers.js';
 import VehicleInspection from "./VehicleInspection.jsx"
 import RevenueCheck from "./RevenueCheck.jsx"
 import VehicleApprove from "./VehicleApprove.jsx"
 import useCommonFunctions from '@/hooks/useCommonFunctions';
+import helper, { toaster } from '@/utils/helpers.js';
 
 const ApplicationForwardInspector = ({ t, show, onHide, onSave, editData }) => {
 
