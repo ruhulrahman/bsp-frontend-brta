@@ -433,5 +433,6 @@
   "documentNotRequired":"Document Not Required",
   "documentType":"Document Type",
   "selectDocumentType":"Select Document Type",
+  "applicationDetails":"Application Details",
   "selectDocument":"Select Document"
 }

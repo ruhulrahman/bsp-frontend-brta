@@ -291,6 +291,11 @@ const UserList = ({ t }) => {
                                     <td>{helper.dDate(item.applicationDate)}</td>
                                     <td>{item.applicationStatusName}</td>
                                     <td className='text-left'>
+                                        {/* <OverlayTrigger overlay={<Tooltip>{t('applicationDetails')}</Tooltip>}>
+                                            <button onClick={() => openModal(item)} className="btn btn-sm rounded-full text-xs btn-outline-dark mr-2">
+                                                <i className="fa fa-eye"></i>
+                                            </button>
+                                        </OverlayTrigger> */}
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
                                             <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/${item.serviceRequestId}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>

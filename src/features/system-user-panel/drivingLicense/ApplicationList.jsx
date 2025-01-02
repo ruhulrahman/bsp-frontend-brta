@@ -300,7 +300,7 @@ const DLRegistrationApprovalList = ({ t }) => {
                                     <td>{helper.dDate(item.applicationDate)}</td>
                                     <td><span className={`badge bg-${item.applicationStatusColor}`}>{item.applicationStatus}</span></td>
                                     <td className='text-center'>
-                                        <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                        <OverlayTrigger overlay={<Tooltip>{t('applicationDetails')}</Tooltip>}>
                                             <button onClick={() => openModal(item)} className='btn btn-sm rounded-full text-[12px] btn-outline-dark mr-1'>
                                                 <i className="fa fa-eye"></i>
                                             </button>

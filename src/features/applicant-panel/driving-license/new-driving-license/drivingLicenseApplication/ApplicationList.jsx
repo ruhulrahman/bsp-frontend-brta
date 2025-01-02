@@ -292,7 +292,7 @@ const DLRegistrationApprovalList = ({ t }) => {
                                     <td><span className={`badge bg-${item.applicationStatusColor}`}>{item.applicationStatus}</span></td>
                                     <td className="text-center flex flex-wrap gap-2 justify-center">
 
-                                        <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                        <OverlayTrigger overlay={<Tooltip>{t('applicationDetails')}</Tooltip>}>
                                             <button onClick={() => openModal(item)} className="btn btn-sm rounded-full text-xs btn-outline-dark">
                                                 <i className="fa fa-eye"></i>
                                             </button>

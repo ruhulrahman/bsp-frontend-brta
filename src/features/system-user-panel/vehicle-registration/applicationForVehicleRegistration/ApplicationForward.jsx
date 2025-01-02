@@ -54,7 +54,8 @@ const ApplicationForward = ({ t, show, onHide, onSave, editData }) => {
             {editData &&
                 <Modal show={show} onHide={onHide} size='xl'>
                     <Modal.Header closeButton>
-                        <Modal.Title>{t('applicationForward')}</Modal.Title>
+                        {/* <Modal.Title>{t('applicationForward')}</Modal.Title> */}
+                        <Modal.Title>{t('Vehicle Application Details')}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="row p-3">
@@ -62,37 +63,71 @@ const ApplicationForward = ({ t, show, onHide, onSave, editData }) => {
                                 <div className="card-body">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <h1 className='font-semibold mb-3'>Service Request No: {editData.serviceRequestNo}</h1>
-                                            <h1 className='font-semibold mb-3'>Chassis No: {editData.chassisNumber}</h1>
-                                            <h1 className='font-semibold mb-3'>Engine No: {editData.engineNumber}</h1>
-                                            <h1 className='font-semibold mb-3'>Vehicle Class: {editData.vehicleClassName}</h1>
+                                            <h1 className='font-normal mb-3'>Service Request No: {editData.serviceRequestNo}</h1>
+                                            <h1 className='font-normal mb-3'>Chassis No: {editData.chassisNumber}</h1>
+                                            <h1 className='font-normal mb-3'>Engine No: {editData.engineNumber}</h1>
+                                            <h1 className='font-normal mb-3'>Vehicle Class: {editData.vehicleClassName}</h1>
 
                                         </div>
                                         <div className="col-md-6">
-                                            <h1 className='font-semibold mb-3'>CC: {editData.ccOrKw}</h1>
-                                            <h1 className='font-semibold mb-3'>Manufacturing Year: {editData.manufacturingYear}</h1>
-                                            <h1 className='font-semibold mb-3'>Application Date: {helper.dDate(editData.applicationDate)}</h1>
-                                            <h1 className='font-semibold mb-3'>Application Status: {editData.applicationStatusName}</h1>
+                                            <h1 className='font-normal mb-3'>CC: {editData.ccOrKw}</h1>
+                                            <h1 className='font-normal mb-3'>Manufacturing Year: {editData.manufacturingYear}</h1>
+                                            <h1 className='font-normal mb-3'>Application Date: {helper.dDate(editData.applicationDate)}</h1>
+                                            {/* <h1 className='font-normal mb-3'>Application Status: {editData.applicationStatusName}</h1> */}
+                                            <h1 className='font-normal mb-3'>Application Status: <span className={`badge bg-${editData.applicationStatusColor}`}>{editData.applicationStatusName}</span></h1>
+                                            {editData.approvalDate && (
+                                                <h1 className='font-normal mb-3'>Approval Date: <span className={`badge bg-${editData.applicationStatusColor}`}>{helper.dDate(editData.approvalDate)}</span></h1>
+                                            )}
+                                            {editData.rejectionDate && (
+                                                <h1 className='font-normal mb-3'>Rejected Date: <span className={`badge bg-${editData.applicationStatusColor}`}>{helper.dDate(editData.rejectionDate)}</span></h1>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
+
+                        <div className="row px-1 mt-[24px]">
+                            {hasPermission('permitted') && (
+                                <div className="col-sm-12 col-md-6 col-lg-6">
+                                    <div className="card px-[24px] border-none pb-[24px]">
+                                        <h3 className="text-xl text-green-600 mb-6 pt-[24px]">{t('vehicleInspection')}</h3>
+                                        <div className="row">
+                                            <div className="col-sm-12">
+                                                <VehicleInspection editData={editData}></VehicleInspection>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {hasPermission('permitted') && (
+                                <div className="col-sm-12 col-md-6 col-lg-6">
+                                    <div className="card px-[24px] border-none pb-[24px]">
+                                        <h3 className="text-xl text-green-600 mb-6 pt-[24px]">{t('vehicleApprovalSection')}</h3>
+                                        <div className="row">
+                                            <div className="col-sm-12">
+                                                <VehicleApprove editData={editData}></VehicleApprove>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        {/* <div className="row">
                             <div className="col-md-6">
                                 <VehicleInspection editData={editData}></VehicleInspection>
                             </div>
                             <div className="col-md-6">
                                 <RevenueCheck editData={editData}></RevenueCheck>
                             </div>
-                        </div>
-                        <div className="row mt-3">
+                        </div> */}
+                        {/* <div className="row mt-3">
                             <div className="col-md-6">
                                 <VehicleApprove editData={editData}></VehicleApprove>
                             </div>
                             <div className="col-md-6">
                             </div>
-                        </div>
+                        </div> */}
 
                     </Modal.Body>
                     <Modal.Footer>

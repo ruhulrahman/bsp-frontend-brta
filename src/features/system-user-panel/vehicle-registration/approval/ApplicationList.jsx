@@ -327,21 +327,21 @@ const VehicleRegistrationApprovalList = ({ t }) => {
                                     {/* <td><span className={`badge bg-${item.applicationStatusColor}`}>{item.applicationStatusName}</span></td> */}
                                     <td className='text-center'>
                                         {hasPermission('vehicle_application_approval') && (
-                                            <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                            <OverlayTrigger overlay={<Tooltip>{t('applicationDetails')}</Tooltip>}>
                                                 <button onClick={() => openModal(item, 'approval')} className='btn btn-sm rounded-full text-[12px] btn-outline-dark mr-1'>
                                                     <i className="fa fa-eye"></i>
                                                 </button>
                                             </OverlayTrigger>
                                         )}
                                         {hasPermission('vehicle_inspection_submission') && (
-                                            <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                            <OverlayTrigger overlay={<Tooltip>{t('applicationDetails')}</Tooltip>}>
                                                 <button onClick={() => openModal(item, 'inspection')} className='btn btn-sm rounded-full text-[12px] btn-outline-dark mr-1'>
                                                     <i className="fa fa-eye"></i>
                                                 </button>
                                             </OverlayTrigger>
                                         )}
                                         {hasPermission('vehicle_revenue_check_submission') && (
-                                            <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                            <OverlayTrigger overlay={<Tooltip>{t('applicationDetails')}</Tooltip>}>
                                                 <button onClick={() => openModal(item, 'revenue')} className='btn btn-sm rounded-full text-[12px] btn-outline-dark mr-1'>
                                                     <i className="fa fa-eye"></i>
                                                 </button>

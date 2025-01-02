@@ -81,8 +81,8 @@ const VehicleInspection = ({ t, editData }) => {
 
     return (
         <div>
-            <h1>{t('vehicleInspection')}</h1>
-            <hr />
+            {/* <h1>{t('vehicleInspection')}</h1> */}
+            {/* <hr /> */}
             <Formik
                 initialValues={initialValues}
                 enableReinitialize={true}

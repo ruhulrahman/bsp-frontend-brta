@@ -76,8 +76,8 @@ const VehicleApprove = ({ t, editData }) => {
 
     return (
         <div>
-            <h1>{t('vehicleApprovalSection')}</h1>
-            <hr />
+            {/* <h1>{t('vehicleApprovalSection')}</h1>
+            <hr /> */}
             <Formik
                 initialValues={initialValues}
                 enableReinitialize={true}
