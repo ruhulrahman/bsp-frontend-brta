@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react'
 import { withNamespaces } from 'react-i18next';
 import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
-import { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setAuthUser } from '../authSlice';

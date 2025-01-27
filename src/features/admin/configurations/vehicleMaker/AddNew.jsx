@@ -80,7 +80,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         // console.log('initialValues', initialValues)
     }, []);
 
-    const onSubmit = async (values, setSubmitting, resetForm) => {
+    const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
         values.countryId = parseInt(values.countryId)
 
         if (values.id) {
@@ -88,7 +88,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
             delete values.statusGroup;
         }
 
-        onSave(values, setSubmitting, resetForm);
+        onSave(values, setSubmitting, resetForm, setErrors);
     };
 
     return (
@@ -101,11 +101,11 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                        onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
-                            onSubmit(values, setSubmitting, resetForm);
+                            onSubmit(values, setSubmitting, resetForm, setErrors);
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => (

@@ -12,7 +12,7 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
@@ -152,27 +152,29 @@ const DesignationList = ({ t }) => {
         isActive: null,
     };
 
-    const handleReset = (resetForm) => {
-        // resetForm({
-        //     values: resetSearchValues, // Reset to initial values
-        // });
+    const handleReset = (resetForm, currentValues) => {
 
-        resetForm({ values: { isActive: null } });
-        resetForm({ values: resetSearchValues });
+        if (!helpers.compareValuesAreSame(searchValues, currentValues)) {
 
-        if (currentPage != 0) {
-            setCurrentPage(0)
-        } else {
-            getListData()
+            resetForm({ values: resetSearchValues });
+
+            if (currentPage != 0) {
+                setCurrentPage(0)
+            } else {
+                getListData()
+            }
         }
-    };
+
+    }
 
     const searchData = (values) => {
-        if (currentPage != 0) {
-            setCurrentPage(0)
-            getListData(values)
-        } else {
-            getListData(values)
+        if (!helpers.compareValuesAreSame(searchValues, values)) {
+            if (currentPage != 0) {
+                setCurrentPage(0)
+                getListData(values)
+            } else {
+                getListData(values)
+            }
         }
     }
 
@@ -277,7 +279,7 @@ const DesignationList = ({ t }) => {
     };
 
 
-    const handleSave = async (values, setSubmitting, resetForm) => {
+    const handleSave = async (values, setSubmitting, resetForm, setErrors) => {
         try {
             values.parentDesignationId = parseInt(values.parentDesignationId)
 
@@ -296,7 +298,9 @@ const DesignationList = ({ t }) => {
 
         } catch (error) {
             console.log('error', error)
-            // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
+            if (error.response && error.response.data) {
+                setErrors(error.response.data)
+            }
         } finally {
             setSubmitting(false)
         }
@@ -349,8 +353,8 @@ const DesignationList = ({ t }) => {
                                                 </div>
                                                 <div className="flex-1 ml-2">
                                                     <button type='reset' onClick={() => {
-                                                        setFieldValue('isActive', null)
-                                                        handleReset(resetForm)
+                                                        // setFieldValue('isActive', null)
+                                                        handleReset(resetForm, values)
                                                     }} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
                                                 </div>
                                             </div>
@@ -365,8 +369,9 @@ const DesignationList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('designationList')}</h3>
+                        <h3 className="text-lg font-semibold text-green-600">{t('designationList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                        <span className="badge bg-success">{t('totalRecords')}: {totalElements}</span>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
@@ -393,7 +398,7 @@ const DesignationList = ({ t }) => {
                                 <th>{t('level')}</th>
                                 <th>{t('parentDesignation')}</th>
                                 <th>{t('status')}</th>
-                                <th>{t('action')}</th>
+                                <th className='text-center min-w-[120px]'>{t('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -416,7 +421,7 @@ const DesignationList = ({ t }) => {
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
-                                    <td>
+                                    <td className='text-center'>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
                                             <button onClick={() => handleOpenEditModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
@@ -442,15 +447,17 @@ const DesignationList = ({ t }) => {
                         </tbody>
                     </table>
                 </div>
-                <div className='row m-2.5'>
-                    <div className="col-md-12 text-right">
-                        <div className="flex items-center justify-end">
-                            <div className="flex">
-                                <Pagination size='sm'>{renderPagination()}</Pagination>
+                {listData && listData.length > 0 && (
+                    <div className='row m-2.5'>
+                        <div className="col-md-12 text-right">
+                            <div className="flex items-center justify-end">
+                                <div className="flex">
+                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     )

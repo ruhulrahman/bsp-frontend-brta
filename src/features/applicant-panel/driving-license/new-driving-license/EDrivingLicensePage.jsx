@@ -6,7 +6,7 @@ import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
 import manPhoto from '@/assets/images/man.png';
 import QRCode from "react-qr-code";
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import { AuthContext } from '@/components/common/AuthContext';
@@ -81,7 +81,7 @@ const PrintSectionWithoutImage = ({ t, learnerData }) => {
                         <p><strong>Name:</strong> {learnerData?.userNidInfo?.nameEn}</p>
                         <p><strong>Father's Name:</strong> {learnerData?.userNidInfo?.fatherOrHusbandNameEn}</p>
                         <p><strong>Mother's Name:</strong> {learnerData?.userNidInfo?.motherNameEn}</p>
-                        <p><strong>Date of Birth:</strong> {helper.dDate(learnerData?.userNidInfo?.dob)}</p>
+                        <p><strong>Date of Birth:</strong> {helpers.dDate(learnerData?.userNidInfo?.dob)}</p>
                         <p><strong>{t('permanentAddress')}:</strong> {learnerData?.dlInformation?.permanentAddress?.fullAddressEn}</p>
                     </div>
                     <div className="col-6">
@@ -102,7 +102,7 @@ const PrintSectionWithoutImage = ({ t, learnerData }) => {
                     <div className="col-6">
                         <p><strong>Reference No.:</strong> {helper.cn(learnerData, 'dlInformation.dlReferenceNumber', 'Unknown')}</p>
                         <p><strong>License Type:</strong> {helper.cn(learnerData, 'licenseType.nameEn', 'Unknown')}</p>
-                        <p><strong>Issue Date:</strong> {helper.dDate(learnerData?.dlInformation?.issueDate)}</p>
+                        <p><strong>Issue Date:</strong> {helpers.dDate(learnerData?.dlInformation?.issueDate)}</p>
                     </div>
                     <div className="col-6">
                         <p><strong>Licensing Authority:</strong> {helper.cn(learnerData, 'dlInformation.issuedOffice.nameEn', 'Unknown')}, BRTA</p>
@@ -133,7 +133,7 @@ const PrintSectionWithoutImage = ({ t, learnerData }) => {
                                     }
                                 })}
                         </p>
-                        <p><strong>Expiry Date:</strong> {helper.dDate(learnerData?.dlInformation?.expireDate)}</p>
+                        <p><strong>Expiry Date:</strong> {helpers.dDate(learnerData?.dlInformation?.expireDate)}</p>
                     </div>
                 </div>
             </div>
@@ -141,7 +141,7 @@ const PrintSectionWithoutImage = ({ t, learnerData }) => {
             {/* Footer */}
             <div className="text-center text-xs mt-4">
                 <p>For any further assistance, Please visit <a href="https://brta.gov.bd" className="text-blue-500">brta.gov.bd</a> Or <a href="https://bsp.brta.gov.bd" className="text-blue-500">bsp.brta.gov.bd</a> or Email: info@brta.gov.bd</p>
-                <p>Print Date: {helper.dDate(new Date(), 'MMM DD, yyyy hh:mm:ss A')}</p>
+                <p>Print Date: {helpers.dDate(new Date(), 'MMM DD, yyyy hh:mm:ss A')}</p>
             </div>
         </div>
     )

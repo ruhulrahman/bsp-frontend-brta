@@ -1,7 +1,7 @@
 import logo from '@/assets/images/logo.png';
 import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
-import { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
@@ -9,12 +9,17 @@ import { withNamespaces } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 // import { ToastContainer } from 'react-toastify';
-import { useDispatch } from 'react-redux';
-import { setToken, setTokenInfo, setUserPermissions } from '../authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setToken, setTokenInfo, setUserPermissions, setUserOfficeRole, setAuthUser, setOfficeRole } from '../authSlice';
+import ChooseOfficeRoleModal from './ChooseOfficeRoleModal';
+import i18n from '@/i18n';
 
 const LoginPage = ({ t }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
+    const { dropdowns, listData, windowSize, yesNoList, pagination, showFilter } = useSelector((state) => state.common)
+    const { userOfficeRole, roleSet, authUser, accessToken } = useSelector((state) => state.auth)
+    const currentLanguage = i18n.language;
 
     const [loading, setLoading] = useState(false)
     const [initialValues, setInitialValues] = useState({
@@ -34,22 +39,38 @@ const LoginPage = ({ t }) => {
 
         try {
             const { data: result } = await RestApi.post('api/auth/v1/login', values)
-            console.log('result', result)
+            // console.log('result', result)
             await localStorage.setItem('token', result.tokenInfo?.accessToken)
             await localStorage.setItem('userTypeCode', result.userInfo?.userTypeCode)
             await dispatch(setToken(result.tokenInfo?.accessToken));
             await dispatch(setTokenInfo(result.tokenInfo));
             await dispatch(setUserPermissions(result.tokenInfo?.permissions));
+            await dispatch(setAuthUser(result.userInfo));
             toaster('Your are logged in successfully')
 
             if (result.userInfo?.userTypeCode === 'applicant') {
                 navigate('/applicant-panel/dashboard');
-            } else if (result.userInfo?.userTypeCode === 'system_admin') {
-                navigate('/admin/dashboard');
-            } else if (result.userInfo?.userTypeCode === 'system_user') {
-                navigate('/system-user-panel/dashboard');
+            } else {
+
+                if (result.userInfo?.userOfficeRoles.length > 1) {
+                    handleOpenChooseOfficeRoleModal(result.userInfo)
+                    // if (result.userInfo?.userTypeCode === 'system_admin') {
+                    //     navigate('/admin/dashboard');
+                    // } else if (result.userInfo?.userTypeCode === 'system_user') {
+                    //     navigate('/system-user-panel/dashboard');
+                    // }
+
+                } else {
+                    const userOfficeRole = result.userInfo?.userOfficeRoles[0]
+                    dispatch(setUserOfficeRole(userOfficeRole));
+
+                    if (result.userInfo?.userTypeCode === 'system_admin') {
+                        navigate(`/admin/dashboard/${userOfficeRole?.orgId}/${userOfficeRole?.roleId}`);
+                    } else if (result.userInfo?.userTypeCode === 'system_user') {
+                        navigate(`/system-user-panel/dashboard/${userOfficeRole?.orgId}/${userOfficeRole?.roleId}`);
+                    }
+                }
             }
-            // navigate('/admin/dashboard');
         } catch (error) {
             console.log('error', error)
             setErrorMessage(error.response.data)
@@ -60,6 +81,30 @@ const LoginPage = ({ t }) => {
         }
     };
 
+    const [chooseOfficeRoleModalOpen, setChooseOfficeRoleModalOpen] = useState(false);
+    const [viewData, setViewData] = useState(null);
+
+    const handleOpenChooseOfficeRoleModal = (item) => {
+        setViewData(item);
+        setChooseOfficeRoleModalOpen(true);
+    };
+
+    const handleCloseChooseOfficeRoleModal = (data) => {
+        console.log('data', data);
+        console.log('authUser', authUser);
+        const userOfficeRole = data
+
+        dispatch(setUserOfficeRole(userOfficeRole));
+
+        if (authUser?.userTypeCode === 'system_admin') {
+            navigate(`/admin/dashboard/${userOfficeRole?.orgId}/${userOfficeRole?.roleId}`);
+        } else if (authUser?.userTypeCode === 'system_user') {
+            navigate(`/system-user-panel/dashboard/${userOfficeRole?.orgId}/${userOfficeRole?.roleId}`);
+        }
+        setChooseOfficeRoleModalOpen(false);
+        setViewData(null); // Reset edit data
+    }
+
     return (
         <div className="relative py-4 sm:max-w-xs sm:mx-auto mb-[150px]">
             <div className="min-h-96 px-8 py-8 mt-4 text-left bg-white dark:bg-gray-900  rounded-xl">
@@ -67,6 +112,15 @@ const LoginPage = ({ t }) => {
                     <h2 className='text-center font-bold text-[30px] mb-[16px]'>{t('login')}</h2>
                     <span className="text-xs text-center text-[#8B8E98] mb-[32px]">{t('login_to_the_portal_to_access_your_account_and_get_access_to_all_the_services')}</span>
                 </div>
+
+                <ChooseOfficeRoleModal
+                    show={chooseOfficeRoleModalOpen}
+                    onHide={() => { }}
+                    onSave={(data) => {
+                        handleCloseChooseOfficeRoleModal(data);
+                    }}
+                    viewData={viewData}
+                />
 
                 {errorMessage && <div className="text-red-500">Username or password not match</div>}
 

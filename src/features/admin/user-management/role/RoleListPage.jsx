@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { useNavigate } from 'react-router-dom';
@@ -153,24 +153,29 @@ const RoleListPage = ({ t }) => {
         isActive: '',
     };
 
-    const handleReset = (resetForm) => {
-        resetForm({
-            values: resetSearchValues, // Reset to initial values
-        });
+    const handleReset = (resetForm, currentValues) => {
+        if (!helpers.compareValuesAreSame(searchValues, currentValues)) {
 
-        if (currentPage != 0) {
-            setCurrentPage(0)
-        } else {
-            getListData()
+            resetForm({
+                values: resetSearchValues, // Reset to initial values
+            });
+
+            if (currentPage != 0) {
+                setCurrentPage(0)
+            } else {
+                getListData()
+            }
         }
-    };
+    }
 
     const searchData = (values) => {
-        if (currentPage != 0) {
-            setCurrentPage(0)
-            getListData(values)
-        } else {
-            getListData(values)
+        if (!helpers.compareValuesAreSame(searchValues, values)) {
+            if (currentPage != 0) {
+                setCurrentPage(0)
+                getListData(values)
+            } else {
+                getListData(values)
+            }
         }
     }
 
@@ -353,7 +358,7 @@ const RoleListPage = ({ t }) => {
                                                     <button type='submit' className="btn btn-success btn-sm w-full">{t('search')}</button>
                                                 </div>
                                                 <div className="flex-1 ml-2">
-                                                    <button type='reset' onClick={() => handleReset(resetForm)} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
+                                                    <button type='reset' onClick={() => handleReset(resetForm, values)} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -367,8 +372,9 @@ const RoleListPage = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('roleList')}</h3>
+                        <h3 className="text-lg font-semibold text-green-600">{t('roleList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                        <span className="badge bg-success">{t('totalRecords')}: {totalElements}</span>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
@@ -388,7 +394,7 @@ const RoleListPage = ({ t }) => {
                                 <th>{t('name') + ` (${t('bn')})`}</th>
                                 <th>{t('roleCode')}</th>
                                 <th className='text-center'>{t('status')}</th>
-                                <th className='text-center'>{t('action')}</th>
+                                <th className='text-center min-w-[120px]'>{t('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -410,17 +416,17 @@ const RoleListPage = ({ t }) => {
                                     </td>
                                     <td className='text-center'>
                                         <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
-                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-role/${true}/${item.id}`)} className='btn btn-sm text-[12px] btn-outline-dark mr-1'>
+                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-role/${true}/${item.id}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-dark mr-1'>
                                                 <i className="fa fa-eye"></i>
                                             </button>
                                         </OverlayTrigger>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-role/${false}/${item.id}`)} className='btn btn-sm text-[12px] btn-outline-info'>
+                                            <button onClick={() => navigate(`/admin/user-management/add-or-update-role/${false}/${item.id}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </OverlayTrigger>
                                         <OverlayTrigger overlay={<Tooltip>{t('delete')}</Tooltip>}>
-                                            <button onClick={() => deleteData(item)} className='btn btn-sm  btn-rounded text-[12px] btn-outline-danger ml-1'>
+                                            <button onClick={() => deleteData(item)} className='btn btn-sm btn-rounded text-[12px] btn-outline-danger ml-1'>
                                                 <i className="fa fa-trash"></i>
                                             </button>
                                         </OverlayTrigger>
@@ -439,15 +445,17 @@ const RoleListPage = ({ t }) => {
                         </tbody>
                     </table>
                 </div>
-                <div className='row m-2.5'>
-                    <div className="col-md-12 text-right">
-                        <div className="flex items-center justify-end">
-                            <div className="flex">
-                                <Pagination size='sm'>{renderPagination()}</Pagination>
+                {listData && listData.length > 0 && (
+                    <div className='row m-2.5'>
+                        <div className="col-md-12 text-right">
+                            <div className="flex items-center justify-end">
+                                <div className="flex">
+                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     )

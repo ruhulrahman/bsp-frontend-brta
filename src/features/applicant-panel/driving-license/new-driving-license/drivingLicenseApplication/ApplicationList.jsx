@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { useNavigate } from 'react-router-dom';
@@ -167,11 +167,13 @@ const DLRegistrationApprovalList = ({ t }) => {
     };
 
     const searchData = (values) => {
-        if (currentPage != 0) {
-            setCurrentPage(0)
-            getListData(values)
-        } else {
-            getListData(values)
+        if (!helpers.compareValuesAreSame(searchValues, values)) {
+            if (currentPage != 0) {
+                setCurrentPage(0)
+                getListData(values)
+            } else {
+                getListData(values)
+            }
         }
     }
 
@@ -251,6 +253,7 @@ const DLRegistrationApprovalList = ({ t }) => {
                     <div className="w-full sm:w-2/3">
                         <h3 className="text-lg font-semibold  text-green-600">{t('drivingLicenseApplicationList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                        <span className="badge bg-success">{t('totalRecords')}: {totalElements}</span>
                     </div>
                     <div className="w-full sm:w-1/3 text-right mt-2 sm:mt-0">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
@@ -288,7 +291,7 @@ const DLRegistrationApprovalList = ({ t }) => {
                                     <td>{item.licenseType}</td>
                                     <td>{item.drivingIssueAuthority}</td>
                                     <td>{item.nid}</td>
-                                    <td>{helper.dDate(item.applicationDate)}</td>
+                                    <td>{helpers.dDate(item.applicationDate)}</td>
                                     <td><span className={`badge bg-${item.applicationStatusColor}`}>{item.applicationStatus}</span></td>
                                     <td className="text-center flex flex-wrap gap-2 justify-center">
 

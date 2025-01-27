@@ -105,8 +105,9 @@ const User = ({ t }) => {
         <div className=" text-slate-700 bg-white shadow-md rounded-xl">
             <div className='row m-1'>
                 <div className="col-md-8 col-sm-12">
-                    <h3 className="text-lg font-semibold text-slate-800">{t('user_list')}</h3>
+                    <h3 className="text-lg font-semibold text-green-600">{t('user_list')}</h3>
                     <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                        <span className="badge bg-success">{t('totalRecords')}: {totalElements}</span>
                 </div>
                 <div className="col-md-4 col-sm-12 text-right">
 

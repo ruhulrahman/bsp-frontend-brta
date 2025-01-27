@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData } from '@/store/commonSlice';
 
 const DesignationList = ({ t }) => {
@@ -360,8 +360,9 @@ const DesignationList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('designationList')}</h3>
+                        <h3 className="text-lg font-semibold text-green-600">{t('designationList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                        <span className="badge bg-success">{t('totalRecords')}: {totalElements}</span>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger
@@ -430,15 +431,17 @@ const DesignationList = ({ t }) => {
                         </tbody>
                     </table>
                 </div>
-                <div className='row m-2.5'>
-                    <div className="col-md-12 text-right">
-                        <div className="flex items-center justify-end">
-                            <div className="flex">
-                                <Pagination size='sm'>{renderPagination()}</Pagination>
+                {listData && listData.length > 0 && (
+                    <div className='row m-2.5'>
+                        <div className="col-md-12 text-right">
+                            <div className="flex items-center justify-end">
+                                <div className="flex">
+                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     )

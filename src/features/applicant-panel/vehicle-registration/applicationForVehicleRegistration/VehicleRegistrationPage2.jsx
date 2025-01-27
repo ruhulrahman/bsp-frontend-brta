@@ -11,7 +11,7 @@ import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 import { useParams, useNavigate } from 'react-router-dom';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
@@ -142,6 +142,7 @@ const VehicleRegistrationPage2 = ({ t }) => {
         fuelId: Yup.string().required('The Field is required'),
         vehiclePrice: Yup.string().required('The Field is required'),
         tyreSize: Yup.string().required('The Field is required'),
+        axleNumber: Yup.string().required('The Field is required'),
         tyreNumber: Yup.string().required('The Field is required'),
     });
 
@@ -222,18 +223,22 @@ const VehicleRegistrationPage2 = ({ t }) => {
         }
     }
 
-    const onSubmit = async (values, setSubmitting, resetForm) => {
+    const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
 
         try {
             let result = await RestApi.post('api/v1/applicant/vehicle/registration-application-page2', values)
 
             if (result.data.success) {
                 toaster(result.data.message)
-                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page3/${result.data.data.id}`)
+                // navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page3/${result.data.data.id}`)
+                navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page3/${serviceRequestId}`)
             }
 
         } catch (error) {
             console.log('error', error)
+            if (error.response && error.response.data) {
+                setErrors(error.response.data)
+            }
             // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
         } finally {
             setSubmitting(false)
@@ -252,11 +257,11 @@ const VehicleRegistrationPage2 = ({ t }) => {
                         initialValues={initialValues}
                         enableReinitialize={true}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                        onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
-                            onSubmit(values, setSubmitting, resetForm);
+                            onSubmit(values, setSubmitting, resetForm, setErrors);
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, handleBlur, handleSubmit, setFieldValue }) => {
@@ -631,7 +636,7 @@ const VehicleRegistrationPage2 = ({ t }) => {
 
                                                 <div className="col-sm-12 col-lg-4 col-xl-4">
                                                     <Form.Group className="mb-3" controlId="tyreNumber">
-                                                        <Form.Label>{t('tyreNumber')}</Form.Label>
+                                                        <Form.Label>{t('tyreNumber')} <span className='text-red-500'>*</span></Form.Label>
                                                         <Field disabled={isViewable} type="number" name="tyreNumber" className="form-control" placeholder="Enter tyre number" />
                                                         <ErrorMessage name="tyreNumber" component="div" className="text-danger" />
                                                     </Form.Group>

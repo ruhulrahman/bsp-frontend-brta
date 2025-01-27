@@ -120,7 +120,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
 
                             <button
                                 type="button"
-                                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                className="relative rounded-full bg-gray-800 w-auto mx-3 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                             >
                                 <span className="absolute -inset-1.5" />
                                 <span className="sr-only">View notifications</span>
@@ -136,7 +136,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                             {/* Profile dropdown */}
                             <Menu as="div" className="relative ml-3">
                                 <div>
-                                    <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                    <MenuButton className="relative flex rounded-full bg-gray-800 w-auto mr-3 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
                                         <img

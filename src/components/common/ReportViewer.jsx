@@ -11,7 +11,7 @@ import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
 import Loading from '@/components/common/Loading';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 
 const ReportViewer = async (reportName, parameters) => {
     try {

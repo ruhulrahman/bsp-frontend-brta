@@ -15,7 +15,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 
 import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { AuthContext } from '@/components/common/AuthContext';
 

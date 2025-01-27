@@ -233,34 +233,42 @@ const AddNew = ({ t, show, onHide, onSave, editData, serviceIds, allServiceList 
                                         <ErrorMessage name="isHire" component="div" className="text-danger" />
                                     </Form.Group>
 
-                                    {/* <Form.Group className="mb-3" controlId="isElectricVehicle">
+                                    <Form.Group className="mb-3" controlId="isElectricVehicle">
                                         <Checkbox id="custom-switch" name="isElectricVehicle" className="" label={values.isElectricVehicle ? t('electricVehicle') : t('notElectricVehicle')} />
                                         <ErrorMessage name="isElectricVehicle" component="div" className="text-danger" />
-                                    </Form.Group> */}
-
-                                    <Form.Group className="mb-3" controlId="ccMin">
-                                        <Form.Label>{t('ccMin')}</Form.Label>
-                                        <Field type="number" min="0" step="0.01" name="ccMin" className="form-control" placeholder="Enter cc" />
-                                        <ErrorMessage name="ccMin" component="div" className="text-danger" />
                                     </Form.Group>
 
-                                    <Form.Group className="mb-3" controlId="ccMax">
-                                        <Form.Label>{t('ccMax')}</Form.Label>
-                                        <Field type="number" min="0" step="0.01" name="ccMax" className="form-control" placeholder="Enter cc" />
-                                        <ErrorMessage name="ccMax" component="div" className="text-danger" />
-                                    </Form.Group>
+                                    {values.isElectricVehicle && (
+                                        <>
+                                            <Form.Group className="mb-3" controlId="kwMin">
+                                                <Form.Label>{t('kwMin')}</Form.Label>
+                                                <Field type="number" min="0" step="0.01" name="kwMin" className="form-control" placeholder="Enter kw" />
+                                                <ErrorMessage name="kwMin" component="div" className="text-danger" />
+                                            </Form.Group>
 
-                                    <Form.Group className="mb-3" controlId="kwMin">
-                                        <Form.Label>{t('kwMin')}</Form.Label>
-                                        <Field type="number" min="0" step="0.01" name="kwMin" className="form-control" placeholder="Enter kw" />
-                                        <ErrorMessage name="kwMin" component="div" className="text-danger" />
-                                    </Form.Group>
+                                            <Form.Group className="mb-3" controlId="kwMax">
+                                                <Form.Label>{t('kwMax')}</Form.Label>
+                                                <Field type="number" min="0" step="0.01" name="kwMax" className="form-control" placeholder="Enter kw" />
+                                                <ErrorMessage name="kwMax" component="div" className="text-danger" />
+                                            </Form.Group>
+                                        </>
+                                    )}
 
-                                    <Form.Group className="mb-3" controlId="kwMax">
-                                        <Form.Label>{t('kwMax')}</Form.Label>
-                                        <Field type="number" min="0" step="0.01" name="kwMax" className="form-control" placeholder="Enter kw" />
-                                        <ErrorMessage name="kwMax" component="div" className="text-danger" />
-                                    </Form.Group>
+                                    {!values.isElectricVehicle && (
+                                        <>
+                                            <Form.Group className="mb-3" controlId="ccMin">
+                                                <Form.Label>{t('ccMin')}</Form.Label>
+                                                <Field type="number" min="0" step="0.01" name="ccMin" className="form-control" placeholder="Enter cc" />
+                                                <ErrorMessage name="ccMin" component="div" className="text-danger" />
+                                            </Form.Group>
+
+                                            <Form.Group className="mb-3" controlId="ccMax">
+                                                <Form.Label>{t('ccMax')}</Form.Label>
+                                                <Field type="number" min="0" step="0.01" name="ccMax" className="form-control" placeholder="Enter cc" />
+                                                <ErrorMessage name="ccMax" component="div" className="text-danger" />
+                                            </Form.Group>
+                                        </>
+                                    )}
 
                                     <Form.Group className="mb-3" controlId="seatMin">
                                         <Form.Label>{t('seatMin')}</Form.Label>

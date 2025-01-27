@@ -1,19 +1,59 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withNamespaces } from 'react-i18next';
 import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 import QRCode from "react-qr-code";
+import Loading from '@/components/common/Loading';
+import helpers from '@/utils/helpers.js';
+import { useNavigate } from 'react-router-dom';
+import i18n from '@/i18n';
+import RestApi from '@/utils/RestApi';
+import { useDispatch, useSelector } from 'react-redux';
 
-const MainContent = ({ t }) => {
+const MainContent = ({ t, serviceRequestId }) => {
 
-    const [qrCodeValue, setQrCodeValue] = useState(`
-        Registration Number: DHAKA METRO-THA-13-3000
-        Fitness Period: 08-FEB-2017 :: 08-FEB-2018
-        Owner Name: PALLI KARMA SHAHYAK FOUNDATION
-    `)
+    // const [qrCodeValue, setQrCodeValue] = useState(`
+    //     Registration Number: DHAKA METRO-THA-13-3000
+    //     Fitness Period: 08-FEB-2017 :: 08-FEB-2018
+    //     Owner Name: PALLI KARMA SHAHYAK FOUNDATION
+    // `)
+
+    const navigate = useNavigate();
+    const currentLanguage = i18n.language;
+    const [vehicleDetail, setVehicleDetail] = useState({});
+    const { activeStatusList, loading, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
+
+    useEffect(() => {
+        if (serviceRequestId) {
+            getVehicleInfoById(serviceRequestId);
+        } else {
+            navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
+        }
+    }, [serviceRequestId]);
+
+    const [barCodeValue, setBarCodeValue] = useState('')
+    const [qrCodeValue, setQrCodeValue] = useState('')
+
+    const getVehicleInfoById = async (serviceRequestId) => {
+
+        try {
+            const { data } = await RestApi.get(`api/v1/applicant/vehicle/get-fitness-certificate-details/${serviceRequestId}`)
+            console.log('data', data)
+            setVehicleDetail(data);
+
+            setQrCodeValue(`
+                Registration Number: ${data?.vehicleOwner?.fullRegNumber}
+                Fitness Period: ${helpers.dDate(data?.fitnessValidStartDate)} :: ${helpers.dDate(data?.fitnessValidEndDate)}
+                Owner Name: ${data?.vehicleOwner?.name}
+            `)
+
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
 
     return (
         <Container className="max-w-[800px] mx-auto p-6 border-2 border-gray-400 bg-white rounded-lg shadow-md english-font bangla-font">
@@ -116,7 +156,7 @@ const styles = StyleSheet.create({
 
 
 
-const FitenessCertificate = ({ t }) => {
+const FitenessCertificate = ({ t, serviceRequestId }) => {
     const handlePrint = () => {
         printJS({
             printable: 'printable-section-fitness-certificate',
@@ -141,7 +181,7 @@ const FitenessCertificate = ({ t }) => {
             </div>
 
             <div id="printable-section-fitness-certificate">
-                <MainContent t={t} />
+                <MainContent t={t} serviceRequestId={serviceRequestId} />
             </div>
         </div>
     )

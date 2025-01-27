@@ -7,7 +7,7 @@ import brtaLogo from '@/assets/images/logo.png';
 import manPhoto from '@/assets/images/man.png';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 import QRCode from "react-qr-code";
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
@@ -120,8 +120,8 @@ const LearnerPrintSectionWithoutImage = ({ t, learnerData }) => {
             <div className="flex justify-between mt-2">
                 <div className="text-sm space-y-1 flex-1">
                     <p><strong>Roll No. :</strong> {currentLanguage === 'en' ? learnerData?.rollNo : toBengaliNumber(learnerData?.rollNo)}</p>
-                    <p><strong>Issue Date :</strong> {currentLanguage === 'en' ? helper.dDate(learnerData?.issueDate) : toBengaliNumber(helper.dDate(learnerData?.issueDate))}</p>
-                    <p><strong>Expiry Date :</strong> {currentLanguage === 'en' ? helper.dDate(learnerData?.expireDate) : toBengaliNumber(helper.dDate(learnerData?.expireDate))}</p>
+                    <p><strong>Issue Date :</strong> {currentLanguage === 'en' ? helpers.dDate(learnerData?.issueDate) : toBengaliNumber(helpers.dDate(learnerData?.issueDate))}</p>
+                    <p><strong>Expiry Date :</strong> {currentLanguage === 'en' ? helpers.dDate(learnerData?.expireDate) : toBengaliNumber(helpers.dDate(learnerData?.expireDate))}</p>
                     {/* <p><strong>License Type :</strong> NON-PROFESSIONAL</p> */}
                     <p><strong>License Type :</strong> {currentLanguage === 'en' ? helper.cn(learnerData, 'licenseType.nameEn', 'Unknown') : helper.cn(learnerData, 'licenseType.nameBn', 'Unknown')}</p>
                     <p><strong>Application Type :</strong> {currentLanguage === 'en' ? helper.cn(learnerData, 'applicationType.nameEn', 'Unknown') : helper.cn(learnerData, 'applicationType.nameBn', 'Unknown')}</p>
@@ -177,7 +177,7 @@ const LearnerPrintSectionWithoutImage = ({ t, learnerData }) => {
                         <p><strong>{t('presentAddress')} :</strong> {currentLanguage === 'en' ? learnerData?.dlInformation?.presentAddress?.fullAddressEn : learnerData?.dlInformation?.presentAddress?.fullAddressBn}</p>
                         {/* <p><strong>{t('permanentAddress')} :</strong> FARAZI BARI, KOLAKOPA, DOUALTKHAN, BHOLA-8301</p> */}
                         <p><strong>{t('permanentAddress')} :</strong> {currentLanguage === 'en' ? learnerData?.dlInformation?.permanentAddress?.fullAddressEn : learnerData?.dlInformation?.permanentAddress?.fullAddressBn}</p>
-                        <p><strong>Date of Birth :</strong> {currentLanguage === 'en' ? helper.dDate(learnerData?.userNidInfo?.dob) : toBengaliNumber(helper.dDate(learnerData?.userNidInfo?.dob))}</p>
+                        <p><strong>Date of Birth :</strong> {currentLanguage === 'en' ? helpers.dDate(learnerData?.userNidInfo?.dob) : toBengaliNumber(helpers.dDate(learnerData?.userNidInfo?.dob))}</p>
                         <p><strong>Blood Group :</strong> {currentLanguage === 'en' ? helper.cn(learnerData, 'bloodGroup.nameEn', 'Unknown') : helper.cn(learnerData, 'bloodGroup.nameBn', 'Unknown')}</p>
                     </div>
                 </div>
@@ -203,7 +203,7 @@ const LearnerPrintSectionWithoutImage = ({ t, learnerData }) => {
                         {drivingTestList && drivingTestList.length > 0 && drivingTestList.map((item, index) => (
                             <tr>
                                 <td className="border px-2 py-1">{currentLanguage === 'en' ? item.nameEn : item.nameBn}</td>
-                                <td className="border px-2 py-1">{currentLanguage === 'en' ? helper.dDate(learnerData?.examDate) : toBengaliNumber(helper.dDate(learnerData?.examDate))}</td>
+                                <td className="border px-2 py-1">{currentLanguage === 'en' ? helpers.dDate(learnerData?.examDate) : toBengaliNumber(helpers.dDate(learnerData?.examDate))}</td>
                                 <td className="border px-2 py-1">{currentLanguage === 'en' ? item.time : item.time}</td>
                                 <td className="border px-2 py-1 text-uppercase">{currentLanguage === 'en' ? learnerData?.examVenueNameEn : learnerData?.examVenueNameBn}</td>
                                 <td className="border px-2 py-1"></td>
@@ -258,7 +258,7 @@ const LearnerPrintSectionWithoutImage = ({ t, learnerData }) => {
             <div className="mt-4 text-center text-xs">
                 <p>
                     <strong>For possible questions and answers regarding driving licenses please visit :</strong> www.brta.gov.bd
-                    <p>Print Date: {helper.dDate(new Date(), 'MMM DD, yyyy hh:mm:ss A')}</p>
+                    <p>Print Date: {helpers.dDate(new Date(), 'MMM DD, yyyy hh:mm:ss A')}</p>
                 </p>
             </div>
 

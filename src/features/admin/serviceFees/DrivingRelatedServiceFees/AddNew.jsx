@@ -88,8 +88,8 @@ const AddNew = ({ t, show, onHide, onSave, editData, serviceIds }) => {
         });
     };
 
-    const onSubmit = async (values, setSubmitting, resetForm) => {
-        onSave(values, setSubmitting, resetForm);
+    const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
+        onSave(values, setSubmitting, resetForm, setErrors);
     };
 
     return (
@@ -102,7 +102,7 @@ const AddNew = ({ t, show, onHide, onSave, editData, serviceIds }) => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                        onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
@@ -113,7 +113,7 @@ const AddNew = ({ t, show, onHide, onSave, editData, serviceIds }) => {
                                 values.effectiveEndDate = new Date(values.effectiveEndDate)
                             }
 
-                            onSubmit(values, setSubmitting, resetForm);
+                            onSubmit(values, setSubmitting, resetForm, setErrors);
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => {

@@ -24,6 +24,7 @@ const useCommonFunctions = () => {
             if (permissions && permissions.length) {
     
                 return permissions.includes(permissionCode);
+                // return true;
     
             } else {
               return false;

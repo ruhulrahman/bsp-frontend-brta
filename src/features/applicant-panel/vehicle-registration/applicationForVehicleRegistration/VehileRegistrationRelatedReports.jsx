@@ -1,6 +1,5 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
-import React from 'react';
 import { withNamespaces } from 'react-i18next';
 import Nav from 'react-bootstrap/Nav';
 import { NavLink } from 'react-router-dom';
@@ -9,9 +8,18 @@ import Tabs from 'react-bootstrap/Tabs';
 import TaxTokenPage from './TaxTokenPage.jsx';
 import FitenessCertificate from './FitenessCertificate.jsx';
 import DigitalRegistrationCertificate from './DigitalRegistrationCertificate.jsx';
+import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const VehileRegistrationRelatedReports = ({ t }) => {
+
+    let { serviceRequestId, isViewable } = useParams()
+    // isViewable = isViewable === 'true'? true : false
+    const navigate = useNavigate();
+    
+    
 
     return (
         <>
@@ -25,13 +33,13 @@ const VehileRegistrationRelatedReports = ({ t }) => {
                             fill
                         >
                             <Tab eventKey="taxToken" title="Tax Token">
-                                <TaxTokenPage />
+                                <TaxTokenPage serviceRequestId={serviceRequestId} />
                             </Tab>
                             <Tab eventKey="fitenessCertificate" title="Fitness Certificate">
-                                <FitenessCertificate />
+                                <FitenessCertificate serviceRequestId={serviceRequestId} />
                             </Tab>
                             <Tab eventKey="digitalRegistrationCertificate" title="Digital Registration Certificate">
-                                <DigitalRegistrationCertificate/>
+                                <DigitalRegistrationCertificate serviceRequestId={serviceRequestId} />
                             </Tab>
                         </Tabs>
                     </div>

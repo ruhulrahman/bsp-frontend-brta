@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 
 const DrivingLicenseApprove = ({ t, editData, onCloseModal, listReload }) => {
 
@@ -118,7 +118,7 @@ const DrivingLicenseApprove = ({ t, editData, onCloseModal, listReload }) => {
                             <Loading loading={loading} loadingText={t('submitting')} />
                             <div className="row mt-3">
                                 <div className="col-md-4">
-                                    <Form.Label>{t('applicationStatus')} <span className='text-red-500'>*</span></Form.Label>
+                                    <Form.Label className='text-nowrap'>{t('applicationStatus')} <span className='text-red-500'>*</span></Form.Label>
                                 </div>
                                 <div className="col-md-8">
                                     <Form.Group className="mb-1" controlId="applicationStatusId">

@@ -39,7 +39,7 @@ const applicantRoutes = [
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page4/:serviceRequestId?', element: <VehicleRegistrationPage4 /> },
     // { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment/:serviceRequestId?', element: <PaymentForVehicleInspection /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment/:serviceRequestId/:serviceRequestNo?', element: <PaymentForVehicleInspection /> },
-    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/:serviceRequestId?', element: <VehicleRegistrationSecondPayment /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/:serviceRequestId/:serviceRequestNo?', element: <VehicleRegistrationSecondPayment /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/reports/:serviceRequestId?', element: <VehileRegistrationRelatedReports /> },
     // { path: 'vehicle-registration/payment-success-page/paymentStep/:serviceRequestNo?', element: <PaymentSuccessForVehicleRegistration /> },
 

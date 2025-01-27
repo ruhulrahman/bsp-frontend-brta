@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { withNamespaces } from 'react-i18next';
 import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import i18n from '@/i18n';
 import { useSelector } from 'react-redux';
 

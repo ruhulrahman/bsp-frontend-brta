@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { removeAuthUser } from '@/features/common/auth/authSlice';
 import { useDispatch } from 'react-redux';
-import { removeToken, removeTokenInfo } from '../../features/common/auth/authSlice';
+import { removeToken, removeTokenInfo, setOfficeRole } from '../../features/common/auth/authSlice';
+import RestApi from '@/utils/RestApi';
 
 const Logout = () => {
     const navigate = useNavigate();
@@ -10,18 +11,41 @@ const Logout = () => {
 
     useEffect(() => {
         // Clear authentication data (e.g., tokens, user info)
-        localStorage.removeItem('token');
-        dispatch(removeAuthUser());
-        dispatch(removeToken());
-        dispatch(removeTokenInfo());
-
-        // Optionally, clear other related data
-        // sessionStorage.clear();
-        // localStorage.clear();
-
-        // Redirect to the login page
-        navigate('/login');
+        unsetLoggedInUserOrgAndRole();
     }, [navigate]);
+
+    const [loading, setLoading] = useState(true)
+
+    const unsetLoggedInUserOrgAndRole = async () => {
+
+        setLoading(true);
+
+        try {
+            // const result = await RestApi.get('api/user/me')
+            const result = await RestApi.post('api/v1/auth/unset-logged-in-user-office-role')
+            if (result.status == 200) {
+
+                localStorage.removeItem('token');
+                dispatch(removeAuthUser());
+                dispatch(removeToken());
+                dispatch(removeTokenInfo());
+                // dispatch(setOfficeRole(true));
+                // localStorage.setItem('roleSet', false);
+
+                // Optionally, clear other related data
+                // sessionStorage.clear();
+                // localStorage.clear();
+
+                // Redirect to the login page
+                navigate('/login');
+                localStorage.setItem('roleSet', false);
+            }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className="flex items-center justify-center h-screen bg-gray-100">

@@ -12,7 +12,7 @@ import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 import FileViewer from '@/components/common/FileViewer';
 import { useParams, useNavigate } from 'react-router-dom';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'

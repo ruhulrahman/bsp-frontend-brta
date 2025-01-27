@@ -112,16 +112,22 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
 
                             <button
                                 type="button"
-                                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 w-[45px] ml-2 mr-1 "
+                                className="relative rounded-full bg-gray-800 w-auto mx-3 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                             >
                                 <span className="absolute -inset-1.5" />
                                 <span className="sr-only">View notifications</span>
                                 <BellIcon aria-hidden="true" className="h-6 w-6" />
                             </button>
+                            
+                            <div className='text-gray-300 text-left'>
+                                {/* <span className='text-[14px]'>Ruhul Amin</span> */}
+                                <p className='text-[14px]'>{currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}</p>
+                                <p className='text-[12px] text-green-200 leadin'>{t('applicant')}</p>
+                            </div>
                             {/* Profile dropdown */}
                             <Menu as="div" className="relative">
                                 <div>
-                                    <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 w-[45px]">
+                                    <MenuButton className="relative flex rounded-full bg-gray-800 w-auto mx-3 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
                                         <img
@@ -160,13 +166,6 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                     </MenuItem>
                                 </MenuItems>
                             </Menu>
-                            
-
-                            <div className='text-gray-300 text-left'>
-                                {/* <span className='text-[14px]'>Ruhul Amin</span> */}
-                                <p className='text-[14px]'>{currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}</p>
-                                <p className='text-[12px] text-green-200 leadin'>{t('applicant')}</p>
-                            </div>
 
                         </div>
                     </div>

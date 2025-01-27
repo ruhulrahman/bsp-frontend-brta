@@ -11,7 +11,7 @@ import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 import { useParams, useNavigate } from 'react-router-dom';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
@@ -64,7 +64,7 @@ const PaymentForVehicleInspection = ({ t }) => {
 
     const [serviceCode, setServiceCode] = useState('vehicle_registration_related_primary_fees')
     const [serviceEconomicCode, setServiceEconomicCode] = useState('')
-    const [paymentServiceList, setpaymentServiceList] = useState([])
+    const [paymentServiceList, setaymentServiceList] = useState([])
     const [grandTotalItem, setGrandTotalItem] = useState({
         grandTotalMainFee: 0,
         grandTotalVat: 0,
@@ -93,7 +93,7 @@ const PaymentForVehicleInspection = ({ t }) => {
                     grandTotalVat: feesList.reduce((r, d) => r + d.vat, 0),
                     grandTotalAmount: feesList.reduce((r, d) => r + d.totalAmount, 0),
                 })
-                setpaymentServiceList(feesList);
+                setaymentServiceList(feesList);
                 setServiceEconomicCode(data.serviceEconomicCode);
             }
 
@@ -110,7 +110,7 @@ const PaymentForVehicleInspection = ({ t }) => {
             const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-nid-info`)
             setNid(data.nidNumber);
             setMobile(data.mobile);
-            setDob(helper.dDate(data.dob, 'yyyy-MM-DD'));
+            setDob(helpers.dDate(data.dob, 'yyyy-MM-DD'));
         } catch (error) {
             console.log('error', error)
         }
@@ -142,7 +142,7 @@ const PaymentForVehicleInspection = ({ t }) => {
             const requestBody = {
                 "serviceCode": 'after_driving_skills_test_fees',
                 "serviceRequestNo": serviceRequestNo,
-                "paymentid": helper.generateUniqueId(),
+                "paymentid": helpers.generateUniqueId(),
                 "paidamount": paidAmount,
                 "tin": tin,
                 "paymenttype": "1145101",
@@ -193,7 +193,7 @@ const PaymentForVehicleInspection = ({ t }) => {
                 "serviceType": 'vehicle',
                 "serviceCode": serviceCode,
                 "serviceRequestNo": serviceRequestNo,
-                "paymentid": helper.generateUniqueId(),
+                "paymentid": helpers.generateUniqueId(),
                 "paidamount": paidAmount,
                 // "tin": tin,
                 "nid": nid,
@@ -231,7 +231,7 @@ const PaymentForVehicleInspection = ({ t }) => {
         <div>
             <div>
                 <CardHeader>
-                    <CardTitle className='mb-2'>Vehicle Registration Related Primary Fees</CardTitle>
+                    <CardTitle className='mb-2'>Vehicle Registration Inspection Related Fees</CardTitle>
                 </CardHeader>
                 
                                 <div>

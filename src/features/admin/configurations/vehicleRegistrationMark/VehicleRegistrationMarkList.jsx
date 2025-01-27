@@ -3,7 +3,7 @@ import ReactSelect from '@/components/ui/ReactSelect';
 import i18n from '@/i18n';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import RestApi from '@/utils/RestApi';
-import { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { toBengaliNumber } from 'bengali-number';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
@@ -167,24 +167,29 @@ const VehicleRegistrationMarkList = ({ t }) => {
         isActive: '',
     };
 
-    const handleReset = (resetForm) => {
-        resetForm({
-            values: resetSearchValues, // Reset to initial values
-        });
+    const handleReset = (resetForm, currentValues) => {
+        if (!helpers.compareValuesAreSame(searchValues, currentValues)) {
 
-        if (currentPage != 0) {
-            setCurrentPage(0)
-        } else {
-            getListData()
+            resetForm({
+                values: resetSearchValues, // Reset to initial values
+            });
+
+            if (currentPage != 0) {
+                setCurrentPage(0)
+            } else {
+                getListData()
+            }
         }
-    };
+    }
 
     const searchData = (values) => {
-        if (currentPage != 0) {
-            setCurrentPage(0)
-            getListData(values)
-        } else {
-            getListData(values)
+        if (!helpers.compareValuesAreSame(searchValues, values)) {
+            if (currentPage != 0) {
+                setCurrentPage(0)
+                getListData(values)
+            } else {
+                getListData(values)
+            }
         }
     }
 
@@ -294,7 +299,7 @@ const VehicleRegistrationMarkList = ({ t }) => {
     };
 
 
-    const handleSave = async (values, setSubmitting, resetForm) => {
+    const handleSave = async (values, setSubmitting, resetForm, setErrors) => {
 
         try {
             let result = ''
@@ -312,7 +317,9 @@ const VehicleRegistrationMarkList = ({ t }) => {
 
         } catch (error) {
             console.log('error', error)
-            // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
+            if (error.response && error.response.data) {
+                setErrors(error.response.data)
+            }
         } finally {
             setSubmitting(false)
         }
@@ -364,7 +371,7 @@ const VehicleRegistrationMarkList = ({ t }) => {
                                                     <button type='submit' className="btn btn-success btn-sm w-full">{t('search')}</button>
                                                 </div>
                                                 <div className="flex-1 ml-2">
-                                                    <button type='reset' onClick={() => handleReset(resetForm)} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
+                                                    <button type='reset' onClick={() => handleReset(resetForm, values)} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -378,8 +385,9 @@ const VehicleRegistrationMarkList = ({ t }) => {
             <div className=" text-slate-700 card bg-white shadow-md rounded-xl">
                 <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('VehicleRegistrationMarkList')}</h3>
+                        <h3 className="text-lg font-semibold text-green-600">{t('VehicleRegistrationMarkList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                        <span className="badge bg-success">{t('totalRecords')}: {totalElements}</span>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
@@ -426,7 +434,7 @@ const VehicleRegistrationMarkList = ({ t }) => {
                                     <td>
                                         <span className={`badge ${item.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {item.isActive ? t('active') : t('inactive')}</span>
                                     </td>
-                                    <td>
+                                    <td className='text-center'>
                                         <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
                                             <button onClick={() => handleOpenEditModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
@@ -452,15 +460,17 @@ const VehicleRegistrationMarkList = ({ t }) => {
                         </tbody>
                     </table>
                 </div>
-                <div className='row m-2.5'>
-                    <div className="col-md-12 text-right">
-                        <div className="flex items-center justify-end">
-                            <div className="flex">
-                                <Pagination size='sm'>{renderPagination()}</Pagination>
+                {listData && listData.length > 0 && (
+                    <div className='row m-2.5'>
+                        <div className="col-md-12 text-right">
+                            <div className="flex items-center justify-end">
+                                <div className="flex">
+                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     )

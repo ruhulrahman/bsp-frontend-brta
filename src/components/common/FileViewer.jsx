@@ -12,7 +12,7 @@ import * as Yup from 'yup';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import RestApi, { baseURL } from '@/utils/RestApi';
 import useCommonFunctions from '@/hooks/useCommonFunctions';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 
 
 const FileViewer = ({ t, show, onHide, data }) => {

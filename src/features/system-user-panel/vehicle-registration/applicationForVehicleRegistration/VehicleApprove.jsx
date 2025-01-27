@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 
 const VehicleApprove = ({ t, editData }) => {
 
@@ -23,8 +23,15 @@ const VehicleApprove = ({ t, editData }) => {
         applicationStatusId: "",
         approvalRemarks: "",
     })
+
+    const [remarksMendatory, setRemarksMendatory] = useState(false)
     const validationSchema = Yup.object().shape({
         applicationStatusId: Yup.string().required('This field is required'),
+        approvalRemarks: Yup.string().when([], {
+            is: () => remarksMendatory, // React to the state value
+            then: (schema) => schema.required("Approval remarks are required"),
+            otherwise: (schema) => schema.notRequired(),
+        }),
     });
 
     const [isViewable, setIsViewable] = useState(false)
@@ -74,6 +81,19 @@ const VehicleApprove = ({ t, editData }) => {
         return returnValue
     }
 
+    const vehicleAprovalStatusList = () => {
+        if (dropdowns.vehicleApplicationCheckStatusList) {
+            const statusList = dropdowns.vehicleApplicationCheckStatusList.filter(
+                item =>
+                    item.statusCode === 'vehicle_app_final_approved' ||
+                    item.statusCode === 'vehicle_app_final_rejected'
+            );
+            return statusList;
+        } else {
+            return [];
+        }
+    }
+
     return (
         <div>
             {/* <h1>{t('vehicleApprovalSection')}</h1>
@@ -89,54 +109,68 @@ const VehicleApprove = ({ t, editData }) => {
                     submitData(values, setSubmitting, resetForm);
                 }}
             >
-                {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => (
-                    <FormikForm>
-                        <Loading loading={loading} loadingText={t('submitting')} />
-                        <div className="row mt-3">
-                            <div className="col-md-4">
-                                <Form.Label>{t('applicationStatus')} <span className='text-red-500'>*</span></Form.Label>
-                            </div>
-                            <div className="col-md-8">
-                                <Form.Group className="mb-1" controlId="applicationStatusId">
-                                    {/* <Form.Label>{t('forwardTo')} <span className='text-red-500'>*</span></Form.Label> */}
-                                    <Field
-                                        id="applicationStatusId"
-                                        name="applicationStatusId"
-                                        component={ReactSelect}
-                                        options={dropdowns.vehicleApplicationCheckStatusList}
-                                        placeholder={t('dropdownDefaultSelect')}
-                                        value={values.applicationStatusId}
-                                        onChange={(option) => {
-                                            setFieldValue('applicationStatusId', option ? option.value : '')
-                                        }} // Update Formik value
-                                    />
-                                    <ErrorMessage name="applicationStatusId" component="div" className="text-danger" />
-                                </Form.Group>
-                            </div>
-                        </div>
+                {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => {
 
-                        <div className="row">
-                            <div className="col-md-4">
-                                <Form.Label>{t('remarks')} <span className='text-red-500'>*</span></Form.Label>
-                            </div>
-                            <div className="col-md-8">
-                                <Form.Group className="mb-1" controlId="approvalRemarks">
-                                    <Field type="text" name="approvalRemarks" className="form-control" placeholder={t('remarks')} />
-                                    <ErrorMessage name="approvalRemarks" component="div" className="text-danger" />
-                                </Form.Group>
-                            </div>
-                        </div>
+                    useEffect(() => {
+                        if (values.applicationStatusId) {
 
-                        <div className="row mt-1">
-                            <div className="col-sm-12 text-right">
-                                <button type='button' className='btn btn-success btn-rounded btn-xs mr-1' onClick={() => resetForm()}>{t('reset')}</button>
-                                <button type='submit' className='btn btn-success btn-rounded btn-xs'>{t('save')}</button>
+                            const currentStatus = vehicleAprovalStatusList().find(item => item.id == values.applicationStatusId)
+
+                            if (currentStatus && currentStatus.statusCode == 'vehicle_app_final_rejected') {
+                                setRemarksMendatory(true)
+                            } else {
+                                setRemarksMendatory(false)
+                            }
+                        }
+                    }, [values.applicationStatusId])
+
+                    return (
+                        <FormikForm>
+                            <Loading loading={loading} loadingText={t('submitting')} />
+                            <div className="row mt-3">
+                                <div className="col-md-4">
+                                    <Form.Label className='text-nowrap'>{t('applicationStatus')} <span className='text-red-500'>*</span></Form.Label>
+                                </div>
+                                <div className="col-md-8">
+                                    <Form.Group className="mb-1" controlId="applicationStatusId">
+                                        <Field
+                                            id="applicationStatusId"
+                                            name="applicationStatusId"
+                                            component={ReactSelect}
+                                            options={vehicleAprovalStatusList()}
+                                            placeholder={t('dropdownDefaultSelect')}
+                                            value={values.applicationStatusId}
+                                            onChange={(option) => {
+                                                setFieldValue('applicationStatusId', option ? option.value : '')
+                                            }} // Update Formik value
+                                        />
+                                        <ErrorMessage name="applicationStatusId" component="div" className="text-danger" />
+                                    </Form.Group>
+                                </div>
                             </div>
-                        </div>
 
+                            <div className="row">
+                                <div className="col-md-4">
+                                    <Form.Label>{t('remarks')} {remarksMendatory && <span className='text-red-500'>*</span>}</Form.Label>
+                                </div>
+                                <div className="col-md-8">
+                                    <Form.Group className="mb-1" controlId="approvalRemarks">
+                                        <Field type="text" name="approvalRemarks" className="form-control" placeholder={t('remarks')} />
+                                        <ErrorMessage name="approvalRemarks" component="div" className="text-danger" />
+                                    </Form.Group>
+                                </div>
+                            </div>
 
-                    </FormikForm>
-                )}
+                            <div className="row mt-1">
+                                <div className="col-sm-12 text-right">
+                                    <button type='button' className='btn btn-success btn-rounded btn-xs mr-1' onClick={() => resetForm()}>{t('reset')}</button>
+                                    <button type='submit' className='btn btn-success btn-rounded btn-xs'>{t('save')}</button>
+                                </div>
+                            </div>
+
+                        </FormikForm>
+                    )
+                }}
             </Formik>
 
         </div>

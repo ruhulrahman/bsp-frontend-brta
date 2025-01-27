@@ -63,25 +63,25 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         });
     };
 
-    const onSubmit = async (values, setSubmitting, resetForm) => {
-        onSave(values, setSubmitting, resetForm);
+    const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
+        onSave(values, setSubmitting, resetForm, setErrors);
     };
 
     return (
         <div>
             <Offcanvas size="sm" show={show} onHide={onHide} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('officeJurisdiction')}</Offcanvas.Title>
+                    <Offcanvas.Title>{editData ? t('edit') : t('add_new')} {t('examCenter')}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                        onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
-                            onSubmit(values, setSubmitting, resetForm);
+                            onSubmit(values, setSubmitting, resetForm, setErrors);
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => {

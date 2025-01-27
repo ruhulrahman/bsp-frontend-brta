@@ -11,7 +11,7 @@ import ReactSelect from '@/components/ui/ReactSelect';
 import * as Yup from 'yup';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import VehicleInspection from "./VehicleInspection.jsx"
 import RevenueCheck from "./RevenueCheck.jsx"
 import VehicleApprove from "./VehicleApprove.jsx"
@@ -71,7 +71,7 @@ const ApplicationForwardRevenue = ({ t, show, onHide, onSave, editData }) => {
                                         <div className="col-md-6">
                                             <h1 className='font-semibold mb-3'>CC: {editData.ccOrKw}</h1>
                                             <h1 className='font-semibold mb-3'>Manufacturing Year: {editData.manufacturingYear}</h1>
-                                            <h1 className='font-semibold mb-3'>Application Date: {helper.dDate(editData.applicationDate)}</h1>
+                                            <h1 className='font-semibold mb-3'>Application Date: {helpers.dDate(editData.applicationDate)}</h1>
                                             <h1 className='font-semibold mb-3'>Application Status: {editData.applicationStatusName}</h1>
                                         </div>
                                     </div>

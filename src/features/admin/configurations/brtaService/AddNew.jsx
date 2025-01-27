@@ -42,7 +42,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     const validationSchema = Yup.object().shape({
         nameBn: Yup.string().required('Name is required'),
         nameEn: Yup.string().required('Name is required'),
-        // serviceCode: Yup.string().required('Service Code is required'),
+        serviceCode: Yup.string().required('Service Code is required'),
         isActive: Yup.string().required('Is active is required'),
     });
 
@@ -97,8 +97,8 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         });
     };
 
-    const onSubmit = async (values, setSubmitting, resetForm) => {
-        onSave(values, setSubmitting, resetForm);
+    const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
+        onSave(values, setSubmitting, resetForm, setErrors);
     };
 
     return (
@@ -111,11 +111,11 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                        onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
-                            onSubmit(values, setSubmitting, resetForm);
+                            onSubmit(values, setSubmitting, resetForm, setErrors);
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => {

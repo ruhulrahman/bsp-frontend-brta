@@ -11,7 +11,7 @@ import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 import { useParams, useNavigate } from 'react-router-dom';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
@@ -97,7 +97,7 @@ const NewDrivingLicenseFirstPayment = ({ t }) => {
             const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-nid-info`)
             setNid(data.nidNumber);
             setMobile(data.mobile);
-            setDob(helper.dDate(data.dob, 'yyyy-MM-DD'));
+            setDob(helpers.dDate(data.dob, 'yyyy-MM-DD'));
         } catch (error) {
             console.log('error', error)
         }
@@ -129,7 +129,7 @@ const NewDrivingLicenseFirstPayment = ({ t }) => {
                 "serviceType": 'dl',
                 "serviceCode": 'before_driving_skills_test_fees',
                 "serviceRequestNo": serviceRequestNo,
-                "paymentid": helper.generateUniqueId(),
+                "paymentid": helpers.generateUniqueId(),
                 "paidamount": paidAmount,
                 // "tin": tin,
                 "nid": nid,

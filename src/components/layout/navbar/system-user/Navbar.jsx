@@ -2,11 +2,17 @@ import i18n from '@/i18n';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { withNamespaces } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import logoBrta from '@/assets/images/logo-brta.png';
+import ChooseOfficeRoleModal from '@/features/common/auth/pages/ChooseOfficeRoleModal';
+import { setToken, setTokenInfo, setUserPermissions, setUserOfficeRole, setAuthUser, setOfficeRole } from '@/features/common/auth/authSlice';
+import { useState } from 'react';
+import RestApi from '@/utils/RestApi';
+import { setCommonDropdowns } from '@/store/commonSlice';
+import Loading from '@/components/common/Loading';
 
 const navigation = [
     // { name: 'Contact', href: '/admin/contact' },
@@ -19,6 +25,7 @@ function classNames(...classes) {
 const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
     const navigate = useNavigate()
     const currentLanguage = i18n.language;
+    const dispatch = useDispatch()
 
     const setLanguage = (language) => {
         localStorage.setItem('preferredLanguage', language);
@@ -37,6 +44,90 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
 
     const { authUser } = useSelector((state) => state.auth) || {};
 
+    const [chooseOfficeRoleModalOpen, setChooseOfficeRoleModalOpen] = useState(false);
+    const [viewData, setViewData] = useState(null);
+
+    const handleOpenChooseOfficeRoleModal = (item) => {
+        setViewData(item);
+        setChooseOfficeRoleModalOpen(true);
+    };
+
+    const handleCloseChooseOfficeRoleModal = async (data) => {
+        console.log('data', data);
+        console.log('authUser', authUser);
+        const userOfficeRole = data
+
+        dispatch(setUserOfficeRole(userOfficeRole));
+        await setLoggedInUserOrgAndRole(userOfficeRole)
+        await getAuthData()
+        // getCommonDropdownData()
+
+        let newRoute;
+
+        if (authUser?.userTypeCode === 'system_admin') {
+            // navigate(`/admin/dashboard/${userOfficeRole?.orgId}/${userOfficeRole?.roleId}`);
+            newRoute = `/admin/dashboard`
+
+        } else if (authUser?.userTypeCode === 'system_user') {
+            // navigate(`/system-user-panel/dashboard/${userOfficeRole?.orgId}/${userOfficeRole?.roleId}`);
+            newRoute = `/system-user-panel/dashboard`
+        }
+        navigate(newRoute)
+        // window.location.href = newRoute
+        // window.location.reload();
+        setChooseOfficeRoleModalOpen(false);
+        setViewData(null); // Reset edit data
+    }
+
+    const [loading, setLoading] = useState(false)
+
+    const setLoggedInUserOrgAndRole = async (userOfficeRole) => {
+
+        setLoading(true);
+
+        try {
+            // const result = await RestApi.get('api/user/me')
+            const result = await RestApi.post('api/v1/auth/set-logged-in-user-office-role', userOfficeRole)
+            if (result.status == 200) {
+            }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const getAuthData = async () => {
+
+        setLoading(true);
+        try {
+            // const result = await RestApi.get('api/user/me')
+            const result = await RestApi.get('api/v1/auth/get-auth-user')
+            if (result.status == 200) {
+                dispatch(setAuthUser(result.data));
+                dispatch(setUserPermissions(result.data.permissionCodes));
+                dispatch(setToken(localStorage.getItem('token')));
+            }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            setLoading(false);
+        }
+    }
+    const getCommonDropdownData = async () => {
+
+        setLoading(true);
+        try {
+            const { data } = await RestApi.get('api/v1/admin/common/dropdown-list')
+            // console.log('data', data)
+            dispatch(setCommonDropdowns(data.data));
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <div className={`flex ${openSidebar ? 'ml-[265px]' : 'ml-[0px]'}`}>
             <div onClick={!openSidebar ? onToggleSidebar : undefined} className={`flex justify-between text-green-500 bg-gray-600 p-[18px] transition-all duration-500w-auto`}>
@@ -47,6 +138,17 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                 {openSidebar && currentLanguage === 'en' && (
                     <h2 className="text-xl font-semibold mr-2">{t('brtaServicePortal')}</h2>
                 )} */}
+                <Loading loading={loading} />
+                <ChooseOfficeRoleModal
+                    show={chooseOfficeRoleModalOpen}
+                    onHide={() => { setChooseOfficeRoleModalOpen(false) }}
+                    onSave={(data) => {
+                        handleCloseChooseOfficeRoleModal(data);
+                    }}
+                    viewData={viewData}
+                    closeButton={true}
+                    backdrop={false}
+                />
 
                 <OverlayTrigger placement="bottom" overlay={<Tooltip>{openSidebar ? t('hideSidebar') : t('showSidebar')}</Tooltip>}>
                     <button onClick={onToggleSidebar} id="menu-button" className="btn btn-dark btn-sm flex-auto">
@@ -110,22 +212,40 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                 </button>} */}
 
                             {preferredLanguage === 'en' &&
-                                <button onClick={() => changeLanguage('bn')} className='flex justify-center btn btn-success'>
-                                    <span className="text-md">{t('bangla')}</span>
+                                <button onClick={() => changeLanguage('bn')} className='btn border hover:bg-gray-200 text-gray-400 ml-5 text-xs-sm md:text-md-lg '>
+                                    <i className="fa-solid fa-globe"></i>
+                                    <span className="ml-2">{t('bangla')}</span>
                                 </button>}
                             {preferredLanguage === 'bn' &&
-                                <button onClick={() => changeLanguage('en')} className='flex justify-center btn btn-danger'>
-                                    <span className="text-md">{t('lang')}</span>
+                                <button onClick={() => changeLanguage('en')} className='btn border hover:bg-gray-200 text-gray-400 text-xs-sm md:text-md-lg '>
+                                    <i className="fa-solid fa-globe"></i>
+                                    <span className="ml-2">{t('lang')}</span>
                                 </button>}
 
-                            <button
-                                type="button"
-                                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                            >
-                                <span className="absolute -inset-1.5" />
-                                <span className="sr-only">View notifications</span>
-                                <BellIcon aria-hidden="true" className="h-6 w-6" />
-                            </button>
+
+                            <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('notification')}</Tooltip>}>
+                                <button
+                                    type="button"
+                                    className="relative rounded-full bg-gray-800  w-auto mx-3 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                >
+                                    <span className="absolute -inset-1.5" />
+                                    <span className="sr-only">View notifications</span>
+                                    <BellIcon aria-hidden="true" className="h-6 w-6" />
+                                </button>
+                            </OverlayTrigger>
+
+
+                            <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('switchOfficeRole')}</Tooltip>}>
+                                <button
+                                    onClick={() => handleOpenChooseOfficeRoleModal(authUser)}
+                                    type="button"
+                                    className="relative rounded-full bg-gray-800 w-auto mr-5 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                >
+                                    <i className="fa-solid fa-layer-group h-6 w-6 leading-6"></i>
+                                </button>
+                            </OverlayTrigger>
+
+
 
                             <div className='text-gray-300 flex flex-col'>
                                 {/* <span className='text-[14px]'>Ruhul Amin</span> */}
@@ -136,7 +256,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                             {/* Profile dropdown */}
                             <Menu as="div" className="relative ml-3">
                                 <div>
-                                    <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                    <MenuButton className="relative flex rounded-full bg-gray-800 w-auto mr-3 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
                                         <img

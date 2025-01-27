@@ -6,10 +6,10 @@ import { setCommonDropdowns } from '@/store/commonSlice';
 import RestApi from '@/utils/RestApi';
 import { useEffect, useState } from 'react';
 import { withNamespaces } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import { Link, Outlet } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { setAuthUser, setUserPermissions, setToken } from '../../features/common/auth/authSlice';
+import { setAuthUser, setUserPermissions, setToken, setOfficeRole } from '../../features/common/auth/authSlice';
 import Navbar from './navbar/system-user/Navbar';
 import Sidebar from './navbar/system-user/Sidebar';
 
@@ -17,23 +17,62 @@ const SystemUserLayout = ({ t }) => {
 
     const { screenWidth, screenHeight } = useWindowSize();
 
+    const navigate = useNavigate();
+
     const currentLanguage = i18n.language;
 
     const dispatch = useDispatch()
+    const { userOfficeRole } = useSelector((state) => state.auth)
     // Sidebar Toggle State
     const [openSidebar, setOpenSidebar] = useState(true);
 
-
-
     const [key, setKey] = useState(window.location.pathname);
 
+    const roleSet = localStorage.getItem('roleSet') === 'true'
+
+    // const token = localStorage.getItem('token');
+    // console.log('token', token)
+
+    // useEffect(() => {
+    //     if (!token) {
+    //         navigate('/logout');
+    //     }
+    // }, [])
+
     useEffect(() => {
-        getAuthData()
-        getCommonDropdownData()
+        if (!roleSet) {
+            setLoggedInUserOrgAndRole()
+        }
     }, []);
+
+    useEffect(() => {
+        if (roleSet) {
+            getAuthData()
+        }
+        getCommonDropdownData()
+    }, [roleSet]);
 
     const [listData, setListData] = useState([])
     const [loading, setLoading] = useState(true)
+
+    const setLoggedInUserOrgAndRole = async () => {
+
+        setLoading(true);
+
+        try {
+            // const result = await RestApi.get('api/user/me')
+            const result = await RestApi.post('api/v1/auth/set-logged-in-user-office-role', userOfficeRole)
+            if (result.status == 200) {
+                dispatch(setOfficeRole(true));
+                localStorage.setItem('roleSet', true);
+            }
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const getAuthData = async () => {
 
         setLoading(true);
@@ -80,12 +119,12 @@ const SystemUserLayout = ({ t }) => {
 
                 <div className={`flex-grow-2 bg-gray-800  text-white sidebar ${openSidebar ? 'open' : 'hide'} scrollbar-design-2 w-[265px] lg:w-[265px]  md:w-[265px] sm:w-[265px] min-h-screen`}>
                     <div className="sidebar-brand d-flex align-items-center justify-between">
-                    {currentLanguage === 'bn' && (
-                        <span className="font-semibold m-2 text-green-500">{t('brtaServicePortal')}</span>
-                    )}
-                    {currentLanguage === 'en' && (
-                        <span className="text-xl font-semibold m-2 text-green-500">{t('brtaServicePortal')}</span>
-                    )}
+                        {currentLanguage === 'bn' && (
+                            <span className="font-semibold m-2 text-green-500">{t('brtaServicePortal')}</span>
+                        )}
+                        {currentLanguage === 'en' && (
+                            <span className="text-xl font-semibold m-2 text-green-500">{t('brtaServicePortal')}</span>
+                        )}
                         <Link to="/">
                             <img className="h-8 w-auto mr-2" src={logoBrta} alt="BRTA" />
                         </Link>

@@ -13,7 +13,7 @@ import Loading from '@/components/common/Loading';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import manPhoto from '@/assets/images/man.png';
 import profileBackground from '@/assets/images/profile-background.png';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 
 const ApplicantProfile = ({ t }) => {
 
@@ -115,6 +115,25 @@ const ApplicantProfile = ({ t }) => {
       dispatch(setLoading(false));
     }
   }
+
+  const [userUploadImage, setUserUploadImage] = useState(null);
+
+  useEffect(() => {
+    getUserProfilePhoto()
+},[])
+
+const getUserProfilePhoto = async () => {
+
+    try {
+        const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-profile-photo`,{
+            responseType: "text", // Use "arraybuffer" for PDFs and "text" for Base64
+        })
+        const userPhoto = `data:image/jpeg;base64,${data}`
+        setUserUploadImage(userPhoto)
+    } catch (error) {
+        console.log('error', error)
+    }
+}
 
   const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
     console.log('values', values)
@@ -225,13 +244,16 @@ const ApplicantProfile = ({ t }) => {
                       <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                         <div className="flex items-center justify-start">
                           <div className="flex-none">
-                            <img src={manPhoto} className='w-[133px] h-[133px] border-3 border-white rounded-full' alt="Profile Photo" />
+                            {userUploadImage && (
+                                <img src={userUploadImage} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
+                            )}
+                            {!userUploadImage && (
+                                <img src={manPhoto} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
+                            )}
                           </div>
                           <div className="flex-1 my-auto max-w-[700px] mx-[16px]">
-                            {/* <h3 className="text-[22px] xs:text-[16px]">Md. Habib Ullah Sarker</h3> */}
-                            {/* <p className="text-[#778293] text-[16px] xs:text-[14px]">Joined on 15 Jan, 2024</p> */}
                             <h3 className="text-[22px] xs:text-[16px]">{currentLanguage === 'bn' ? authUser?.nameBn : authUser?.nameEn}</h3>
-                            <p className="text-[#778293] text-[16px] xs:text-[14px]">Joined on {helper.dDate(authUser?.createdAt, 'DD MMM, YYYY')}</p>
+                            <p className="text-[#778293] text-[16px] xs:text-[14px]">Joined on {helpers.dDate(authUser?.createdAt, 'DD MMM, YYYY')}</p>
                           </div>
                         </div>
                       </div>

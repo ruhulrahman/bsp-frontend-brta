@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { useNavigate } from 'react-router-dom';
@@ -151,24 +151,29 @@ const UserList = ({ t }) => {
         applicationDate: '',
     };
 
-    const handleReset = (resetForm) => {
-        resetForm({
-            values: resetSearchValues, // Reset to initial values
-        });
+    const handleReset = (resetForm, currentValues) => {
+        if (!helpers.compareValuesAreSame(searchValues, currentValues)) {
 
-        if (currentPage != 0) {
-            setCurrentPage(0)
-        } else {
-            getListData()
+            resetForm({
+                values: resetSearchValues, // Reset to initial values
+            });
+
+            if (currentPage != 0) {
+                setCurrentPage(0)
+            } else {
+                getListData()
+            }
         }
-    };
+    }
 
     const searchData = (values) => {
-        if (currentPage != 0) {
-            setCurrentPage(0)
-            getListData(values)
-        } else {
-            getListData(values)
+        if (!helpers.compareValuesAreSame(searchValues, values)) {
+            if (currentPage != 0) {
+                setCurrentPage(0)
+                getListData(values)
+            } else {
+                getListData(values)
+            }
         }
     }
 
@@ -226,7 +231,7 @@ const UserList = ({ t }) => {
                 >
                     {({ values, resetForm, setFieldValue }) => (
                         <FormikForm>
-                            <SearchComponent values={values} clearData={() => handleReset(resetForm)} />
+                            <SearchComponent values={values} clearData={() => handleReset(resetForm, values)} />
                         </FormikForm>
                     )}
                 </Formik>
@@ -234,8 +239,9 @@ const UserList = ({ t }) => {
             <div className=" text-slate-700 card border-none bg-white shadow-md rounded-xl">
                 {/* <div className='row m-1'>
                     <div className="col-md-8 col-sm-12">
-                        <h3 className="text-lg font-semibold text-slate-800">{t('vehicleRegistrationApplicationList')}</h3>
+                        <h3 className="text-lg font-semibold text-green-600">{t('vehicleRegistrationApplicationList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                        <span className="badge bg-success">{t('totalRecords')}: {totalElements}</span>
                     </div>
                     <div className="col-md-4 col-sm-12 text-right">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
@@ -249,6 +255,7 @@ const UserList = ({ t }) => {
                     <div className="w-full sm:w-2/3">
                         <h3 className="text-lg font-semibold text-green-600">{t('vehicleRegistrationApplicationList')}</h3>
                         <p className="text-slate-500">{t('review_each_data_before_edit_or_delete')}</p>
+                        <span className="badge bg-success">{t('totalRecords')}: {totalElements}</span>
                     </div>
                     <div className="w-full sm:w-1/3 text-right mt-2 sm:mt-0">
                         <OverlayTrigger overlay={<Tooltip>{t('toggle_search_filter')}</Tooltip>}>
@@ -288,7 +295,7 @@ const UserList = ({ t }) => {
                                     <td>{item.vehicleClassName}</td>
                                     <td>{item.ccOrKw}</td>
                                     <td>{item.manufacturingYear}</td>
-                                    <td>{helper.dDate(item.applicationDate)}</td>
+                                    <td>{helpers.dDate(item.applicationDate)}</td>
                                     <td>{item.applicationStatusName}</td>
                                     <td className='text-left'>
                                         {/* <OverlayTrigger overlay={<Tooltip>{t('applicationDetails')}</Tooltip>}>
@@ -303,7 +310,7 @@ const UserList = ({ t }) => {
                                         </OverlayTrigger>
                                         {item.applicationStatusCode === 'vehicle_app_primary_approved' && (
                                             <OverlayTrigger overlay={<Tooltip>{t('Submit Application')}</Tooltip>}>
-                                                <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/${item.serviceRequestId}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-primary ml-1'>
+                                                <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/${item.serviceRequestId}/${item.serviceRequestNo}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-primary ml-1'>
                                                     Submit Application
                                                 </button>
                                             </OverlayTrigger>
@@ -330,15 +337,17 @@ const UserList = ({ t }) => {
                         </tbody>
                     </table>
                 </div>
-                <div className='row m-2.5'>
-                    <div className="col-md-12 text-right">
-                        <div className="flex items-center justify-end">
-                            <div className="flex">
-                                <Pagination size='sm'>{renderPagination()}</Pagination>
+                {listData && listData.length > 0 && (
+                    <div className='row m-2.5'>
+                        <div className="col-md-12 text-right">
+                            <div className="flex items-center justify-end">
+                                <div className="flex">
+                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     )

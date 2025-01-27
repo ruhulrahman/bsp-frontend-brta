@@ -33,11 +33,11 @@ const AdminSidebar = ({ t, openSidebar }) => {
                     )}
 
 
-{hasPermission('permitted') && (
+                    {hasPermission('driving_license') && (
                         <li>
                             <div onClick={() => setOpenDLMgmt(!openDLMgmt)} className="flex items-center justify-content-between cursor-pointer">
                                 {/* <i className="bi bi-gear-fill"></i> */}
-                                    <span className="material-symbols-outlined">directions_car</span>
+                                <span className="material-symbols-outlined">directions_car</span>
                                 <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('drivingLicense')}</span>
                                 <span className={`text-sm rotate-180 ml-2 ${openDLMgmt ? 'rotate-0' : ''}`}>
                                     <i className="bi bi-chevron-down"></i>
@@ -45,8 +45,8 @@ const AdminSidebar = ({ t, openSidebar }) => {
                             </div>
                             {openDLMgmt && (
                                 <ul id="example-collapse-text" className="pl-10 h-auto visible">
-                                    {hasPermission('permitted') && (
-                                        <li>                                            
+                                    {hasPermission('driving_license_application_list') && (
+                                        <li>
                                             <NavLink to="/system-user-panel/driving-license-registration/application-for-driving-license">
                                                 <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('drivingLicenseApplication')}</span>
                                             </NavLink>
@@ -56,12 +56,12 @@ const AdminSidebar = ({ t, openSidebar }) => {
                             )}
                         </li>
                     )}
-                    
-                    {hasPermission('permitted') && (
+
+                    {hasPermission('vehicle_registration') && (
                         <li>
                             <div onClick={() => setOpenVehicleMgmt(!openVehicleMgmt)} className="flex items-center justify-content-between cursor-pointer">
                                 {/* <i className="bi bi-gear-fill"></i> */}
-                                    <span className="material-symbols-outlined">directions_car</span>
+                                <span className="material-symbols-outlined">directions_car</span>
                                 <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('vehicleRegistration')}</span>
                                 <span className={`text-sm rotate-180 ml-2 ${openVehicleMgmt ? 'rotate-0' : ''}`}>
                                     <i className="bi bi-chevron-down"></i>
@@ -84,7 +84,7 @@ const AdminSidebar = ({ t, openSidebar }) => {
                                         </li>
                                     )} */}
                                     {hasPermission('application_for_vehicle_registration') && (
-                                        <li>                                            
+                                        <li>
                                             <NavLink to="/system-user-panel/vehicle-registration/approval-1">
                                                 <span className="text-[15px] ml-4 text-gray-200 font-bold">{t('applicationForVehicleRegistration')}</span>
                                             </NavLink>

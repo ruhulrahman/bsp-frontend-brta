@@ -21,12 +21,30 @@ import { Dropdown } from 'react-bootstrap';
 const VehicleRelatedServiceFeesList = ({ t }) => {
 
     const dispatch = useDispatch();
-    const { activeStatusList, loading, dropdowns, listData, windowSize, yesNoList, pagination, showFilter } = useSelector((state) => state.common)
+    const { activeStatusList, loading, dropdowns, listData, windowSize, yesNoList, showFilter } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
     const toggleFilter = () => {
         dispatch(toggleShowFilter());
     }
+
+    // const [searchValues, setSearchValues] = useState({
+    //     serviceId: '',
+    //     effectiveStartDate: '',
+    //     effectiveEndDate: '',
+    //     isAirCondition: '',
+    //     isHire: '',
+    //     isElectricVehicle: '',
+    //     isApplicableForMultipleVehicleOwner: '',
+    //     cc: '',
+    //     seat: '',
+    //     weight: '',
+    //     kw: '',
+    //     isActive: '',
+    // });
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pagination, setPagination] = useState({ perPage: 30, total: 0 });
+    const [isLoading, setIsLoading] = useState(false);
 
     const [paginationObj, setPaginationObj] = useState({
         currentPage: 0,
@@ -36,33 +54,33 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
         slOffset: 1,
     })
 
-    const [currentPage, setCurrentPage] = useState(0);  // Spring Boot uses 0-based page numbers
-    const [pageSize, setPageSize] = useState(5);       // Default page size
-    const [totalPages, setTotalPages] = useState(0);    // Total pages from Spring response
+    // const [currentPage, setCurrentPage] = useState(0);  // Spring Boot uses 0-based page numbers
+    // const [pageSize, setPageSize] = useState(5);       // Default page size
+    // const [totalPages, setTotalPages] = useState(0);    // Total pages from Spring response
     const [totalElements, setTotalElements] = useState(0);  // Total items
     const [slOffset, setSlOffset] = useState(1);  // Total items
 
     const setPaginationData = (data) => {
-        setCurrentPage(data.page);
-        setPageSize(data.size);
-        setTotalPages(data.totalPages);
+        // setCurrentPage(data.page);
+        // setPageSize(data.size);
+        // setTotalPages(data.totalPages);
         setTotalElements(data.totalElements);
         setSlOffset(data.size * (data.page + 1) - data.size + 1);
     }
 
-    const handlePageChange = (page) => {
-        // dispatch(setCurrentPage(page))
-        setCurrentPage(page)
-    };
+    // const handlePageChange = (page) => {
+    //     // dispatch(setCurrentPage(page))
+    //     setCurrentPage(page)
+    // };
 
     // useEffect(() => {
     //     dispatch(setResetPagination())
     // }, []);
 
     useEffect(() => {
-        getListData()
+        // getListData()
         getAllServiceList()
-    }, [currentPage]);
+    }, []);
 
     const [allServiceList, setAllServiceList] = useState([]);
     const getAllServiceList = async () => {
@@ -80,85 +98,7 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
         }
     }
 
-    // Render pagination using React Bootstrap Pagination
-    const renderPagination = () => {
-        let items = [];
 
-        items.push(
-            <Pagination.First
-                key="first"
-                onClick={() => handlePageChange(0)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        items.push(
-            <Pagination.Prev
-                key="prev"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        // Ellipsis Logic (similar to previous example)
-        const maxLeft = Math.max(currentPage - Math.floor(windowSize / 2), 0);
-        const maxRight = Math.min(currentPage + Math.floor(windowSize / 2), totalPages - 1);
-
-        if (maxLeft > 0) {
-            items.push(
-                <Pagination.Item key={0} onClick={() => handlePageChange(0)}>
-                    {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}
-                </Pagination.Item>
-            );
-            if (maxLeft > 1) {
-                items.push(<Pagination.Ellipsis key="left-ellipsis" />);
-            }
-        }
-
-        for (let i = maxLeft; i <= maxRight; i++) {
-            items.push(
-                <Pagination.Item
-                    key={i}
-                    active={i === currentPage}
-                    onClick={() => handlePageChange(i)}
-                >
-                    {currentLanguage === 'en' ? i + 1 : toBengaliNumber(i + 1)}
-                </Pagination.Item>
-            );
-        }
-
-        if (maxRight < totalPages - 1) {
-            if (maxRight < totalPages - 2) {
-                items.push(<Pagination.Ellipsis key="right-ellipsis" />);
-            }
-            items.push(
-                <Pagination.Item
-                    key={totalPages - 1}
-                    onClick={() => handlePageChange(totalPages - 1)}
-                >
-                    {totalPages}
-                </Pagination.Item>
-            );
-        }
-
-        items.push(
-            <Pagination.Next
-                key="next"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        items.push(
-            <Pagination.Last
-                key="last"
-                onClick={() => handlePageChange(totalPages - 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        return items;
-    };
 
     const [searchValues, setSearchValues] = useState({
         serviceId: '',
@@ -190,52 +130,101 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
         isActive: '',
     }
 
+    
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+
+    useEffect(() => {
+        fetchData();
+    }, [searchValues, currentPage]);
+    
+    const fetchData = async () => {
+        const params = {
+            ...searchValues,
+            page: currentPage,
+            size: pagination.perPage,
+        };
+
+        setIsLoading(true);
+        try {
+            const { data } = await RestApi.get('api/v1/admin/configurations/vehicle-related-service-fees/list', { params });
+            // setListData(data.list.content);
+            console.log('data', data.data)
+            dispatch(setListData(data.data.list.content));
+            setPaginationData(data.data.list)
+            setServiceIds(data.data.serviceIds);
+            setPagination((prev) => ({
+                ...prev,
+                total: data.data.list.totalElements,
+            }));
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleReset = (resetForm, currentValues) => {
+        setSearchValues(currentValues); // Update state with new search values
+            setCurrentPage(0);
+            fetchData()
         if (!helpers.compareValuesAreSame(searchValues, currentValues)) {
+            setSearchValues(currentValues); // Update state with new search values
+            setCurrentPage(0);
 
-            resetForm({
-                values: resetSearchValues, // Reset to initial values
-            });
+            // resetForm({
+            //     values: resetSearchValues, // Reset to initial values
+            // });
 
-            if (currentPage != 0) {
-                setCurrentPage(0)
-            } else {
-                getListData()
-            }
+            // setSearchValues(values); // Update state with new search values
+                                // setCurrentPage(0);
+                                // fetchData()
+
+            // if (currentPage != 0) {
+            //     setCurrentPage(0)
+            // } else {
+            //     getListData()
+            // }
         }
     }
 
     const searchData = (values) => {
         if (!helpers.compareValuesAreSame(searchValues, values)) {
-            if (currentPage != 0) {
-                setCurrentPage(0)
-                getListData(values)
-            } else {
-                getListData(values)
-            }
+            // if (currentPage != 0) {
+            //     setCurrentPage(0)
+            //     getListData(values)
+            // } else {
+            //     getListData(values)
+            // }
+
+            setSearchValues(values); // Update state with new search values
+            setCurrentPage(0);
+            fetchData()
         }
     }
 
     const [serviceIds, setServiceIds] = useState([])
 
-    const getListData = async (values = searchValues) => {
+    // const getListData = async (values = searchValues) => {
 
-        const params = Object.assign({ page: currentPage, size: pagination.perPage }, values)
+    //     const params = Object.assign({ page: currentPage, size: pagination.perPage }, values)
 
-        dispatch(setLoading(true));
-        dispatch(setListData([]));
-        try {
-            const { data } = await RestApi.get('api/v1/admin/configurations/vehicle-related-service-fees/list', { params })
-            console.log('data', data.data)
-            dispatch(setListData(data.data.list.content));
-            setPaginationData(data.data.list)
-            setServiceIds(data.data.serviceIds);
-        } catch (error) {
-            console.log('error', error)
-        } finally {
-            dispatch(setLoading(false));
-        }
-    }
+    //     dispatch(setLoading(true));
+    //     dispatch(setListData([]));
+    //     try {
+    //         const { data } = await RestApi.get('api/v1/admin/configurations/vehicle-related-service-fees/list', { params })
+    //         console.log('data', data.data)
+    //         dispatch(setListData(data.data.list.content));
+    //         setPaginationData(data.data.list)
+    //         setServiceIds(data.data.serviceIds);
+    //     } catch (error) {
+    //         console.log('error', error)
+    //     } finally {
+    //         dispatch(setLoading(false));
+    //     }
+    // }
 
     const deleteData = (data) => {
         console.log("deleteData", data);
@@ -373,7 +362,9 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
                             initialValues={searchValues}
                             onSubmit={(values, { resetForm }) => {
                                 // console.log('Form Submitted', values);
-                                searchData(values);
+                                // searchData(values);
+                                setSearchValues(values); // Update state with new search values
+                                setCurrentPage(0); // Reset to first page on new search
                             }}
                         >
                             {({ values, resetForm, setFieldValue }) => (
@@ -491,6 +482,7 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
                                                     <button type='submit' className="btn btn-success btn-sm w-full">{t('search')}</button>
                                                 </div>
                                                 <div className="flex-1 ml-2">
+                                                    {/* <button type='reset' onClick={() => resetForm()} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button> */}
                                                     <button type='reset' onClick={() => handleReset(resetForm, values)} className="btn btn-outline-danger btn-sm w-full">{t('clear')}</button>
                                                 </div>
                                             </div>
@@ -559,7 +551,8 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
                                 <tr key={item.id} className='text-slate-500 text-sm'>
                                     {/* <td>{slOffset + index}.</td> */}
                                     {/* <td>{toBengaliNumber(slOffset + index)}.</td> */}
-                                    <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
+                                    <td className='min-w-[60px]'>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
+                                    {/* <td>.</td> */}
                                     <td>{currentLanguage === 'en' ? item.serviceNameEn : item.serviceNameBn}</td>
                                     <td className='text-center'>
                                         {
@@ -683,7 +676,19 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
                         <div className="col-md-12 text-right">
                             <div className="flex items-center justify-end">
                                 <div className="flex">
-                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                    {/* <Pagination size='sm'>{renderPagination()}</Pagination> */}
+                                    {/* Pagination controls */}
+        <div>
+            {[...Array(Math.ceil(pagination.total / pagination.perPage)).keys()].map((page) => (
+                <button
+                    key={page + 1}
+                    onClick={() => handlePageChange(page)}
+                    disabled={currentPage === page}
+                >
+                    {page + 1}
+                </button>
+            ))}
+        </div>
                                 </div>
                             </div>
                         </div>

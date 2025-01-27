@@ -12,8 +12,6 @@ import { useState } from 'react';
 import i18n from '@/i18n';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '@/components/common/Loading';
-import helpers from '@/utils/helpers.js';
-import QRCode from "react-qr-code";
 
 const MainContent = ({ t, serviceRequestId }) => {
 
@@ -30,52 +28,21 @@ const MainContent = ({ t, serviceRequestId }) => {
         }
     }, [serviceRequestId]);
 
-    const [barCodeValue, setBarCodeValue] = useState('')
-    const [qrCodeValue, setQrCodeValue] = useState('')
-
     const getVehicleInfoById = async (serviceRequestId) => {
 
         try {
-            const { data } = await RestApi.get(`api/v1/applicant/vehicle/get-digital-registration-details/${serviceRequestId}`)
+            const { data } = await RestApi.get(`api/v1/applicant/vehicle/service/${serviceRequestId}`)
             console.log('data', data)
             setVehicleDetail(data);
-
-            setQrCodeValue(`
-                Owner Name: ${data?.vehicleOwner?.name}
-                Registration No: ${data?.vehicleOwner?.fullRegNumber}
-                Vehicle Type: ${data?.vehicleInfo?.vehicleType?.nameEn}
-            `)
-
-            setBarCodeValue(`
-                Owner Name: ${data?.vehicleOwner?.name}
-            `)
 
         } catch (error) {
             console.log('error', error)
         }
     }
 
-    // const [qrCodeValue, setQrCodeValue] = useState(`
-    //         Owner Name: ${vehicleDetail?.vehicleOwner?.name}
-    //         Registration No: ${vehicleDetail?.vehicleOwner?.fullRegNumber}
-    //         Vehicle Type: ${vehicleDetail?.vehicleType?.nameEn}
-    //     `)
-
-    // const [qrCodeValue, setQrCodeValue] = useState(`
-    //         Owner Name: ${vehicleDetail?.vehicleOwner?.name}
-    //         Address: ${vehicleDetail?.addressInfo?.fullAddressEn}
-    //         Registration No: ${vehicleDetail?.vehicleOwner?.fullRegNumber}
-    //         Registration Date: ${vehicleDetail?.vehicleOwner?.createdAt ? helpers.dDate(vehicleDetail?.vehicleOwner?.createdAt) : ''}
-    //         Chassis No: ${vehicleDetail?.vehicleOwner?.chassisNo}
-    //         Engine No: ${vehicleDetail?.vehicleOwner?.engineNo}
-    //         Issuing Authority: ${vehicleDetail?.issuingAuthority?.nameEn}
-    //         Vehicle Type: ${vehicleDetail?.vehicleInfo?.vehicleType?.nameEn}
-    //         Vehicle Class: ${vehicleDetail?.vehicleClass?.nameEn}
-    //     `)
-
-
     return (
         <div className="container mx-auto p-4 space-y-6">
+
 
             {/* Card 1: Vehicle Details */}
             <div className="border rounded-lg shadow-lg p-4 bg-white max-w-md mx-auto">
@@ -86,55 +53,50 @@ const MainContent = ({ t, serviceRequestId }) => {
                     {/* <div className="bg-gray-300 h-16 w-1/2 mx-auto rounded-md"></div>  */}
                     {/* Placeholder for QR/Barcode */}
                     <div className="mx-auto d-flex align-items-center justify-content-center">
-                        <Barcode value={barCodeValue}
+                        <Barcode value="Name: Ruhul Amin"
                             displayValue={false}
                             width={2} // Customize the barcode width if desired
                             height={50} // Customize the barcode height if desired
                         />
-                        {/* <Barcode value="Name: Ruhul Amin"
-                            displayValue={false}
-                            width={2} // Customize the barcode width if desired
-                            height={50} // Customize the barcode height if desired
-                        /> */}
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-sm">
                     <div>
-                        <strong>Registration No:</strong> {vehicleDetail?.vehicleRegistration?.fullRegNumber}
+                        <strong>Registration No:</strong> DHAKA METRO-G-47-7369
                     </div>
                     <div>
-                        <strong>Date:</strong> {vehicleDetail?.vehicleRegistration?.createdAt ? helpers.dDate(vehicleDetail?.vehicleRegistration?.createdAt) : ''}
+                        <strong>Date:</strong> 16/05/2022
                     </div>
                     <div>
-                        <strong>Vehicle Type:</strong> {vehicleDetail?.vehicleInfo?.vehicleType?.nameEn}
+                        <strong>Vehicle Description:</strong> Car (Saloon)
                     </div>
                     <div>
-                        <strong>Vehicle Class:</strong> {vehicleDetail?.vehicleInfo?.vehicleClass?.nameEn}
+                        <strong>Vehicle Class:</strong> Motor Car (Large)
                     </div>
                     <div>
-                        <strong>Color:</strong> {vehicleDetail?.vehicleInfo?.vehicleColor?.nameEn}
+                        <strong>Color:</strong> Silver
                     </div>
                     <div>
-                        <strong>Fuel:</strong> {vehicleDetail?.vehicleInfo?.fuelType?.nameEn}
+                        <strong>Fuel:</strong> Petrol
                     </div>
                     <div>
-                        <strong>Engine No:</strong> {vehicleDetail?.vehicleInfo?.engineNumber}
+                        <strong>Engine No:</strong> 1NZ-R443113
                     </div>
                     <div>
-                        <strong>Chassis No:</strong> {vehicleDetail?.vehicleInfo?.chassisNumber}
+                        <strong>Chassis No:</strong> NKE165-7138709
                     </div>
                     <div>
-                        <strong>Seat:</strong> {vehicleDetail?.vehicleInfo?.totalSeat}
+                        <strong>Seat:</strong> 5
                     </div>
                     <div>
-                        <strong>Weight (Unladen):</strong> {vehicleDetail?.vehicleInfo?.unladenWeight} kg
+                        <strong>Weight (Unladen):</strong> 1140 kg
                     </div>
                     <div>
-                        <strong>Weight (Laden):</strong> {vehicleDetail?.vehicleInfo?.maxLadenWeight} kg
+                        <strong>Weight (Laden):</strong> 1415 kg
                     </div>
                     <div>
-                        <strong>Issuing Authority:</strong> {vehicleDetail?.issuingAuthority?.nameEn}
+                        <strong>Issuing Authority:</strong> Mirpur
                     </div>
                 </div>
 
@@ -145,36 +107,30 @@ const MainContent = ({ t, serviceRequestId }) => {
                 <header className="flex justify-between items-center mb-4">
                     <div className="w-1/3">
                         {/* Owner photo Placeholder */}
-                        {/* <div className="bg-gray-300 h-16 w-full rounded-md"></div> */}
-                        <div className="bg-gray-300 h-16 w-16 rounded-md">
-                            <img src={vehicleDetail?.ownerPhotoInfo?.base64Content} alt="" />
-                        </div>
+                        <div className="bg-gray-300 h-16 w-full rounded-md"></div>
                     </div>
                     <div className="text-right">
                         {/* Bangladeshi Flag Placeholder */}
-                        {/* <div className="bg-green-600 w-8 h-5 rounded-sm"></div> */}
-                        {/* <div className="bg-gray-300 h-16 w-16 rounded-md"></div> */}
-                        {/* {qrCodeValue} */}
-                        <QRCode className="bg-gray-300 h-16 w-16 rounded-md" value={qrCodeValue} />
+                        <div className="bg-green-600 w-8 h-5 rounded-sm"></div>
                     </div>
                 </header>
 
                 <h6 className="text-lg font-bold mb-2">Owner's Name & Address</h6>
-                <p className="text-sm mb-1"><strong>Name:</strong> {vehicleDetail?.vehicleOwner?.name}</p>
-                <p className="text-sm mb-1"><strong>Address:</strong> {vehicleDetail?.addressInfo?.fullAddressEn}</p>
+                <p className="text-sm mb-1"><strong>Name:</strong> MD. MOSTOFAZAMAN</p>
+                <p className="text-sm mb-1"><strong>Address:</strong> HEAD OFFICE, CITY BANK CENTER, 136 GULSHAN AVENUE, GULSHAN-2, DHAKA-1212</p>
 
                 <div className="grid grid-cols-2 gap-2 my-4 text-sm">
                     <div>
-                        <strong>Owner Type:</strong> {vehicleDetail?.vehicleOwner?.ownerType?.nameEn}
+                        <strong>Owner Type:</strong> Private
                     </div>
                     <div>
-                        <strong>Tyre Size:</strong> {vehicleDetail?.vehicleInfo?.tyreSize}
+                        <strong>Tyre Size:</strong> 175/65R15
                     </div>
                     <div>
-                        <strong>Manufacturing Year:</strong> {vehicleDetail?.vehicleInfo?.manufacturingYear}
+                        <strong>Manufacturing Year:</strong> 2016
                     </div>
                     <div>
-                        <strong>Axle Weight:</strong> Front - {vehicleDetail?.vehicleInfo?.frontAxle1}kg
+                        <strong>Axle Weight:</strong> Front - 800kg
                     </div>
                 </div>
 

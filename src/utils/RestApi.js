@@ -54,7 +54,10 @@ const errorHandler = (error) => {
   } else if (error.status === 404) {
     toaster('Source Not Found', 'error')
   } else if (error.status === 500) {
-    toaster('Internal Server Error', 'error')
+    if (error.response && error.response.data) {
+      toaster(error.response.data.message, 'error')
+    }
+    // toaster('Internal Server Error', 'error')
   } else if (error.status === 503) {
     toaster('Service Unavailable', 'error')
   }

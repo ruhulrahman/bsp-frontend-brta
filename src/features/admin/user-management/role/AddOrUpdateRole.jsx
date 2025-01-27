@@ -11,7 +11,7 @@ import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 import { useParams, useNavigate } from 'react-router-dom';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -119,11 +119,11 @@ const AddOrUpdateRole = ({ t }) => {
         }
     }
 
-    const onSubmit = async (values, setSubmitting, resetForm) => {
-        handleSave(values, setSubmitting, resetForm);
+    const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
+        handleSave(values, setSubmitting, resetForm, setErrors);
     };
 
-    const handleSave = async (values, setSubmitting, resetForm) => {
+    const handleSave = async (values, setSubmitting, resetForm, setErrors) => {
 
         try {
             let result = ''
@@ -141,7 +141,9 @@ const AddOrUpdateRole = ({ t }) => {
 
         } catch (error) {
             console.log('error', error)
-            // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
+            if (error.response && error.response.data) {
+                setErrors(error.response.data)
+            }
         } finally {
             setSubmitting(false)
         }
@@ -177,11 +179,11 @@ const AddOrUpdateRole = ({ t }) => {
                         initialValues={initialValues}
                         enableReinitialize={true}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                        onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
-                            onSubmit(values, setSubmitting, resetForm);
+                            onSubmit(values, setSubmitting, resetForm, setErrors);
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => (

@@ -6,16 +6,38 @@ import RestApi from '@/utils/RestApi';
 export const fetchCommonDropdowns = createAsyncThunk(
     'common/fetchCommonDropdowns', // name the action type
     async ({ rejectWithValue }) => {
-      try {
-          console.log('clicked =====')
-        const response = await RestApi.get(`/api/v1/admin/configurations/common-dropdown-list`);
-        console.log('response =========', response)
-        return response.data;
-      } catch (error) {
-        return rejectWithValue(error.response.data); // return error message if failed
-      }
+        try {
+            console.log('clicked =====')
+            const response = await RestApi.get(`/api/v1/admin/configurations/common-dropdown-list`);
+            console.log('response =========', response)
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data); // return error message if failed
+        }
     }
-  );
+);
+
+export const updateAndFetchDropdowns = createAsyncThunk(
+    'common/updateAndFetchDropdowns',
+    async ({ newItem }, { dispatch, rejectWithValue }) => {
+        try {
+            const { data } = await RestApi.get('/api/v1/admin/common/dropdown-list');
+            dispatch(setCommonDropdowns(data.data)); // Update the Redux store
+        } catch (error) {
+            return rejectWithValue(error.response?.data || "Failed to update");
+        }
+    }
+);
+
+export const getCommonDropdowns = async (dispatch) => {
+    try {
+        console.log('clicked =====')
+        const { data } = await RestApi.get('api/v1/admin/common/dropdown-list')
+        dispatch(setCommonDropdowns(data.data));
+    } catch (error) {
+        console.log('error', error)
+    }
+};
 
 const initialState = {
     loading: false,
@@ -74,7 +96,7 @@ const initialState = {
         revenueCheckStatusList: [],
         inspectionStatusList: [],
         vehicleApplicationCheckStatusList: [],
-        userList:[],
+        userList: [],
         ownerTypeList: [],
         // Driving License Related Start =====================================
         occupationList: [],
@@ -175,25 +197,25 @@ const commonSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(fetchCommonDropdowns.pending, (state) => {
-            state.loading = true;
-            state.error = null; // clear any existing errors
-        })
-        .addCase(fetchCommonDropdowns.fulfilled, (state, action) => {
-            state.loading = false;
-            state.dropdowns = action.payload; // store the fetched user data
-        })
-        .addCase(fetchCommonDropdowns.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload; // store error message
-        });
+            .addCase(fetchCommonDropdowns.pending, (state) => {
+                state.loading = true;
+                state.error = null; // clear any existing errors
+            })
+            .addCase(fetchCommonDropdowns.fulfilled, (state, action) => {
+                state.loading = false;
+                state.dropdowns = action.payload; // store the fetched user data
+            })
+            .addCase(fetchCommonDropdowns.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload; // store error message
+            });
     },
 });
 
-export const { 
-    setLoading, setListData, 
-    setCommonDropdowns, removeCommonDropdowns, 
+export const {
+    setLoading, setListData,
+    setCommonDropdowns, removeCommonDropdowns,
     setCurrentPage, setResetPagination, setPaginationData,
     setShowFilter, toggleShowFilter
- } = commonSlice.actions;
+} = commonSlice.actions;
 export default commonSlice.reducer;

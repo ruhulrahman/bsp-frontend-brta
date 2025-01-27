@@ -3,7 +3,7 @@ import Checkbox from '@/components/ui/Checkbox';
 import ReactSelect from '@/components/ui/ReactSelect';
 import TextEditor from '@/components/ui/TextEditor';
 import i18n from '@/i18n';
-import { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import RestApi from '@/utils/RestApi';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
@@ -95,13 +95,13 @@ const AddOrUpdateEmailTemplate = ({ t }) => {
         // console.log('initialValues', initialValues)
     }, []);
 
-    const onSubmit = async (values, setSubmitting, resetForm) => {
+    const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
         values.serviceId = parseInt(values.serviceId)
-        handleSave(values, setSubmitting, resetForm);
+        handleSave(values, setSubmitting, resetForm, setErrors);
     };
 
 
-    const handleSave = async (values, setSubmitting, resetForm) => {
+    const handleSave = async (values, setSubmitting, resetForm, setErrors) => {
 
         try {
             let result = ''
@@ -118,7 +118,9 @@ const AddOrUpdateEmailTemplate = ({ t }) => {
 
         } catch (error) {
             console.log('error', error)
-            // myForm.value.setErrors({ form: mixin.cn(error, 'response.data', null) });
+            if (error.response && error.response.data) {
+                setErrors(error.response.data)
+            }
         } finally {
             setSubmitting(false)
         }
@@ -147,11 +149,11 @@ const AddOrUpdateEmailTemplate = ({ t }) => {
                         initialValues={initialValues}
                         enableReinitialize={true}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                        onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
-                            onSubmit(values, setSubmitting, resetForm);
+                            onSubmit(values, setSubmitting, resetForm, setErrors);
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => (

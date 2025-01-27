@@ -57,8 +57,8 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
         });
     };
 
-    const onSubmit = async (values, setSubmitting, resetForm) => {
-        onSave(values, setSubmitting, resetForm);
+    const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
+        onSave(values, setSubmitting, resetForm, setErrors);
     };
 
     return (
@@ -71,11 +71,11 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                        onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
-                            onSubmit(values, setSubmitting, resetForm);
+                            onSubmit(values, setSubmitting, resetForm, setErrors);
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => {
@@ -115,6 +115,8 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     console.log('error', error)
                                 }
                             }
+
+                            const [checkedAll, setCheckedAll] = useState(false);
 
 
                             return (
@@ -180,7 +182,33 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                     </div>
 
                                     <Form.Group className="mb-3" controlId="thanaIds">
-                                        <Form.Label>{t('thana')} <span className='text-red-500'>*</span></Form.Label>
+                                        <Form.Label className='d-flex justify-content-between'>
+                                            <span>{t('thana')} <span className='text-red-500'>*</span></span>
+                                            <div>
+                                            <Field
+                                                type="checkbox"
+                                                id={`checkedAll`}
+                                                className="ml-2"
+                                                value={checkedAll}
+                                                checked={checkedAll}
+                                                onChange={(e) => {
+                                                    setCheckedAll(e.target.checked);
+                                                    if (e.target.checked) {
+                                                        setFieldValue(
+                                                            'thanaIds',
+                                                            thanaList ? thanaList.map((item) => item.id) : []
+                                                        );
+                                                    } else {
+                                                        setFieldValue(
+                                                            'thanaIds',
+                                                            []
+                                                        );
+                                                    }
+                                                }} /> <label htmlFor="checkedAll">{t('selectAll')}</label>
+                                            </div>
+
+                                        </Form.Label>
+
                                         <Field
                                             isMulti={true}
                                             name="thanaIds"

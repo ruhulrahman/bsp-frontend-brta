@@ -4,6 +4,7 @@ import AuthGuard from './AuthGuard.jsx';
 import DashboardPage from '../features/admin/dashboard/pages/DashboardPage.jsx';
 import ChangePassword from '../features/common/profile-management/pages/ChangePassword.jsx';
 import Profile from '../features/common/profile-management/pages/Profile.jsx';
+import UserProfile from '../features/common/profile-management/pages/UserProfile.jsx';
 import VehicleRegistrationApplications from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/ApplicationList.jsx';
 import VehicleRegistrationPage1 from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage1.jsx';
 import VehicleRegistrationPage2 from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage2.jsx';
@@ -16,8 +17,9 @@ import VehicleRegistrationApprovalList from '../features/system-user-panel/vehic
 import DrivingLicenseApplicationList from '../features/system-user-panel/drivingLicense/ApplicationList.jsx';
 
 const SystemUserRoutes = [
-    { path: 'dashboard', element: <DashboardPage /> },
-    { path: 'profile', element: <Profile /> },
+    { path: 'dashboard/:orgId?/:roleId?', element: <DashboardPage /> },
+    // { path: 'profile', element: <Profile /> },
+    { path: 'profile', element: <UserProfile /> },
     { path: 'change-password', element: <ChangePassword /> },
 
     // Vehicle Registration Routes

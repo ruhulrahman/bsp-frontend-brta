@@ -35,7 +35,7 @@ import VehicleRegistrationMarkList from '../features/admin/configurations/vehicl
 import ServiceDocumentMapList from '../features/admin/configurations/ServiceDocumentMap/ServiceDocumentMapList.jsx';
 
 const adminRoutes = [
-    { path: 'dashboard', element: <DashboardPage /> },
+    { path: 'dashboard/:orgId?/:roleId?', element: <DashboardPage /> },
     { path: 'profile', element: <Profile /> },
     { path: 'change-password', element: <ChangePassword /> },
 

@@ -13,7 +13,7 @@ import Loading from '@/components/common/Loading';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import manPhoto from '@/assets/images/man.png';
 import profileBackground from '@/assets/images/profile-background.png';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 
 const DownloadReport = async (reportName, parameters) => {
     try {

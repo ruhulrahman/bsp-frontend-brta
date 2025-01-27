@@ -14,7 +14,7 @@ import RestApi from '@/utils/RestApi';
 import MviSubmission from "./MviSubmission.jsx"
 import DrivingLicenseApprove from "./DrivingLicenseApprove.jsx"
 import useCommonFunctions from '@/hooks/useCommonFunctions';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 
 const DLApprovalModal = ({ t, show, onHide, onSave, editData, listReload }) => {
 
@@ -42,13 +42,13 @@ const DLApprovalModal = ({ t, show, onHide, onSave, editData, listReload }) => {
                                         <div className="col-md-6">
                                             <h1 className='font-normal mb-3'>Driving Issued Authority: {editData.drivingIssueAuthority}</h1>
                                             <h1 className='font-normal mb-3'>Nid: {editData.nid}</h1>
-                                            <h1 className='font-normal mb-3'>Application Date: {helper.dDate(editData.applicationDate)}</h1>
+                                            <h1 className='font-normal mb-3'>Application Date: {helpers.dDate(editData.applicationDate)}</h1>
                                             <h1 className='font-normal mb-3'>Application Status: <span className={`badge bg-${editData.applicationStatusColor}`}>{editData.applicationStatus}</span></h1>
                                             {editData.approvalDate && (
-                                                <h1 className='font-normal mb-3'>Approval Date: <span className={`badge bg-${editData.applicationStatusColor}`}>{helper.dDate(editData.approvalDate)}</span></h1>
+                                                <h1 className='font-normal mb-3'>Approval Date: <span className={`badge bg-${editData.applicationStatusColor}`}>{helpers.dDate(editData.approvalDate)}</span></h1>
                                             )}
                                             {editData.rejectionDate && (
-                                                <h1 className='font-normal mb-3'>Rejected Date: <span className={`badge bg-${editData.applicationStatusColor}`}>{helper.dDate(editData.rejectionDate)}</span></h1>
+                                                <h1 className='font-normal mb-3'>Rejected Date: <span className={`badge bg-${editData.applicationStatusColor}`}>{helpers.dDate(editData.rejectionDate)}</span></h1>
                                             )}
                                         </div>
                                     </div>

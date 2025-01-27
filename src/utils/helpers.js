@@ -348,7 +348,20 @@ export default {
     const sanitizedValue = input.replace(/[-\/\\,\s\[\]\(\)]/g, "_");
 
     return sanitizedValue
-  }
+  },
+  compareValuesAreSame: function (obj1, obj2) {
+    return Object.keys(obj1).every(key => obj1[key] === obj2[key]);
+  },
+  sumArray: function (arr = []) {
+    return arr.reduce((sum, value) => sum + value, 0);
+  },
+  capitalizeFirstLetter: function (string) {
+    if (!string) return '';
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  },
+  isEmptyObject: function (obj) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  },
 }
 
 // Function to calculate the sum of an array of numbers

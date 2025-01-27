@@ -23,7 +23,7 @@ const AdminSidebar = ({ t, openSidebar }) => {
                         </li>
                     )}
 
-                    {hasPermission('profile') && (
+                    {hasPermission('permitted') && (
                         <li>
                             <NavLink to="/applicant-panel/profile">
                                 <i className="bi bi-person-fill"></i>

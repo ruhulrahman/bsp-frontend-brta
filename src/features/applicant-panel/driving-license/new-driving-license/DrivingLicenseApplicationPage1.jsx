@@ -12,7 +12,7 @@ import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import { useParams, useNavigate } from 'react-router-dom';
-import helper, { toaster } from '@/utils/helpers.js';
+import helpers, { toaster } from '@/utils/helpers.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
@@ -374,7 +374,7 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
                                                                 {/* <h3 className="text-[22px] xs:text-[16px]">Md. Habib Ullah Sarker</h3> */}
                                                                 {/* <p className="text-[#778293] text-[16px] xs:text-[14px]">Joined on 15 Jan, 2024</p> */}
                                                                 <h3 className="text-[22px] xs:text-[16px]">{currentLanguage === 'bn' ? authUser?.nameBn : authUser?.nameEn}</h3>
-                                                                <p className="text-[#778293] text-[16px] xs:text-[14px]">Joined on {helper.dDate(authUser?.createdAt, 'DD MMM, YYYY')}</p>
+                                                                <p className="text-[#778293] text-[16px] xs:text-[14px]">Joined on {helpers.dDate(authUser?.createdAt, 'DD MMM, YYYY')}</p>
                                                             </div>
                                                         </div>
                                                     </div>

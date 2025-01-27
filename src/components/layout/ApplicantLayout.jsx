@@ -7,7 +7,7 @@ import RestApi from '@/utils/RestApi';
 import { useContext, useEffect, useState } from 'react';
 import { withNamespaces } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { setAuthUser, setUserPermissions, setToken } from '../../features/common/auth/authSlice';
 import Navbar from './navbar/applicant/Navbar';
@@ -25,8 +25,17 @@ const ApplicantLayout = ({ t }) => {
     const [openSidebar, setOpenSidebar] = useState(true);
 
 
-
     const [key, setKey] = useState(window.location.pathname);
+
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    console.log('token', token)
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/logout');
+        }
+    }, [])
 
     useEffect(() => {
         getAuthData()
