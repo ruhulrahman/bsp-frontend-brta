@@ -9,7 +9,7 @@ import { withNamespaces } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { setAuthUser, setUserOfficeRole, setUserPermissions, setToken } from '../../features/common/auth/authSlice';
+import { setAuthUser, setUserOfficeRole, setUserPermissions, setToken, setUserImage, removeUserImage } from '../../features/common/auth/authSlice';
 import AdminNavbar from './navbar/admin/AdminNavbar';
 import AdminSidebar from './navbar/admin/AdminSidebar';
 
@@ -40,15 +40,37 @@ const AdminLayout = ({ t }) => {
     const roleSet = localStorage.getItem('roleSet') === 'true'
 
     useEffect(() => {
-        if (!roleSet) {
-            setLoggedInUserOrgAndRole()
-        }
+        // if (!roleSet) {
+        //     setLoggedInUserOrgAndRole()
+        // }
     }, []);
 
     useEffect(() => {
         getAuthData()
+        getUserProfilePhoto()
         getCommonDropdownData()
     }, []);
+
+    const getUserProfilePhoto = async () => {
+
+        try {
+            const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-profile-photo`, {
+                responseType: "text", // Use "arraybuffer" for PDFs and "text" for Base64
+            })
+
+            // removeUserImage(null)
+            // console.log('photo', data)
+            
+            // setUserImage('hello')
+            if (data) {
+                const userPhoto = `data:image/jpeg;base64,${data}`
+                console.log('userPhoto', userPhoto)
+                dispatch(setUserImage(userPhoto))
+            }
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
 
     const [listData, setListData] = useState([])
     const [loading, setLoading] = useState(true)

@@ -7,6 +7,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import logoBrta from '@/assets/images/logo-brta.png';
+import manPhoto from '@/assets/images/man.png';
 
 const navigation = [
     // { name: 'Contact', href: '/admin/contact' },
@@ -35,7 +36,9 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
     let preferredLanguage = localStorage.getItem('preferredLanguage');
     preferredLanguage = preferredLanguage !== null && preferredLanguage !== undefined ? preferredLanguage : 'bn';
 
-    const { authUser } = useSelector((state) => state.auth) || {};
+    const { authUser, userImage } = useSelector((state) => state.auth) || {};
+
+    // console.log('userImage', userImage)
 
     return (
         <div className={`flex ${openSidebar ? 'ml-[265px]' : 'ml-[0px]'}`}>
@@ -139,11 +142,17 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                     <MenuButton className="relative flex rounded-full bg-gray-800 w-auto mr-3 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
-                                        <img
+                                        {/* <img
                                             alt=""
                                             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                                             className="h-8 w-8 rounded-full"
-                                        />
+                                        /> */}
+                                        {userImage && (
+                                            <img src={userImage} alt="" className="h-8 w-8 rounded-full" />
+                                        )}
+                                        {!userImage && (
+                                            <img src={manPhoto} alt="" className="h-8 w-8 rounded-full" />
+                                        )}
                                     </MenuButton>
                                 </div>
                                 <MenuItems

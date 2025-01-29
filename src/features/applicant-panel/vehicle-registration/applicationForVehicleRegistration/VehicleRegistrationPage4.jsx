@@ -557,7 +557,7 @@ const VehicleRegistrationPage4 = ({ t }) => {
                                                     />
 
                                                     {documentList.length > 0 && documentList.map((item, index) => (
-                                                        <div className="row">
+                                                        <div key={index} className="row">
                                                             <Form.Group className="row mb-3 items-start" controlId="fileUpload">
                                                                 <div className="col-sm-6 col-md-6 col-form-label text-right font-semibold">
                                                                     <Form.Label>{item.documentType.nameEn}

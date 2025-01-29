@@ -11,6 +11,7 @@ import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
+import { setUserImage } from '@/features/common/auth/authSlice';
 import { useParams, useNavigate } from 'react-router-dom';
 import helpers, { toaster } from '@/utils/helpers.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -31,7 +32,7 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
     const { activeStatusList, loading, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
 
-    const { authUser } = useSelector((state) => state.auth) || {};
+    const { authUser, userImage } = useSelector((state) => state.auth) || {};
 
     const [initialValues, setInitialValues] = useState({
         serviceRequestNo: '',
@@ -293,7 +294,7 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
 
                                 if (selectedFile) {
                                     console.log("Selected file:", selectedFile.name); // Replace with your file handling logic
-                                    setUserUploadImage(URL.createObjectURL(selectedFile))
+                                    // setUserUploadImage(URL.createObjectURL(selectedFile))
 
                                     dispatch(setLoading(true));
 
@@ -316,16 +317,19 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
 
                             useEffect(() => {
                                 getUserProfilePhoto()
-                            },[])
+                            }, [])
 
                             const getUserProfilePhoto = async () => {
 
                                 try {
-                                    const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-profile-photo`,{
+                                    const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-profile-photo`, {
                                         responseType: "text", // Use "arraybuffer" for PDFs and "text" for Base64
                                     })
-                                    const userPhoto = `data:image/jpeg;base64,${data}`
-                                    setUserUploadImage(userPhoto)
+                                    if (data) {
+                                        const userPhoto = `data:image/jpeg;base64,${data}`
+                                        setUserUploadImage(userPhoto)
+                                        dispatch(setUserImage(userPhoto))
+                                    }
                                 } catch (error) {
                                     console.log('error', error)
                                 }
@@ -344,10 +348,10 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
                                                             <div className="flex-none">
                                                                 {/* <img src={dummyUserImage} className='w-[133px] h-[133px] border-3 border-white rounded-full' alt="Profile Photo" /> */}
 
-                                                                {userUploadImage && (
-                                                                    <img src={userUploadImage} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
+                                                                {userImage && (
+                                                                    <img src={userImage} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
                                                                 )}
-                                                                {!userUploadImage && (
+                                                                {!userImage && (
                                                                     <img src={dummyUserImage} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
                                                                 )}
 

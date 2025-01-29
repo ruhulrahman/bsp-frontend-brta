@@ -8,11 +8,12 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import logoBrta from '@/assets/images/logo-brta.png';
 import ChooseOfficeRoleModal from '@/features/common/auth/pages/ChooseOfficeRoleModal';
-import { setToken, setTokenInfo, setUserPermissions, setUserOfficeRole, setAuthUser, setOfficeRole } from '@/features/common/auth/authSlice';
+import { setToken, setTokenInfo, setUserPermissions, setUserOfficeRole, setAuthUser, setOfficeRole, setUserImage, removeUserImage } from '@/features/common/auth/authSlice';
 import { useState } from 'react';
 import RestApi from '@/utils/RestApi';
 import { setCommonDropdowns } from '@/store/commonSlice';
 import Loading from '@/components/common/Loading';
+import manPhoto from '@/assets/images/man.png';
 
 const navigation = [
     // { name: 'Contact', href: '/admin/contact' },
@@ -26,6 +27,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
     const navigate = useNavigate()
     const currentLanguage = i18n.language;
     const dispatch = useDispatch()
+    const { userImage } = useSelector((state) => state.auth)
 
     const setLanguage = (language) => {
         localStorage.setItem('preferredLanguage', language);
@@ -60,6 +62,7 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
         dispatch(setUserOfficeRole(userOfficeRole));
         await setLoggedInUserOrgAndRole(userOfficeRole)
         await getAuthData()
+        await getUserProfilePhoto()
         // getCommonDropdownData()
 
         let newRoute;
@@ -114,6 +117,25 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
             setLoading(false);
         }
     }
+
+    const getUserProfilePhoto = async () => {
+
+        try {
+            const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-profile-photo`, {
+                responseType: "text", // Use "arraybuffer" for PDFs and "text" for Base64
+            })
+
+            removeUserImage(null)
+
+            if (data) {
+                const userPhoto = `data:image/jpeg;base64,${data}`
+                setUserImage(userPhoto)
+            }
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
     const getCommonDropdownData = async () => {
 
         setLoading(true);
@@ -259,11 +281,17 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                     <MenuButton className="relative flex rounded-full bg-gray-800 w-auto mr-3 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
-                                        <img
+                                        {/* <img
                                             alt=""
                                             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                                             className="h-8 w-8 rounded-full"
-                                        />
+                                        /> */}
+                                        {userImage && (
+                                            <img src={userImage} alt="" className="h-8 w-8 rounded-full" />
+                                        )}
+                                        {!userImage && (
+                                            <img src={manPhoto} alt="" className="h-8 w-8 rounded-full" />
+                                        )}
                                     </MenuButton>
                                 </div>
                                 <MenuItems
@@ -271,17 +299,17 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
                                     className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                                 >
                                     <MenuItem>
-                                        <Link to="/admin/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                                        <Link to="/system-user-panel/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
                                             {currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn}
                                         </Link>
                                     </MenuItem>
                                     <MenuItem>
-                                        <Link to="/admin/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                                        <Link to="/system-user-panel/profile" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
                                             {t('your_profile')}
                                         </Link>
                                     </MenuItem>
                                     <MenuItem>
-                                        <Link to="/admin/change-password" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                                        <Link to="/system-user-panel/change-password" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
                                             {t('change_password')}
                                         </Link>
                                     </MenuItem>

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { withNamespaces } from 'react-i18next';
 import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
-import helpers, { toaster } from '@/utils/helpers.js';
+import helper, { toaster } from '@/utils/helpers.js';
 import i18n from '@/i18n';
 import { useSelector } from 'react-redux';
 
@@ -14,7 +14,7 @@ const ChangePassword = ({ t }) => {
   const currentLanguage = i18n.language;
 
   const authStore = useSelector((state) => state.auth)
-  console.log('authStore==========', authStore)
+  // console.log('authStore==========', authStore)
 
   const [loading, setLoading] = useState(false)
 
@@ -59,7 +59,7 @@ const ChangePassword = ({ t }) => {
   };
 
   const onSubmit = async (values, setErrors, resetForm, setSubmitting) => {
-    console.log('Form submitted:', values);
+    // console.log('Form submitted:', values);
     setLoading(true);
     try {
       const result = await RestApi.post('api/v1/admin/user-management/user/change-password', values)
@@ -83,12 +83,13 @@ const ChangePassword = ({ t }) => {
 
   return (
 
-    <div className=" text-slate-700 card bg-white shadow-md rounded-xl card-body">
+    <div className=" text-slate-700 card pb-[24px] border-none rounded-xl card-body">
       <div className="container">
         <div className="row">
           <div className="row">
             <div className="col">
-              <h5 className='text-dark font-semibold'>{t('change_password')}</h5>
+              {/* <h5 className='text-dark font-semibold'>{t('change_password')}</h5> */}
+              <h3 className="text-xl text-green-600">{t('change_password')}</h3>
             </div>
           </div>
           <div className="col-md-6 offset-md-3">

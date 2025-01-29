@@ -95,6 +95,8 @@ const initialState = {
         paymentStatusList: [],
         revenueCheckStatusList: [],
         inspectionStatusList: [],
+        acquisitionProcessList: [],
+        usedByList: [],
         vehicleApplicationCheckStatusList: [],
         userList: [],
         ownerTypeList: [],

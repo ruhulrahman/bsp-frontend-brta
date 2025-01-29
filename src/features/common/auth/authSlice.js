@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    accessToken: undefined,
+    accessToken: "",
     tokenInfo: undefined,
     authUser: undefined,
     userOfficeRole: undefined,
     roleSet: false,
     permissions: [],
+    userImage: '',
 };
 
 const authSlice = createSlice({
@@ -50,10 +51,17 @@ const authSlice = createSlice({
         },
         setUserPermissions: (state, action) => {
             state.permissions = []
-            state.permissions = action.payload
+            state.permissions = action.payload;
         },
         removeUserPermissions: (state) => {
-            state.permissions = []
+            state.permissions = [];
+        },
+        setUserImage: (state, action) => {
+            console.log('action=============', action)
+            state.userImage = action.payload;
+        },
+        removeUserImage: (state) => {
+            state.userImage = '';
         },
     },
 });
@@ -64,6 +72,7 @@ export const {
     setTokenInfo, removeTokenInfo,
     setUserPermissions, removeUserPermissions,
     setUserOfficeRole, removeUserOfficeRole,
-    setOfficeRole, removeOfficeRole
+    setOfficeRole, removeOfficeRole,
+    setUserImage, removeUserImage
 } = authSlice.actions;
 export default authSlice.reducer;

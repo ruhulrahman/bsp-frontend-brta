@@ -101,9 +101,9 @@ const UserProfile = ({ t }) => {
 		nameEn: Yup.string().required('Name is required'),
 	});
 
-	// useEffect(() => {
-	// 	getUserProfileInfo();
-	// }, []);
+	useEffect(() => {
+		getUserProfileInfo();
+	}, []);
 
 	const getUserProfileInfo = async () => {
 		dispatch(setLoading(true));
@@ -253,7 +253,7 @@ const UserProfile = ({ t }) => {
 															{/* <div className='absolute bottom-0 h-[35px] left-0 bg-gray-200  text-black w-full text-center'> */}
 															<div className='absolute bottom-[-2px] left-0  w-full text-center'>
 																{/* <span className=" text-[12px] p-[3px] text-black">{currentLanguage === 'en' ? values?.userTypeNameEn : values?.userTypeNameBn}</span> */}
-																<span className="badge bg-success text-[10px] px-[8px] py-[4px]">{currentLanguage === 'en' ? authUser?.userTypeNameEn : authUser?.userTypeNameBn}</span>
+																<span className="badge bg-success text-[10px] px-[8px] py-[4px]">{currentLanguage === 'en' ? values?.userTypeNameEn : values?.userTypeNameBn}</span>
 															</div>
 														</div>
 
@@ -304,7 +304,7 @@ const UserProfile = ({ t }) => {
 														className="text-sm bg-[#e9ecef] font-medium border-1 rounded-l-md px-4 py-1 w-2/6">{t('name')}:</span>
 													<input
 														className="px-2 border-l-0 cursor-default border-1 border-[#dee2e6] focus:outline-none rounded-r-md rounded-l-none -ml-1 w-4/6 text-black"
-														type="text" value={currentLanguage === 'en' ? authUser?.nameEn : authUser?.nameBn} readOnly />
+														type="text" value={currentLanguage === 'en' ? values?.nameEn : values?.nameBn} readOnly />
 												</div>
 											</div>
 
@@ -314,7 +314,7 @@ const UserProfile = ({ t }) => {
 														className="text-sm bg-[#e9ecef] font-medium border-1 rounded-l-md px-4 py-1 w-2/6">{t('email')}:</span>
 													<input
 														className="px-2 border-l-0 cursor-default border-1 border-[#dee2e6] focus:outline-none rounded-r-md  rounded-l-none -ml-1 w-4/6 text-black"
-														type="text" value={authUser?.email} readOnly />
+														type="text" value={values?.email} readOnly />
 												</div>
 											</div>
 
@@ -324,7 +324,7 @@ const UserProfile = ({ t }) => {
 														className="text-sm bg-[#e9ecef] font-medium border-1 rounded-l-md px-4 py-1 w-2/6">{t('username')}:</span>
 													<input
 														className="px-2 border-l-0 cursor-default border-1 border-[#dee2e6] focus:outline-none rounded-r-md  rounded-l-none -ml-1 w-4/6 text-black"
-														type="text" value={authUser?.username} readOnly />
+														type="text" value={values?.username} readOnly />
 												</div>
 											</div>
 
@@ -334,7 +334,7 @@ const UserProfile = ({ t }) => {
 														className="text-sm bg-[#e9ecef] font-medium border-1 rounded-l-md px-4 py-1 w-2/6">{t('mobile')}:</span>
 													<input
 														className="px-2 border-l-0 cursor-default border-1 border-[#dee2e6] focus:outline-none rounded-r-md  rounded-l-none -ml-1 w-4/6 text-black"
-														type="text" value={currentLanguage === 'en' ? authUser?.mobile : toBengaliNumber(authUser?.mobile)} readOnly />
+														type="text" value={currentLanguage === 'en' ? values?.mobile : toBengaliNumber(values?.mobile)} readOnly />
 												</div>
 											</div>
 
@@ -344,7 +344,7 @@ const UserProfile = ({ t }) => {
 														className="text-sm bg-[#e9ecef] font-medium border-1 rounded-l-md px-4 py-1 w-2/6">{t('userType')}:</span>
 													<input
 														className="px-2 border-l-0 cursor-default border-1 border-[#dee2e6] focus:outline-none rounded-r-md  rounded-l-none -ml-1 w-4/6 text-black"
-														type="text" value={currentLanguage === 'en' ? authUser?.userTypeNameEn : authUser?.userTypeNameBn} readOnly />
+														type="text" value={currentLanguage === 'en' ? values?.userTypeNameEn : values?.userTypeNameBn} readOnly />
 												</div>
 											</div>
 
@@ -354,7 +354,7 @@ const UserProfile = ({ t }) => {
 														className="text-sm bg-[#e9ecef] font-medium border-1 rounded-l-md px-4 py-1 w-2/6">{t('designation')}:</span>
 													<input
 														className="px-2 border-l-0 cursor-default border-1 border-[#dee2e6] focus:outline-none rounded-r-md  rounded-l-none -ml-1 w-4/6 text-black"
-														type="text" value={currentLanguage === 'en' ? authUser?.designationNameEn : authUser?.designationNameBn} readOnly />
+														type="text" value={currentLanguage === 'en' ? values?.designationNameEn : values?.designationNameBn} readOnly />
 												</div>
 											</div>
 
@@ -373,7 +373,7 @@ const UserProfile = ({ t }) => {
 
 										<h3 className="text-xl text-green-600 mb-6 pt-[24px]">{t('organizationWiseRole')}</h3>
 
-										{authUser?.userOfficeRoles && authUser?.userOfficeRoles.length > 0 && authUser?.userOfficeRoles.map((item, index) => {
+										{values.userOfficeRoles && values.userOfficeRoles.length > 0 && values.userOfficeRoles.map((item, index) => {
 
 											return (
 												<div key={index} className="row">

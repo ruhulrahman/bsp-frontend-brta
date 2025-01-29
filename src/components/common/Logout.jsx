@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { removeAuthUser } from '@/features/common/auth/authSlice';
 import { useDispatch } from 'react-redux';
-import { removeToken, removeTokenInfo, setOfficeRole } from '../../features/common/auth/authSlice';
+import { removeToken, removeTokenInfo, setOfficeRole, removeUserOfficeRole, removeUserPermissions } from '../../features/common/auth/authSlice';
 import RestApi from '@/utils/RestApi';
 
 const Logout = () => {
@@ -29,6 +29,8 @@ const Logout = () => {
                 dispatch(removeAuthUser());
                 dispatch(removeToken());
                 dispatch(removeTokenInfo());
+                dispatch(removeUserOfficeRole());
+                dispatch(removeUserPermissions());
                 // dispatch(setOfficeRole(true));
                 // localStorage.setItem('roleSet', false);
 

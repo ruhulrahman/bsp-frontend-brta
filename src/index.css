@@ -1,9 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap'); */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* body {
+    @apply font-sans;
+  } */
+
+  /* input {
+    @apply
+    !leading-none
+  } */
+}
 
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
@@ -33,11 +46,18 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 body {
   background-color: #EBF3F5;
   font-family: "Noto Sans Bengali", sans-serif, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  
+  /* Roboto Condensed */
+  /* font-family: "Roboto Condensed", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal; */
 }
 
 /* transitions.css */
@@ -130,6 +150,21 @@ table th {
   !text-gray-100
 }
 
+/* table th {
+  @apply
+  p-2
+  transition-colors 
+  border-y 
+  !border-slate-200 
+  !bg-[#e9ecef] 
+  text-[#212529bf]
+  hover:!bg-slate-700
+  font-sans 
+  text-sm 
+  font-normal 
+  leading-none 
+} */
+
 table tr {
   @apply
   transition-colors 
@@ -181,6 +216,7 @@ table td {
     @apply
     border rounded-lg px-3 py-2 mb-2 text-sm w-full outline-none dark:border-gray-500 dark:bg-gray-900
   } */
+
 
   .custom-active-class {
     @apply

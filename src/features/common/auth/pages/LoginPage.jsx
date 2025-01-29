@@ -50,6 +50,9 @@ const LoginPage = ({ t }) => {
 
             if (result.userInfo?.userTypeCode === 'applicant') {
                 navigate('/applicant-panel/dashboard');
+            } else if (result.userInfo?.userTypeCode === 'system_admin') {
+                // navigate(`/admin/dashboard/${userOfficeRole?.orgId}/${userOfficeRole?.roleId}`);
+                navigate(`/admin/dashboard`);
             } else {
 
                 if (result.userInfo?.userOfficeRoles.length > 1) {

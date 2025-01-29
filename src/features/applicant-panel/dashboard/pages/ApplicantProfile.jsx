@@ -21,7 +21,7 @@ const ApplicantProfile = ({ t }) => {
   const { activeStatusList, loading, listData, dropdowns } = useSelector((state) => state.common)
   const currentLanguage = i18n.language;
 
-  const { authUser } = useSelector((state) => state.auth) || {};
+  const { authUser, userImage } = useSelector((state) => state.auth) || {};
   const [isViewable, setIsViewable] = useState(false)
 
   const [initialValues, setInitialValues] = useState({
@@ -118,22 +118,24 @@ const ApplicantProfile = ({ t }) => {
 
   const [userUploadImage, setUserUploadImage] = useState(null);
 
-  useEffect(() => {
-    getUserProfilePhoto()
-},[])
+  // useEffect(() => {
+  //   getUserProfilePhoto()
+  // }, [])
 
-const getUserProfilePhoto = async () => {
+  const getUserProfilePhoto = async () => {
 
     try {
-        const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-profile-photo`,{
-            responseType: "text", // Use "arraybuffer" for PDFs and "text" for Base64
-        })
+      const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-profile-photo`, {
+        responseType: "text", // Use "arraybuffer" for PDFs and "text" for Base64
+      })
+      if (data) {
         const userPhoto = `data:image/jpeg;base64,${data}`
         setUserUploadImage(userPhoto)
+      }
     } catch (error) {
-        console.log('error', error)
+      console.log('error', error)
     }
-}
+  }
 
   const onSubmit = async (values, setSubmitting, resetForm, setErrors) => {
     console.log('values', values)
@@ -244,11 +246,11 @@ const getUserProfilePhoto = async () => {
                       <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                         <div className="flex items-center justify-start">
                           <div className="flex-none">
-                            {userUploadImage && (
-                                <img src={userUploadImage} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
+                            {userImage && (
+                              <img src={userImage} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
                             )}
-                            {!userUploadImage && (
-                                <img src={manPhoto} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
+                            {!userImage && (
+                              <img src={manPhoto} alt="" className="w-[133px] h-[133px] border-3 border-white rounded-full" />
                             )}
                           </div>
                           <div className="flex-1 my-auto max-w-[700px] mx-[16px]">

@@ -112,18 +112,66 @@ const VehicleRegistrationPage3 = ({ t }) => {
             isRecondition: Yup.string().required('The Field is required'),
             isJointOwner: Yup.string().required('The Field is required'),
             ownerTypeId: Yup.string().required('The Field is required'),
-            // ministryId: Yup.string().required('The Field is required'),
-            // departmentId: Yup.string().required('The Field is required'),
-            // subOfficeUnitGroupId: Yup.string().required('The Field is required'),
-            // unitOrActivityId: Yup.string().required('The Field is required'),
-            // inUse: Yup.string().required('The Field is required'),
-            // usedById: Yup.string().required('The Field is required'),
-            // withinOrganogram: Yup.string().required('The Field is required'),
-            // acquisitionProcessId: Yup.string().required('The Field is required'),
-            // acquisitionOffice: Yup.string().required('The Field is required'),
-            // acquisitionPrice: Yup.string().required('The Field is required'),
-            // dateOfReceipt: Yup.string().required('The Field is required'),
-            // remarks: Yup.string().required('The Field is required'),
+            ministryId: Yup.string().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            departmentId: Yup.string().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            subOfficeUnitGroupId: Yup.string().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            unitOrActivityId: Yup.string().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            inUse: Yup.string().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            usedById: Yup.string().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            withinOrganogram: Yup.string().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            acquisitionProcessId: Yup.string().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            acquisitionOffice: Yup.string().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            // acquisitionPrice: Yup.number().when('isOwnerTypePublic', {
+            //     is: true,
+            //     then: schema => schema.required('The Field is required'),
+            //     otherwise: schema => schema.optional(),
+            // }),
+            dateOfReceipt: Yup.date().when('isOwnerTypePublic', {
+                is: true,
+                then: schema => schema.required('The Field is required'),
+                otherwise: schema => schema.optional(),
+            }),
+            // remarks: Yup.string().when('isOwnerTypePublic', {
+            //     is: true,
+            //     then: schema => schema.required('The Field is required'),
+            //     otherwise: schema => schema.optional(),
+            // }),
         }),
         addressInfo: Yup.object({
             divisionId: Yup.string().required('The Field is required'),
@@ -141,6 +189,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
             values: resetValues, // Reset to initial values
         });
     };
+
 
 
     const [officeList, setOfficeList] = useState([]);
@@ -162,7 +211,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
         try {
             const { data } = await RestApi.get(`api/v1/admin/common/get-active-orgation-list`)
-            console.log('data', data)
+            // console.log('data', data)
             setOfficeList(data);
         } catch (error) {
             console.log('error', error)
@@ -189,15 +238,6 @@ const VehicleRegistrationPage3 = ({ t }) => {
         }
     }
 
-    const [isOwnerTypePublic, setIsOwnerTypePublic] = useState(false);
-
-    const setOwnerType = (ownerTypeId) => {
-        const selectedOwner = dropdowns.ownerTypeList.find(
-            (item) => item.id === ownerTypeId && item.statusCode === 'owner_type_public'
-        );
-        setIsOwnerTypePublic(!!selectedOwner);  // Set to true if found, false otherwise
-    };
-
     const getVehicleInfoById = async (serviceRequestId) => {
 
         try {
@@ -214,6 +254,17 @@ const VehicleRegistrationPage3 = ({ t }) => {
             if (!apiResponse.vehicleOwner) {
                 apiResponse = Object.assign({}, apiResponse, { vehicleOwner: initialValues.vehicleOwner });
             }
+            
+            const selectedOwner = dropdowns.ownerTypeList.find(
+                (item) => item.id === apiResponse.vehicleOwner.ownerTypeId && item.statusCode === 'owner_type_public'
+            );
+
+            apiResponse.vehicleOwner.isOwnerTypePublic = !!selectedOwner;
+            // console.log('apiResponse.vehicleOwner.isOwnerTypePublic', apiResponse.vehicleOwner.isOwnerTypePublic)
+            // console.log('apiResponse.vehicleOwner.acquisitionPrice', apiResponse.vehicleOwner.acquisitionPrice)
+            // console.log('apiResponse.vehicleOwner.dateOfReceipt', apiResponse.vehicleOwner.dateOfReceipt)
+            apiResponse.vehicleOwner.acquisitionPrice = apiResponse.vehicleOwner.acquisitionPrice ? apiResponse.vehicleOwner.acquisitionPrice : ''
+            apiResponse.vehicleOwner.dateOfReceipt = apiResponse.vehicleOwner.dateOfReceipt ? apiResponse.vehicleOwner.dateOfReceipt : ''
 
             if (apiResponse && apiResponse.pageCompleted < 1) {
                 navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
@@ -287,7 +338,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
         if (!divisionApiCalled){
             
         try {
-            console.log('fetchDivisionList')
+            // console.log('fetchDivisionList')
             const { data } = await RestApi.get('api/v1/admin/common/get-division-list');
             setJointOwnerLocations((prevLocations) => prevLocations.map((location) => ({...location, divisionList: data.locationList })));
             setDivisionApiCalled(true);
@@ -323,6 +374,61 @@ const VehicleRegistrationPage3 = ({ t }) => {
         }
     };
 
+    useEffect(() => {
+        getGovernmentOfficeListByParntCode('1');
+    }, []);
+
+
+    const [ministryList, setMinistryList] = useState([])
+    const [departmentList, setDepartmentList] = useState([])
+    const [subOfficeList, setSubOfficeList] = useState([])
+    const [officeUnitList, setOfficeUnitList] = useState([])
+
+    const getGovernmentOfficeListByParntCode = async (parentCode, officeType = 'ministry') => {
+
+        // console.log('parentCode', parentCode)
+        // console.log('officeType', officeType)
+
+        try {
+            const { data } = await RestApi.get(`api/v1/admin/common/get-government-office-by-parent-code/${parentCode}`);
+            if (officeType === 'ministry') {
+                setMinistryList(data.governmentOffices);
+            } else if (officeType === 'department') {
+                setDepartmentList(data.governmentOffices);
+            } else if (officeType === 'subOffice') {
+                setSubOfficeList(data.governmentOffices);
+            } else if (officeType === 'officeUnit') {
+                setOfficeUnitList(data.governmentOffices);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+
+    const fetchOfficeListById = (id, officeType = 'ministry') => {
+        // console.log('id', id)
+        // console.log('officeType', officeType)
+        if (officeType === 'department') {
+            const department = ministryList.find((item) => item.id === id);
+            // console.log('department', department)
+            if (department) {
+                getGovernmentOfficeListByParntCode(department.fullCode, 'department');
+            }
+        } else if (officeType === 'subOffice') {
+            // console.log('departmentList===========', departmentList)
+            const subOffice = departmentList.find((item) => item.id === id);
+            // console.log('subOffice===========', subOffice)
+            if (subOffice) {
+                getGovernmentOfficeListByParntCode(subOffice.fullCode, 'subOffice');
+            }
+        } else if (officeType === 'officeUnit') {
+            const officeUnit = subOfficeList.find((item) => item.id === id);
+            if (officeUnit) {
+                getGovernmentOfficeListByParntCode(officeUnit.fullCode, 'officeUnit');
+            }
+        }
+    }
+
     return (
         <div>
             <div>
@@ -352,7 +458,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                             }, [values.vehicleOwner?.ownerTypeId]);
 
                             useEffect(() => {
-                                console.log('values.vehicleOwner?.isJointOwner', values.vehicleOwner?.isJointOwner)
+                                // console.log('values.vehicleOwner?.isJointOwner', values.vehicleOwner?.isJointOwner)
                                 if (values.vehicleOwner?.isJointOwner) {
 
                                     const newJointOwner = {
@@ -474,6 +580,39 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                   }
                                 });
                               }, [values.vehicleJointOwners]);
+
+
+                            useEffect(() => {
+                                if (values.vehicleOwner?.ministryId) {
+                                    // console.log('values.vehicleOwner?.ministryId', values.vehicleOwner?.ministryId)
+                                    fetchOfficeListById(values.vehicleOwner.ministryId, 'department');
+                                }
+                            }, [values.vehicleOwner?.ministryId]);
+                            
+                            useEffect(() => {
+                                if (values.vehicleOwner?.departmentId) {
+                                    // console.log('values.vehicleOwner?.departmentId', values.vehicleOwner?.departmentId)
+                                    fetchOfficeListById(values.vehicleOwner.departmentId, 'subOffice');
+                                }
+                            }, [values.vehicleOwner?.departmentId, departmentList]);
+
+                            useEffect(() => {
+                                if (values.vehicleOwner?.subOfficeUnitGroupId) {
+                                    // console.log('values.vehicleOwner?.subOfficeUnitGroupId', values.vehicleOwner?.subOfficeUnitGroupId)
+                                    fetchOfficeListById(values.vehicleOwner.subOfficeUnitGroupId, 'officeUnit');
+                                }
+                            }, [values.vehicleOwner?.subOfficeUnitGroupId, subOfficeList]);
+
+                            const [isOwnerTypePublic, setIsOwnerTypePublic] = useState(false);
+                            // const [validateIsOwnerTypePublic, setValidateIsOwnerTypePublic] = useState(true);
+
+                            const setOwnerType = (ownerTypeId) => {
+                                const selectedOwner = dropdowns.ownerTypeList.find(
+                                    (item) => item.id === ownerTypeId && item.statusCode === 'owner_type_public'
+                                );
+                                setFieldValue('vehicleOwner.isOwnerTypePublic', !!selectedOwner);  // Set to true if found, false otherwise
+                                // setIsOwnerTypePublic(!!selectedOwner);  // Set to true if found, false otherwise
+                            };
 
                             return (
                                 <FormikForm>
@@ -912,7 +1051,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                 </FieldArray>
                                             )}
 
-                                            {isOwnerTypePublic && (
+                                            {values.vehicleOwner.isOwnerTypePublic && (
 
 
                                                 <div className="row">
@@ -927,25 +1066,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                                 disabled={isViewable}
                                                                 name="vehicleOwner.ministryId"
                                                                 component={ReactSelect}
-                                                                options={dropdowns.countryList}
-                                                                placeholder={t('pleaseSelectOne')}
-                                                                value={values.vehicleOwner?.ministryId}
-                                                                onChange={(option) => {
-                                                                    setFieldValue('vehicleOwner.ministryId', option ? option.value : '')
-                                                                }}
-                                                            />
-                                                            <ErrorMessage name="vehicleOwner.ministryId" component="div" className="text-danger" />
-                                                        </Form.Group>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-lg-6 col-xl-6">
-                                                        <Form.Group className="mb-3" controlId="vehicleOwner.ministryId">
-                                                            <Form.Label>{t('Ministry')} <span className='text-red-500'>*</span></Form.Label>
-                                                            <Field
-                                                                disabled={isViewable}
-                                                                name="vehicleOwner.ministryId"
-                                                                component={ReactSelect}
-                                                                options={dropdowns.countryList}
+                                                                options={ministryList}
                                                                 placeholder={t('pleaseSelectOne')}
                                                                 value={values.vehicleOwner?.ministryId}
                                                                 onChange={(option) => {
@@ -963,7 +1084,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                                 disabled={isViewable}
                                                                 name="vehicleOwner.departmentId"
                                                                 component={ReactSelect}
-                                                                options={dropdowns.countryList}
+                                                                options={departmentList}
                                                                 placeholder={t('pleaseSelectOne')}
                                                                 value={values.vehicleOwner?.departmentId}
                                                                 onChange={(option) => {
@@ -981,7 +1102,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                                 disabled={isViewable}
                                                                 name="vehicleOwner.subOfficeUnitGroupId"
                                                                 component={ReactSelect}
-                                                                options={dropdowns.countryList}
+                                                                options={subOfficeList}
                                                                 placeholder={t('pleaseSelectOne')}
                                                                 value={values.vehicleOwner?.subOfficeUnitGroupId}
                                                                 onChange={(option) => {
@@ -999,7 +1120,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                                 disabled={isViewable}
                                                                 name="vehicleOwner.unitOrActivityId"
                                                                 component={ReactSelect}
-                                                                options={dropdowns.countryList}
+                                                                options={officeUnitList}
                                                                 placeholder={t('pleaseSelectOne')}
                                                                 value={values.vehicleOwner?.unitOrActivityId}
                                                                 onChange={(option) => {
@@ -1035,7 +1156,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                                 disabled={isViewable}
                                                                 name="vehicleOwner.usedById"
                                                                 component={ReactSelect}
-                                                                options={dropdowns.countryList}
+                                                                options={dropdowns.usedByList}
                                                                 placeholder={t('pleaseSelectOne')}
                                                                 value={values.vehicleOwner.usedById}
                                                                 onChange={(option) => {
@@ -1071,7 +1192,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
                                                                 disabled={isViewable}
                                                                 name="vehicleOwner.acquisitionProcessId"
                                                                 component={ReactSelect}
-                                                                options={dropdowns.countryList}
+                                                                options={dropdowns.acquisitionProcessList}
                                                                 placeholder={t('pleaseSelectOne')}
                                                                 value={values.vehicleOwner?.acquisitionProcessId}
                                                                 onChange={(option) => {
@@ -1092,7 +1213,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
                                                     <div className="col-sm-12 col-lg-6 col-xl-6">
                                                         <Form.Group className="mb-3" controlId="vehicleOwner.acquisitionPrice">
-                                                            <Form.Label>{t("Acquisition Price")} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Form.Label>{t("Acquisition Price")}</Form.Label>
                                                             <Field disabled={isViewable} type="text" name="vehicleOwner.acquisitionPrice" className="form-control" placeholder={t('enterSomething')} />
                                                             <ErrorMessage name="vehicleOwner.acquisitionPrice" component="div" className="text-danger" />
                                                         </Form.Group>
@@ -1108,7 +1229,7 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
                                                     <div className="col-sm-12 col-lg-6 col-xl-6">
                                                         <Form.Group className="mb-3" controlId="vehicleOwner.remarks">
-                                                            <Form.Label>{t("Remarks")} <span className='text-red-500'>*</span></Form.Label>
+                                                            <Form.Label>{t("Remarks")}</Form.Label>
                                                             <Field disabled={isViewable} type="text" name="vehicleOwner.remarks" className="form-control" placeholder={t('enterSomething')} />
                                                             <ErrorMessage name="vehicleOwner.remarks" component="div" className="text-danger" />
                                                         </Form.Group>

@@ -4,6 +4,7 @@ import AuthGuard from './AuthGuard';
 import DashboardPage from '../features/admin/dashboard/pages/DashboardPage.jsx';
 import ChangePassword from '../features/common/profile-management/pages/ChangePassword.jsx';
 import Profile from '../features/common/profile-management/pages/Profile.jsx';
+import UserProfile from '../features/common/profile-management/pages/UserProfile.jsx';
 import CountryList from '../features/admin/configurations/country/CountryList.jsx';
 import UserList from '../features/admin/user-management//user/UserList.jsx';
 import DesignationList from '../features/admin/user-management/designation/DesignationList.jsx';
@@ -36,7 +37,8 @@ import ServiceDocumentMapList from '../features/admin/configurations/ServiceDocu
 
 const adminRoutes = [
     { path: 'dashboard/:orgId?/:roleId?', element: <DashboardPage /> },
-    { path: 'profile', element: <Profile /> },
+    // { path: 'profile', element: <Profile /> },
+    { path: 'profile', element: <UserProfile /> },
     { path: 'change-password', element: <ChangePassword /> },
 
     { path: 'configurations/country-list', element: <CountryList /> },

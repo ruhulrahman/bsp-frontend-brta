@@ -9,7 +9,7 @@ import { withNamespaces } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { setAuthUser, setUserPermissions, setToken, setOfficeRole } from '../../features/common/auth/authSlice';
+import { setAuthUser, setUserPermissions, setToken, setOfficeRole, setUserImage, removeUserImage } from '../../features/common/auth/authSlice';
 import Navbar from './navbar/system-user/Navbar';
 import Sidebar from './navbar/system-user/Sidebar';
 
@@ -52,6 +52,28 @@ const SystemUserLayout = ({ t }) => {
         getCommonDropdownData()
     }, [roleSet]);
 
+    useEffect(() => {
+        getUserProfilePhoto()
+    },[])
+
+    const getUserProfilePhoto = async () => {
+
+        try {
+            const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-profile-photo`, {
+                responseType: "text", // Use "arraybuffer" for PDFs and "text" for Base64
+            })
+
+            removeUserImage(null)
+
+            if (data) {
+                const userPhoto = `data:image/jpeg;base64,${data}`
+                dispatch(setUserImage(userPhoto))
+            }
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
     const [listData, setListData] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -82,7 +104,9 @@ const SystemUserLayout = ({ t }) => {
             if (result.status == 200) {
                 dispatch(setAuthUser(result.data));
                 dispatch(setUserPermissions(result.data.permissionCodes));
-                dispatch(setToken(localStorage.getItem('token')));
+                if (localStorage.getItem('token')) {
+                    dispatch(setToken(localStorage.getItem('token')));
+                }
             }
         } catch (error) {
             console.log('error', error)

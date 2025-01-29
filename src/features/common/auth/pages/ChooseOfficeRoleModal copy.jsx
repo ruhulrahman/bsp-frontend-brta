@@ -17,7 +17,7 @@ const ViewDetails = ({ t, show, onHide, onSave, viewData, closeButton = false, b
         onHide()
     }
 
-
+    
 
     return (
         <>
@@ -35,6 +35,7 @@ const ViewDetails = ({ t, show, onHide, onSave, viewData, closeButton = false, b
                                             <div key={index} className="row mt-2">
                                                 <div className="col-md-12">
                                                     <button className='btn bg-[#C5D4CB] hover:bg-[#94a19a] hover:text-white' onClick={() => selectOfficeRole(item)} type='button'>
+                                                        {/* <p className='text-justify'>{currentLanguage === 'en' ? `Office: ${item.orgNameEn}, Role: ${item.roleNameEn}` : `Office: ${item.orgNameBn}, Role: ${item.roleNameBn}`}</p> */}
                                                         <p className="text-justify">
                                                             {currentLanguage === 'en' ? (
                                                                 <>
@@ -51,6 +52,24 @@ const ViewDetails = ({ t, show, onHide, onSave, viewData, closeButton = false, b
                                                 </div>
                                             </div>
                                         ))}
+                                        {/* <table className="mt-2 text-left table table-responsive">
+                                            <thead>
+                                                <tr>
+                                                    <th>{t('office')}</th>
+                                                    <th>{t('role')}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                {viewData.userOfficeRoles && viewData.userOfficeRoles.map((item, index) => (
+                                                    <tr key={item.id} className='text-slate-500 text-sm'>
+                                                        <td>{item.orgNameEn}</td>
+                                                        <td>{item.roleNameEn}</td>
+                                                    </tr>
+                                                ))}
+
+                                            </tbody>
+                                        </table> */}
                                     </>
                                 )}
 
