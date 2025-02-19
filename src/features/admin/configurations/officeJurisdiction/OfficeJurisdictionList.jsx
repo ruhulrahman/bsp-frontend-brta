@@ -11,12 +11,14 @@ import Form from 'react-bootstrap/Form';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Pagination from 'react-bootstrap/Pagination';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import AddNew from './AddNew';
+import CustomPagination from '@/components/common/CustomPagination';
 
-const OfficeJurisdictionList = ({ t }) => {
+const OfficeJurisdictionList = () => {
+    const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter } = useSelector((state) => state.common)
@@ -50,99 +52,12 @@ const OfficeJurisdictionList = ({ t }) => {
     }
 
     const handlePageChange = (page) => {
-        // dispatch(setCurrentPage(page))
         setCurrentPage(page)
-    };
-
-    // useEffect(() => {
-    //     dispatch(setResetPagination())
-    // }, []);
+    }
 
     useEffect(() => {
-        getListData()
         getLocationListByParentId()
-        // getAllServiceList()
-    }, [currentPage]);
-
-    // Render pagination using React Bootstrap Pagination
-    const renderPagination = () => {
-        let items = [];
-
-        items.push(
-            <Pagination.First
-                key="first"
-                onClick={() => handlePageChange(0)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        items.push(
-            <Pagination.Prev
-                key="prev"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        // Ellipsis Logic (similar to previous example)
-        const maxLeft = Math.max(currentPage - Math.floor(windowSize / 2), 0);
-        const maxRight = Math.min(currentPage + Math.floor(windowSize / 2), totalPages - 1);
-
-        if (maxLeft > 0) {
-            items.push(
-                <Pagination.Item key={0} onClick={() => handlePageChange(0)}>
-                    {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}
-                </Pagination.Item>
-            );
-            if (maxLeft > 1) {
-                items.push(<Pagination.Ellipsis key="left-ellipsis" />);
-            }
-        }
-
-        for (let i = maxLeft; i <= maxRight; i++) {
-            items.push(
-                <Pagination.Item
-                    key={i}
-                    active={i === currentPage}
-                    onClick={() => handlePageChange(i)}
-                >
-                    {currentLanguage === 'en' ? i + 1 : toBengaliNumber(i + 1)}
-                </Pagination.Item>
-            );
-        }
-
-        if (maxRight < totalPages - 1) {
-            if (maxRight < totalPages - 2) {
-                items.push(<Pagination.Ellipsis key="right-ellipsis" />);
-            }
-            items.push(
-                <Pagination.Item
-                    key={totalPages - 1}
-                    onClick={() => handlePageChange(totalPages - 1)}
-                >
-                    {totalPages}
-                </Pagination.Item>
-            );
-        }
-
-        items.push(
-            <Pagination.Next
-                key="next"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        items.push(
-            <Pagination.Last
-                key="last"
-                onClick={() => handlePageChange(totalPages - 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        return items;
-    };
+    }, []);
 
     const [searchValues, setSearchValues] = useState({
         orgId: '',
@@ -160,29 +75,30 @@ const OfficeJurisdictionList = ({ t }) => {
         isActive: '',
     };
 
+    // Fetch data whenever searchValues or currentPage changes
+    useEffect(() => {
+        getListData();
+    }, [searchValues, currentPage]);
+
     const handleReset = (resetForm, currentValues) => {
-        if (!helpers.compareValuesAreSame(searchValues, currentValues)) {
+        if (!helpers.compareValuesAreSame(resetSearchValues, currentValues)) {
 
             resetForm({
                 values: resetSearchValues, // Reset to initial values
             });
 
-            if (currentPage != 0) {
-                setCurrentPage(0)
-            } else {
-                getListData()
-            }
+            // Always call getListData after resetting the form
+            setSearchValues(resetSearchValues); // Update the search values state
+            setCurrentPage(0); // Reset to the first page
+            // No need to call getListData here; useEffect will handle it
         }
     }
 
     const searchData = (values) => {
         if (!helpers.compareValuesAreSame(searchValues, values)) {
-            if (currentPage != 0) {
-                setCurrentPage(0)
-                getListData(values)
-            } else {
-                getListData(values)
-            }
+            setSearchValues(values); // Update the search values
+            setCurrentPage(0); // Reset to the first page
+            // getListData(values); // Fetch data with the new search values
         }
     }
 
@@ -289,12 +205,15 @@ const OfficeJurisdictionList = ({ t }) => {
     const handleSave = async (values, setSubmitting, resetForm, setErrors) => {
 
         try {
-            const { data } = await RestApi.post('api/v1/admin/configurations/office-jurisdiction/create', values)
+            // if (values.id) {
+            //     result = await RestApi.put(`api/v1/admin/configurations/office-jurisdiction/update/${values.id}`, values)
+            // } else {
+            //     result = await RestApi.post('api/v1/admin/configurations/office-jurisdiction/create', values)
+            // }
+            result = await RestApi.post('api/v1/admin/configurations/office-jurisdiction/create', values)
 
-            console.log('data', data)
-
-            if (data.success) {
-                toaster(data.message)
+            if (result.data.success) {
+                toaster(result.data.message)
                 handleCloseModal();
                 getListData()
             }
@@ -309,27 +228,35 @@ const OfficeJurisdictionList = ({ t }) => {
         }
     };
 
+    function findMissingNumber(arr) {
+        let n = Math.max(...arr); // Find the max number
+        console.log('max', n)
+        let expectedSum = (n * (n + 1)) / 2; // Sum of first N natural numbers
+        console.log('expectedSum', expectedSum)
+        let actualSum = arr.reduce((sum, num) => sum + num, 0); // Sum of given array
+        console.log('actualSum', actualSum)
+        return expectedSum - actualSum; // Missing number
+    }
 
-    const [allServiceList, setAllServiceList] = useState([]);
-    // const getAllServiceList = async () => {
+    const arr = [3, 4, 1, 5, 2, 7, 8];
 
-    //     try {
-    //         const { data } = await RestApi.get('api/v1/admin/configurations/office-jurisdiction/all-list')
-    //         if (data.success) {
-    //             if (data.data.length > 0) {
-    //                 const allServiceParentList = data.data.filter((item) => item.parentServiceId == null).map((item) => {
-    //                     item.children = data.data.filter((child) => child.parentServiceId == item.id)
-    //                     return item
-    //                 })
-    //                 setAllServiceList(allServiceParentList)
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.log('error', error)
-    //     } finally {
-    //         // dispatch(setLoading(false));
-    //     }
-    // }
+    function findMissingNumberUsingLoop(arr) {
+        arr.sort((a, b) => a - b); // Sort the array in ascending order
+        for (let i = 0; i < arr.length - 1; i++) {
+            console.log('arr[i] + 1', arr[i] + 1)
+            console.log('arr[i+1]', arr[i + 1])
+            if (arr[i] + 1 !== arr[i + 1]) {
+                return arr[i] + 1; // Return the missing number
+            }
+        }
+        return -1; // If no missing number is found
+    }
+
+
+    // useEffect(() => {
+    //     console.log("Missing number:", findMissingNumber(arr)); // Output: 6
+    //     console.log("Missing number:", findMissingNumberUsingLoop(arr)); // Output: 6
+    // }, []);
 
     return (
         <>
@@ -357,7 +284,7 @@ const OfficeJurisdictionList = ({ t }) => {
                                                     name="orgId"
                                                     component={ReactSelect}
                                                     options={dropdowns.orgList}
-                                                    placeholder={t('pleaseSelectOne')}
+                                                    placeholder={t('pleaseSelectOrganization')}
                                                     value={values.orgId}
                                                     onChange={(option) => {
                                                         setFieldValue('orgId', option ? option.value : '')
@@ -371,7 +298,7 @@ const OfficeJurisdictionList = ({ t }) => {
                                                     name="thanaId"
                                                     component={ReactSelect}
                                                     options={thanaList}
-                                                    placeholder={t('pleaseSelectOne')}
+                                                    placeholder={t('pleaseSelectThana')}
                                                     value={values.thanaId}
                                                     onChange={(option) => {
                                                         setFieldValue('thanaId', option ? option.value : '')
@@ -429,7 +356,7 @@ const OfficeJurisdictionList = ({ t }) => {
                             onSave={handleSave}
                             editData={editData}
                         />
-        
+
                     </div>
                 </div>
                 <div className="p-0 overflow-auto min-h-[300px]">
@@ -454,8 +381,8 @@ const OfficeJurisdictionList = ({ t }) => {
                                     <td>{currentLanguage === 'en' ? item.orgNameEn : item.orgNameBn}</td>
                                     {/* <td>{currentLanguage === 'en' ? item.thanaNameEn : item.thanaNameBn}</td> */}
                                     <td>
-                                        {item.thanas && item.thanas.length > 0 && item.thanas.map((thana, index) => (
-                                            <span className={`badge bg-secondary rounded-full ${item.thanas.length - 1 === index ? '' : 'mr-1'}`} key={index}>{currentLanguage === 'en' ? thana.nameEn : thana.nameBn}</span>
+                                        {item.thanas && item.thanas.length > 0 && item.thanas.map((thana, thanaIndex) => (
+                                            <span key={'thana' + thanaIndex} className={`badge bg-secondary rounded-full ${item.thanas.length - 1 === thanaIndex ? '' : 'mr-1'}`}>{currentLanguage === 'en' ? thana.nameEn : thana.nameBn}</span>
                                         ))}
                                     </td>
                                     <td>
@@ -492,7 +419,11 @@ const OfficeJurisdictionList = ({ t }) => {
                         <div className="col-md-12 text-right">
                             <div className="flex items-center justify-end">
                                 <div className="flex">
-                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                    <CustomPagination
+                                        currentPage={currentPage}
+                                        totalPages={totalPages}
+                                        onPageChange={handlePageChange}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -503,4 +434,4 @@ const OfficeJurisdictionList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(OfficeJurisdictionList)
+export default (OfficeJurisdictionList)

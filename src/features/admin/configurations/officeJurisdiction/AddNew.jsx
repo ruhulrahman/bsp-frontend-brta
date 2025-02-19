@@ -4,14 +4,15 @@ import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 
-const AddNew = ({ t, show, onHide, onSave, editData }) => {
+const AddNew = ({ show = false, onHide = () => { }, onSave = () => { }, editData = null }) => {
+    const { t } = useTranslation();
 
     const { activeStatusList, loading, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
@@ -79,6 +80,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => {
+                            const { t } = useTranslation();
 
                             const getSelectedServices = (options, selectedIds) => {
                                 const selectedOptions = options.filter((option) => selectedIds.includes(option.value));
@@ -129,7 +131,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                             name="orgId"
                                             component={ReactSelect}
                                             options={dropdowns.orgList}
-                                            placeholder={t('pleaseSelectOne')}
+                                            placeholder={t('pleaseSelectOrganization')}
                                             value={values.orgId}
                                             onChange={(option) => {
                                                 setFieldValue('orgId', option ? option.value : '')
@@ -146,7 +148,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                                 name="divisionId"
                                                 component={ReactSelect}
                                                 options={dropdowns.divisionList}
-                                                placeholder={t('pleaseSelectOne')}
+                                                placeholder={t('pleaseSelectDivision')}
                                                 value={values.divisionId}
                                                 onChange={(option) => {
                                                     const selectedValue = option ? option.value : '';
@@ -167,7 +169,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                                 name="districtId"
                                                 component={ReactSelect}
                                                 options={districtList}
-                                                placeholder={t('pleaseSelectOne')}
+                                                placeholder={t('pleaseSelectDistrict')}
                                                 value={values.districtId}
                                                 onChange={(option) => {
                                                     const selectedValue = option ? option.value : '';
@@ -185,26 +187,26 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                         <Form.Label className='d-flex justify-content-between'>
                                             <span>{t('thana')} <span className='text-red-500'>*</span></span>
                                             <div>
-                                            <Field
-                                                type="checkbox"
-                                                id={`checkedAll`}
-                                                className="ml-2"
-                                                value={checkedAll}
-                                                checked={checkedAll}
-                                                onChange={(e) => {
-                                                    setCheckedAll(e.target.checked);
-                                                    if (e.target.checked) {
-                                                        setFieldValue(
-                                                            'thanaIds',
-                                                            thanaList ? thanaList.map((item) => item.id) : []
-                                                        );
-                                                    } else {
-                                                        setFieldValue(
-                                                            'thanaIds',
-                                                            []
-                                                        );
-                                                    }
-                                                }} /> <label htmlFor="checkedAll">{t('selectAll')}</label>
+                                                <Field
+                                                    type="checkbox"
+                                                    id={`checkedAll`}
+                                                    className="ml-2"
+                                                    value={checkedAll}
+                                                    checked={checkedAll}
+                                                    onChange={(e) => {
+                                                        setCheckedAll(e.target.checked);
+                                                        if (e.target.checked) {
+                                                            setFieldValue(
+                                                                'thanaIds',
+                                                                thanaList ? thanaList.map((item) => item.id) : []
+                                                            );
+                                                        } else {
+                                                            setFieldValue(
+                                                                'thanaIds',
+                                                                []
+                                                            );
+                                                        }
+                                                    }} /> <label htmlFor="checkedAll">{t('selectAll')}</label>
                                             </div>
 
                                         </Form.Label>
@@ -214,7 +216,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                                             name="thanaIds"
                                             component={ReactSelect}
                                             options={thanaList}
-                                            placeholder={t('pleaseSelectOne')}
+                                            placeholder={t('pleaseSelectThana')}
                                             value={values.thanaIds}
                                             onChange={(selectedOptions) => {
                                                 setFieldValue(
@@ -244,4 +246,4 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     );
 };
 
-export default withNamespaces()(AddNew);
+export default (AddNew);

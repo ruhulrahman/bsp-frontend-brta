@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
@@ -16,8 +16,10 @@ import RevenueCheck from "./RevenueCheck.jsx"
 import VehicleApprove from "./VehicleApprove.jsx"
 import useCommonFunctions from '@/hooks/useCommonFunctions';
 import helpers, { toaster } from '@/utils/helpers.js';
+import ForwardHeader from './ForwardHeader.jsx';
 
-const ApplicationForward = ({ t, show, onHide, onSave, editData }) => {
+const ApplicationForward = ({ show = false, onHide = () => {}, onSave = () => {}, editData = null }) => {
+const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { hasPermission } = useCommonFunctions();
@@ -49,6 +51,10 @@ const ApplicationForward = ({ t, show, onHide, onSave, editData }) => {
         console.log(values);
     }
 
+    const reloadList = (serviceRequestId) => {
+        onSave(serviceRequestId)
+    }
+
     return (
         <>
             {editData &&
@@ -58,34 +64,8 @@ const ApplicationForward = ({ t, show, onHide, onSave, editData }) => {
                         <Modal.Title>{t('Vehicle Application Details')}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="row p-3">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <h1 className='font-normal mb-3'>Service Request No: {editData.serviceRequestNo}</h1>
-                                            <h1 className='font-normal mb-3'>Chassis No: {editData.chassisNumber}</h1>
-                                            <h1 className='font-normal mb-3'>Engine No: {editData.engineNumber}</h1>
-                                            <h1 className='font-normal mb-3'>Vehicle Class: {editData.vehicleClassName}</h1>
-
-                                        </div>
-                                        <div className="col-md-6">
-                                            <h1 className='font-normal mb-3'>CC: {editData.ccOrKw}</h1>
-                                            <h1 className='font-normal mb-3'>Manufacturing Year: {editData.manufacturingYear}</h1>
-                                            <h1 className='font-normal mb-3'>Application Date: {helpers.dDate(editData.applicationDate)}</h1>
-                                            {/* <h1 className='font-normal mb-3'>Application Status: {editData.applicationStatusName}</h1> */}
-                                            <h1 className='font-normal mb-3'>Application Status: <span className={`badge bg-${editData.applicationStatusColor}`}>{editData.applicationStatusName}</span></h1>
-                                            {editData.approvalDate && (
-                                                <h1 className='font-normal mb-3'>Approval Date: <span className={`badge bg-${editData.applicationStatusColor}`}>{helpers.dDate(editData.approvalDate)}</span></h1>
-                                            )}
-                                            {editData.rejectionDate && (
-                                                <h1 className='font-normal mb-3'>Rejected Date: <span className={`badge bg-${editData.applicationStatusColor}`}>{helpers.dDate(editData.rejectionDate)}</span></h1>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
+                        <ForwardHeader editData={editData}/>
 
                         <div className="row px-1 mt-[24px]">
                             {hasPermission('permitted') && (
@@ -94,7 +74,7 @@ const ApplicationForward = ({ t, show, onHide, onSave, editData }) => {
                                         <h3 className="text-xl text-green-600 mb-6 pt-[24px]">{t('vehicleInspection')}</h3>
                                         <div className="row">
                                             <div className="col-sm-12">
-                                                <VehicleInspection editData={editData}></VehicleInspection>
+                                                <VehicleInspection editData={editData} reloadList={reloadList}></VehicleInspection>
                                             </div>
                                         </div>
                                     </div>
@@ -106,7 +86,7 @@ const ApplicationForward = ({ t, show, onHide, onSave, editData }) => {
                                         <h3 className="text-xl text-green-600 mb-6 pt-[24px]">{t('vehicleApprovalSection')}</h3>
                                         <div className="row">
                                             <div className="col-sm-12">
-                                                <VehicleApprove editData={editData}></VehicleApprove>
+                                                <VehicleApprove editData={editData} reloadList={reloadList}></VehicleApprove>
                                             </div>
                                         </div>
                                     </div>
@@ -139,4 +119,4 @@ const ApplicationForward = ({ t, show, onHide, onSave, editData }) => {
     );
 };
 
-export default withNamespaces()(ApplicationForward);
+export default (ApplicationForward);

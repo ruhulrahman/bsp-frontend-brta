@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactSelect from '@/components/ui/ReactSelect';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
 import Loading from '@/components/common/Loading';
@@ -20,8 +20,10 @@ import ApplicationForward from '../applicationForVehicleRegistration/Application
 import ApplicationForwardInspector from '../applicationForVehicleRegistration/ApplicationForwardInspector';
 import ApplicationForwardRevenue from '../applicationForVehicleRegistration/ApplicationForwardRevenue';
 import useCommonFunctions from '@/hooks/useCommonFunctions';
+import CustomPagination from '@/components/common/CustomPagination';
 
-const VehicleRegistrationApprovalList = ({ t }) => {
+const VehicleRegistrationApprovalList = () => {
+    const { t } = useTranslation();
 
     const navigate = useNavigate()
     const { hasPermission } = useCommonFunctions();
@@ -49,94 +51,8 @@ const VehicleRegistrationApprovalList = ({ t }) => {
     }
 
     const handlePageChange = (page) => {
-        // dispatch(setCurrentPage(page))
         setCurrentPage(page)
-    };
-
-
-    useEffect(() => {
-        getListData()
-    }, [currentPage]);
-
-    // Render pagination using React Bootstrap Pagination
-    const renderPagination = () => {
-        let items = [];
-
-        items.push(
-            <Pagination.First
-                key="first"
-                onClick={() => handlePageChange(0)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        items.push(
-            <Pagination.Prev
-                key="prev"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        // Ellipsis Logic (similar to previous example)
-        const maxLeft = Math.max(currentPage - Math.floor(windowSize / 2), 0);
-        const maxRight = Math.min(currentPage + Math.floor(windowSize / 2), totalPages - 1);
-
-        if (maxLeft > 0) {
-            items.push(
-                <Pagination.Item key={0} onClick={() => handlePageChange(0)}>
-                    {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}
-                </Pagination.Item>
-            );
-            if (maxLeft > 1) {
-                items.push(<Pagination.Ellipsis key="left-ellipsis" />);
-            }
-        }
-
-        for (let i = maxLeft; i <= maxRight; i++) {
-            items.push(
-                <Pagination.Item
-                    key={i}
-                    active={i === currentPage}
-                    onClick={() => handlePageChange(i)}
-                >
-                    {currentLanguage === 'en' ? i + 1 : toBengaliNumber(i + 1)}
-                </Pagination.Item>
-            );
-        }
-
-        if (maxRight < totalPages - 1) {
-            if (maxRight < totalPages - 2) {
-                items.push(<Pagination.Ellipsis key="right-ellipsis" />);
-            }
-            items.push(
-                <Pagination.Item
-                    key={totalPages - 1}
-                    onClick={() => handlePageChange(totalPages - 1)}
-                >
-                    {totalPages}
-                </Pagination.Item>
-            );
-        }
-
-        items.push(
-            <Pagination.Next
-                key="next"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        items.push(
-            <Pagination.Last
-                key="last"
-                onClick={() => handlePageChange(totalPages - 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        return items;
-    };
+    }
 
     const [searchValues, setSearchValues] = useState({
         serviceRequestNo: '',
@@ -156,33 +72,34 @@ const VehicleRegistrationApprovalList = ({ t }) => {
         applicationDate: '',
     };
 
+    // Fetch data whenever searchValues or currentPage changes
+    useEffect(() => {
+        getListData();
+    }, [searchValues, currentPage]);
+
     const handleReset = (resetForm, currentValues) => {
-        if (!helpers.compareValuesAreSame(searchValues, currentValues)) {
+        if (!helpers.compareValuesAreSame(resetSearchValues, currentValues)) {
 
             resetForm({
                 values: resetSearchValues, // Reset to initial values
             });
 
-            if (currentPage != 0) {
-                setCurrentPage(0)
-            } else {
-                getListData()
-            }
+            // Always call getListData after resetting the form
+            setSearchValues(resetSearchValues); // Update the search values state
+            setCurrentPage(0); // Reset to the first page
+            // No need to call getListData here; useEffect will handle it
         }
     }
 
     const searchData = (values) => {
         if (!helpers.compareValuesAreSame(searchValues, values)) {
-            if (currentPage != 0) {
-                setCurrentPage(0)
-                getListData(values)
-            } else {
-                getListData(values)
-            }
+            setSearchValues(values); // Update the search values
+            setCurrentPage(0); // Reset to the first page
+            // getListData(values); // Fetch data with the new search values
         }
     }
 
-    const getListData = async (values = searchValues) => {
+    const getListData = async (serviceRequestId) => {
         const params = Object.assign({ page: currentPage, size: pagination.perPage });
         // const applicationDate = values.applicationDate ? new Date(values.applicationDate) : ''
         // const requestBody = Object.assign({},values, {applicationDate})
@@ -190,9 +107,13 @@ const VehicleRegistrationApprovalList = ({ t }) => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.post('api/reg/applications/v1/vehicles', values, { params })
+            const { data } = await RestApi.post('api/reg/applications/v1/vehicles', searchValues, { params })
             dispatch(setListData(data.content));
             setPaginationData(data);
+            if (serviceRequestId) {
+                const selectedItem = data.content.find(item => item.serviceRequestId == serviceRequestId)
+                setEditData(selectedItem)
+            }
             console.log(data.content);
         } catch (error) {
             console.log('error', error)
@@ -254,9 +175,8 @@ const VehicleRegistrationApprovalList = ({ t }) => {
         setModalOpen(false);
         setEditData(null); // Reset edit data
     };
-    const handleSave = async (values, setSubmitting, resetForm) => {
-
-
+    const handleSave = async (serviceRequestId) => {
+        getListData(serviceRequestId)
     };
 
     return (
@@ -383,7 +303,11 @@ const VehicleRegistrationApprovalList = ({ t }) => {
                         <div className="col-md-12 text-right">
                             <div className="flex items-center justify-end">
                                 <div className="flex">
-                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                    <CustomPagination
+                                        currentPage={currentPage}
+                                        totalPages={totalPages}
+                                        onPageChange={handlePageChange}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -415,4 +339,4 @@ const VehicleRegistrationApprovalList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(VehicleRegistrationApprovalList)
+export default (VehicleRegistrationApprovalList)

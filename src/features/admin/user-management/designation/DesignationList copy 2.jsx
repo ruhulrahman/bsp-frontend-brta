@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
 import AddNew from './AddNew';
@@ -14,7 +14,8 @@ import RestApi from '@/utils/RestApi';
 import helpers, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData } from '@/store/commonSlice';
 
-const DesignationList = ({ t }) => {
+const DesignationList = () => {
+const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { statusList, loading, listData, pagination } = useSelector((state) => state.common)
@@ -447,4 +448,4 @@ const DesignationList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(DesignationList)
+export default (DesignationList)

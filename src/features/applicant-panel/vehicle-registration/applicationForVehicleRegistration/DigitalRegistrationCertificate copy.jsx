@@ -1,7 +1,7 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
 import React, { useEffect } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
 import { Container, Row, Col, Table } from 'react-bootstrap';
@@ -13,7 +13,8 @@ import i18n from '@/i18n';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '@/components/common/Loading';
 
-const MainContent = ({ t, serviceRequestId }) => {
+const MainContent = ({ serviceRequestId }) => {
+const { t } = useTranslation();
 
     const navigate = useNavigate();
     const currentLanguage = i18n.language;
@@ -153,7 +154,8 @@ const styles = StyleSheet.create({
 
 
 
-const DigitalRegistrationCertificate = ({ t, serviceRequestId }) => {
+const DigitalRegistrationCertificate = ({ serviceRequestId }) => {
+const { t } = useTranslation();
     const handlePrint = () => {
         printJS({
             printable: 'printable-section-digital-registration-certificate',
@@ -184,4 +186,4 @@ const DigitalRegistrationCertificate = ({ t, serviceRequestId }) => {
     )
 }
 
-export default withNamespaces()(DigitalRegistrationCertificate)
+export default (DigitalRegistrationCertificate)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
@@ -7,10 +7,12 @@ import Modal from 'react-bootstrap/Modal';
 import { toBengaliNumber } from 'bengali-number';
 import helpers from '../../../../utils/helpers';
 
-const ViewDetails = ({ t, show, onHide, onSave, viewData }) => {
+const ViewDetails = ({ show, onHide, onSave, viewData }) => {
+const { t } = useTranslation();
 
     const { activeStatusList, loading, listData, dropdowns } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
+    console.log('viewData', viewData)
 
     return (
         <>
@@ -25,7 +27,8 @@ const ViewDetails = ({ t, show, onHide, onSave, viewData }) => {
                             <div className='card-body'>
                                 {viewData.vehicleTypes && viewData.vehicleTypes.length > 0 && (
                                     <>
-                                        <h1 className='font-semibold mb-3'>{t('vehicleTypes')}:</h1>
+                                        <h1 className='font-bold mb-3 text-center text-[18px]'>{currentLanguage === 'en' ? viewData.serviceNameEn : viewData.serviceNameBn}</h1>
+                                        <h1 className='font-semibold'>{t('vehicleTypes')}:</h1>
 
                                         <table className="mt-2 text-left table table-responsive">
                                             <thead>
@@ -116,6 +119,16 @@ const ViewDetails = ({ t, show, onHide, onSave, viewData }) => {
                                                 <span className={`badge ${viewData.isActive ? 'bg-success' : 'bg-danger'} rounded-full`}> {viewData.isActive ? t('yes') : t('no')}</span>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <th className='text-right'>{t('applicableForMultipleVehicleOwner')}</th>
+                                            <td className='min-w-[100px] w-auto'>
+                                                <span className={`badge ${viewData.isApplicableForMultipleVehicleOwner ? 'bg-success' : 'bg-danger'} rounded-full`}> {viewData.isApplicableForMultipleVehicleOwner ? t('yes') : t('no')}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th className='text-right'>{t('feeForMultipleVehicle')}</th>
+                                            <td className='min-w-[100px] w-auto'>{viewData.feeForMultipleVehicle}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -130,4 +143,4 @@ const ViewDetails = ({ t, show, onHide, onSave, viewData }) => {
     );
 };
 
-export default withNamespaces()(ViewDetails);
+export default (ViewDetails);

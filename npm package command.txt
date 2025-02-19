@@ -22,3 +22,4 @@ npm install react-quill --save
 npm i print-js
 npm i react-qr-code
 npm install react-barcode
+npm install @tanstack/react-query

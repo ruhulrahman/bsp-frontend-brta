@@ -4,7 +4,7 @@ import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
@@ -15,7 +15,8 @@ import helpers, { toaster } from '@/utils/helpers.js';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const AddOrUpdateRole = ({ t }) => {
+const AddOrUpdateRole = () => {
+const { t } = useTranslation();
 
     let { id, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
@@ -497,4 +498,4 @@ const AddOrUpdateRole = ({ t }) => {
     );
 };
 
-export default withNamespaces()(AddOrUpdateRole);
+export default (AddOrUpdateRole);

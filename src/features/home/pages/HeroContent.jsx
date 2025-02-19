@@ -5,10 +5,11 @@ import HeroSlider from './HeroSlider';
 import slider4 from '@/assets/images/slider/slider-4.jpg';
 import slider6 from '@/assets/images/slider/slider-6.jpg';
 import LoginBackground from '@/assets/images/login-background.png';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import carDrive from '@/assets/images/home/car-drive.png';
 
-const HeroContent = ({ t }) => {
+const HeroContent = () => {
+const { t } = useTranslation();
 
     return (
         <div className="container-fluid bg-[#405869] text-white lg:max-h-[395px] 3xl:h-auto">
@@ -28,4 +29,4 @@ const HeroContent = ({ t }) => {
     );
 };
 
-export default withNamespaces()(HeroContent);
+export default (HeroContent);

@@ -217,6 +217,11 @@ table td {
     border rounded-lg px-3 py-2 mb-2 text-sm w-full outline-none dark:border-gray-500 dark:bg-gray-900
   } */
 
+  input {
+    @apply
+    !placeholder-gray-500
+  }
+
 
   .custom-active-class {
     @apply

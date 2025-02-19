@@ -1,7 +1,7 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
 import React, { useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
 import manPhoto from '@/assets/images/man.png';
@@ -12,7 +12,8 @@ import i18n from '@/i18n';
 import { AuthContext } from '@/components/common/AuthContext';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const PrintSectionWithoutImage = ({ t, learnerData }) => {
+const PrintSectionWithoutImage = ({ learnerData }) => {
+const { t } = useTranslation();
 
     const { activeStatusList, listData, windowSize, pagination, showFilter, dropdowns, permissionTypeList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
@@ -176,7 +177,8 @@ const MyDocument = () => (
     </Document>
 );
 
-const EDrivingLicensePage = ({ t, learnerData }) => {
+const EDrivingLicensePage = ({ learnerData }) => {
+const { t } = useTranslation();
     const handlePrint = () => {
         printJS({
             printable: 'printable-edriving-license',
@@ -211,4 +213,4 @@ const EDrivingLicensePage = ({ t, learnerData }) => {
     )
 }
 
-export default withNamespaces()(EDrivingLicensePage)
+export default (EDrivingLicensePage)

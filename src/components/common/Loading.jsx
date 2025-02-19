@@ -1,7 +1,9 @@
 import React from 'react';
 import Spinner from 'react-bootstrap/Spinner';
+import { withTranslation, useTranslation } from 'react-i18next';
 
 const Loading = ({ loading, loadingText, showText = true, children }) => {
+const { t } = useTranslation();
     return (
         <>
             {loading && (
@@ -22,7 +24,7 @@ const Loading = ({ loading, loadingText, showText = true, children }) => {
                     <div className="d-flex flex-column items-center">
                         <Spinner animation="border" variant="primary" />
                         {showText && !children && <p className="text-gray-600 text-sm">
-                            {loadingText ? loadingText : 'Loading...'}
+                            {loadingText ? loadingText : t('loading')}
                         </p>}
                         {children}
                     </div>

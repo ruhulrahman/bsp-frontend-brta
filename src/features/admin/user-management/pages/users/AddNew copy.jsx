@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Modal, Form } from 'react-bootstrap';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 
-const AddNew = ({ t }) => {
+const AddNew = () => {
+const { t } = useTranslation();
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -45,4 +46,4 @@ const AddNew = ({ t }) => {
     )
 }
 
-export default withNamespaces()(AddNew)
+export default (AddNew)

@@ -24,8 +24,6 @@ const Logout = () => {
             // const result = await RestApi.get('api/user/me')
             const result = await RestApi.post('api/v1/auth/unset-logged-in-user-office-role')
             if (result.status == 200) {
-
-                localStorage.removeItem('token');
                 dispatch(removeAuthUser());
                 dispatch(removeToken());
                 dispatch(removeTokenInfo());
@@ -39,9 +37,10 @@ const Logout = () => {
                 // localStorage.clear();
 
                 // Redirect to the login page
-                navigate('/login');
-                localStorage.setItem('roleSet', false);
             }
+            localStorage.removeItem('token');
+            localStorage.setItem('roleSet', false);
+            navigate('/login');
         } catch (error) {
             console.log('error', error)
         } finally {

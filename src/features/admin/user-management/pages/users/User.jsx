@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // import Badge from 'react-bootstrap/Badge';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 // import Pagination from 'react-bootstrap/Pagination'
 import AddNew from './AddNew';
@@ -12,7 +12,8 @@ import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import RestApi from '@/utils/RestApi';
 import helpers, { toaster } from '@/utils/helpers.js';
 
-const User = ({ t }) => {
+const User = () => {
+const { t } = useTranslation();
 
     const options = [
         { value: 'Dhaka Metro-1', label: 'Dhaka Metro-1' },
@@ -360,4 +361,4 @@ const User = ({ t }) => {
     )
 }
 
-export default withNamespaces()(User)
+export default (User)

@@ -4,14 +4,15 @@ import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
 import i18n from '@/i18n';
 import Loading from '@/components/common/Loading';
 
-const AddNew = ({ t, show, onHide, onSave, editData }) => {
+const AddNew = ({ show = false, onHide = () => {}, onSave = () => {}, editData = null }) => {
+const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData } = useSelector((state) => state.common)
@@ -176,4 +177,4 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     );
 };
 
-export default withNamespaces()(AddNew);
+export default (AddNew);

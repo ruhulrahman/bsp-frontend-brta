@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactSelect from '@/components/ui/ReactSelect';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
 import Loading from '@/components/common/Loading';
@@ -16,8 +16,10 @@ import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPag
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { useNavigate } from 'react-router-dom';
 import SearchComponent from '../../../common/list/VehicleRegistrationListSearchComponent';
+import CustomPagination from '@/components/common/CustomPagination';
 
-const UserList = ({ t }) => {
+const UserList = () => {
+    const { t } = useTranslation();
 
     const navigate = useNavigate()
 
@@ -44,94 +46,8 @@ const UserList = ({ t }) => {
     }
 
     const handlePageChange = (page) => {
-        // dispatch(setCurrentPage(page))
         setCurrentPage(page)
-    };
-
-
-    useEffect(() => {
-        getListData()
-    }, [currentPage]);
-
-    // Render pagination using React Bootstrap Pagination
-    const renderPagination = () => {
-        let items = [];
-
-        items.push(
-            <Pagination.First
-                key="first"
-                onClick={() => handlePageChange(0)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        items.push(
-            <Pagination.Prev
-                key="prev"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        // Ellipsis Logic (similar to previous example)
-        const maxLeft = Math.max(currentPage - Math.floor(windowSize / 2), 0);
-        const maxRight = Math.min(currentPage + Math.floor(windowSize / 2), totalPages - 1);
-
-        if (maxLeft > 0) {
-            items.push(
-                <Pagination.Item key={0} onClick={() => handlePageChange(0)}>
-                    {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}
-                </Pagination.Item>
-            );
-            if (maxLeft > 1) {
-                items.push(<Pagination.Ellipsis key="left-ellipsis" />);
-            }
-        }
-
-        for (let i = maxLeft; i <= maxRight; i++) {
-            items.push(
-                <Pagination.Item
-                    key={i}
-                    active={i === currentPage}
-                    onClick={() => handlePageChange(i)}
-                >
-                    {currentLanguage === 'en' ? i + 1 : toBengaliNumber(i + 1)}
-                </Pagination.Item>
-            );
-        }
-
-        if (maxRight < totalPages - 1) {
-            if (maxRight < totalPages - 2) {
-                items.push(<Pagination.Ellipsis key="right-ellipsis" />);
-            }
-            items.push(
-                <Pagination.Item
-                    key={totalPages - 1}
-                    onClick={() => handlePageChange(totalPages - 1)}
-                >
-                    {totalPages}
-                </Pagination.Item>
-            );
-        }
-
-        items.push(
-            <Pagination.Next
-                key="next"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        items.push(
-            <Pagination.Last
-                key="last"
-                onClick={() => handlePageChange(totalPages - 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        return items;
-    };
+    }
 
     const [searchValues, setSearchValues] = useState({
         serviceRequestNo: '',
@@ -151,29 +67,30 @@ const UserList = ({ t }) => {
         applicationDate: '',
     };
 
+    // Fetch data whenever searchValues or currentPage changes
+    useEffect(() => {
+        getListData();
+    }, [searchValues, currentPage]);
+
     const handleReset = (resetForm, currentValues) => {
-        if (!helpers.compareValuesAreSame(searchValues, currentValues)) {
+        if (!helpers.compareValuesAreSame(resetSearchValues, currentValues)) {
 
             resetForm({
                 values: resetSearchValues, // Reset to initial values
             });
 
-            if (currentPage != 0) {
-                setCurrentPage(0)
-            } else {
-                getListData()
-            }
+            // Always call getListData after resetting the form
+            setSearchValues(resetSearchValues); // Update the search values state
+            setCurrentPage(0); // Reset to the first page
+            // No need to call getListData here; useEffect will handle it
         }
     }
 
     const searchData = (values) => {
         if (!helpers.compareValuesAreSame(searchValues, values)) {
-            if (currentPage != 0) {
-                setCurrentPage(0)
-                getListData(values)
-            } else {
-                getListData(values)
-            }
+            setSearchValues(values); // Update the search values
+            setCurrentPage(0); // Reset to the first page
+            // getListData(values); // Fetch data with the new search values
         }
     }
 
@@ -218,6 +135,22 @@ const UserList = ({ t }) => {
         setModalOpen(false);
         setEditData(null); // Reset edit data
     };
+
+    const editIconShow = (item) => {
+        // if (item.applicationStatusCode === 'vehicle_app_primary_approved') {
+        //     return true
+        // }
+        // if (item.applicationStatusCode === 'vehicle_app_final_approved') {
+        //     return true
+        // }
+        if (item.applicationStatusCode === 'vehicle_app_draft') {
+            return true
+        }
+        if (item.applicationStatusCode === 'vehicle_app_final_rejected') {
+            return true
+        }
+        return false
+    }
 
     return (
         <>
@@ -303,11 +236,18 @@ const UserList = ({ t }) => {
                                                 <i className="fa fa-eye"></i>
                                             </button>
                                         </OverlayTrigger> */}
-                                        <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
+                                        {/* <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
                                             <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/${item.serviceRequestId}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-info'>
                                                 <i className="fa fa-pen"></i>
                                             </button>
-                                        </OverlayTrigger>
+                                        </OverlayTrigger> */}
+                                        {editIconShow(item) && (
+                                            <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
+                                                <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1/${item.serviceRequestId}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-info'>
+                                                    <i className="fa fa-pen"></i>
+                                                </button>
+                                            </OverlayTrigger>
+                                        )}
                                         {item.applicationStatusCode === 'vehicle_app_primary_approved' && (
                                             <OverlayTrigger overlay={<Tooltip>{t('Submit Application')}</Tooltip>}>
                                                 <button onClick={() => navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/${item.serviceRequestId}/${item.serviceRequestNo}`)} className='btn btn-sm btn-rounded text-[12px] btn-outline-primary ml-1'>
@@ -342,7 +282,11 @@ const UserList = ({ t }) => {
                         <div className="col-md-12 text-right">
                             <div className="flex items-center justify-end">
                                 <div className="flex">
-                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                    <CustomPagination
+                                        currentPage={currentPage}
+                                        totalPages={totalPages}
+                                        onPageChange={handlePageChange}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -353,4 +297,4 @@ const UserList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(UserList)
+export default (UserList)

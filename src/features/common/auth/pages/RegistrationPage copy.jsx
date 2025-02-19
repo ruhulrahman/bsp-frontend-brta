@@ -10,7 +10,7 @@ import Form from 'react-bootstrap/Form';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import React, { useEffect, useState } from 'react'
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
 import helpers, { toaster } from '@/utils/helpers.js';
@@ -20,10 +20,12 @@ import { setAuthUser } from '../authSlice';
 import Flatpickr from "react-flatpickr";
 
 const CustomInput = ({ value, defaultValue, inputRef, ...props }) => {
+const { t } = useTranslation();
     return <input {...props} defaultValue={defaultValue} ref={inputRef} />;
 };
 
-const RegistrationPage = ({ t }) => {
+const RegistrationPage = () => {
+const { t } = useTranslation();
 
     const navigate = useNavigate();
     const dispatch = useDispatch()
@@ -156,4 +158,4 @@ const RegistrationPage = ({ t }) => {
     )
 }
 
-export default withNamespaces()(RegistrationPage)
+export default (RegistrationPage)

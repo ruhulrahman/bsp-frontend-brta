@@ -1,9 +1,10 @@
 import useCommonFunctions from '@/hooks/useCommonFunctions';
 import { useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 
-const AdminSidebar = ({ t, openSidebar }) => {
+const AdminSidebar = ({ openSidebar }) => {
+const { t } = useTranslation();
 
     const { hasPermission } = useCommonFunctions();
 
@@ -100,4 +101,4 @@ const AdminSidebar = ({ t, openSidebar }) => {
     )
 }
 
-export default withNamespaces()(AdminSidebar)
+export default (AdminSidebar)

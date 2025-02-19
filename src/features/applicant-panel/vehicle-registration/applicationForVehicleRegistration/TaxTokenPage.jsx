@@ -1,18 +1,24 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
-import React, { useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import React, { useEffect, useState } from 'react';
+import { withTranslation, useTranslation } from 'react-i18next';
 import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
 import QRCode from "react-qr-code";
+import { useNavigate } from 'react-router-dom';
+import i18n from '@/i18n';
+import { useSelector } from 'react-redux';
+import RestApi from '@/utils/RestApi';
+import helpers from '@/utils/helpers.js';
 
-const TaxTokenPrintSectionWithoutImage = ({ t }) => {
+const TaxTokenPrintSectionWithoutImage = ({ serviceRequestId }) => {
+    const { t } = useTranslation();
 
-    const [qrCodeValue, setQrCodeValue] = useState(`
-        Registration Number: DHAKA METRO-THA-13-3000
-        TAX Token Period: 08-FEB-2017 :: 08-FEB-2018
-        Tax Token Number: 172957695
-    `)
+    // const [qrCodeValue, setQrCodeValue] = useState(`
+    //     Registration Number: DHAKA METRO-THA-13-3000
+    //     TAX Token Period: 08-FEB-2017 :: 08-FEB-2018
+    //     Tax Token Number: 172957695
+    // `)
 
     const pageSize = (size = 'a4') => {
         if (size == 'a4') {
@@ -23,9 +29,44 @@ const TaxTokenPrintSectionWithoutImage = ({ t }) => {
     }
 
     const legalSize = pageSize('a4')
-    
+
+    const navigate = useNavigate();
+    const currentLanguage = i18n.language;
+    const [vehicleDetail, setVehicleDetail] = useState({});
+    const { activeStatusList, loading, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
+
+    useEffect(() => {
+        if (serviceRequestId) {
+            getVehicleInfoById(serviceRequestId);
+        } else {
+            navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
+        }
+    }, [serviceRequestId]);
+
+    const [barCodeValue, setBarCodeValue] = useState('')
+    const [qrCodeValue, setQrCodeValue] = useState('')
+
+    const getVehicleInfoById = async (serviceRequestId) => {
+
+        try {
+            const { data } = await RestApi.get(`api/v1/applicant/vehicle/get-tax-token-certificate-details/${serviceRequestId}`)
+            console.log('data', data)
+            setVehicleDetail(data);
+
+            setQrCodeValue(`
+                Registration Number: ${data?.vehicleRegistration?.fullRegNumber}
+                Owner Name: ${data?.vehicleOwner?.name}
+                TAX Token Period: ${helpers.dDate(data?.validStartDate)} :: ${helpers.dDate(data?.validEndDate)}
+                Tax Token Number: 172957695
+            `)
+
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
     return (
-        <div className="max-w-[800px] mx-auto p-6 border-2 border-gray-400 bg-white rounded-lg shadow-md english-font bangla-font">
+        <div className="max-w-[800px] mx-auto p-6 border-1  bg-white rounded-lg english-font bangla-font">
             {/* Header Section */}
             <div className="row border-b-2 pb-4 mb-2">
                 <div className="col-md-4 text-right">
@@ -45,67 +86,93 @@ const TaxTokenPrintSectionWithoutImage = ({ t }) => {
 
             <div className="row border-b-2 pb-2 mb-2">
                 <div className="col-md-12">
-                    <p><span className="font-semibold">TAX Token Period:</span> 08-FEB-2017 :: 08-FEB-2018</p>
+                    <p><span className="font-semibold">TAX Token Period:</span> {helpers.dDate(vehicleDetail?.validStartDate)} :: {helpers.dDate(vehicleDetail?.validEndDate)}</p>
                 </div>
             </div>
 
             {/* Document Content */}
             <div className="grid grid-cols-2 gap-x-6">
                 <div>
-                    <p className="font-semibold">Registration Number:</p>
-                    <p>DHAKA METRO-THA-13-3000</p>
-
-                    <p className="font-semibold mt-2">Registration Date:</p>
-                    <p>08-FEB-15</p>
-
-                    <p className="font-semibold mt-2">Tax Token Number:</p>
-                    <p>172957695</p>
-
-                    <p className="font-semibold mt-2">Transaction No:</p>
+                    {/* <p className="font-semibold mt-2">Transaction No:</p>
                     <p>1702121214356</p>
 
                     <p className="font-semibold mt-2">eTracking No:</p>
                     <p>170212124286</p>
 
                     <p className="font-semibold mt-2">Issuing Bank Name:</p>
-                    <p>BRAC BANK LTD</p>
+                    <p>BRAC BANK LTD</p> */}
                 </div>
 
                 <div>
-                    <p className="font-semibold">Issuing Branch/Booth Name:</p>
+                    {/* <p className="font-semibold">Issuing Branch/Booth Name:</p>
                     <p>MIRPUR BRTA BOOTH</p>
 
                     <p className="font-semibold mt-2">Issuing Teller Name:</p>
-                    <p>TELLER-17</p>
-
-                    <p className="font-semibold mt-2">Chassis Number:</p>
-                    <p>LETEDCD12CHP20080</p>
-
-                    <p className="font-semibold mt-2">Engine Number:</p>
-                    <p>JX493Z0C4CA3045566</p>
-
-                    <p className="font-semibold mt-2">Seats / Laden Wt. (Kg):</p>
-                    <p>5 / 2495 (Kg)</p>
-
-                    <p className="font-semibold mt-2">Owner Name:</p>
-                    <p>CHAIRMAN BRTA</p>
+                    <p>TELLER-17</p> */}
                 </div>
             </div>
 
             <div className="mt-4">
                 <div className="grid grid-cols-2 gap-x-6">
                     <div>
-                        <p className="font-semibold">Father/Husband Name:</p>
-                        <p>UNDEFINED</p>
+                        <p className="font-semibold">Registration Number:</p>
+                        <p>{vehicleDetail?.vehicleRegistration?.fullRegNumber}</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold mt-2">Registration Date:</p>
+                        <p>{vehicleDetail?.vehicleRegistration?.createdAt ? helpers.dDate(vehicleDetail?.vehicleRegistration?.createdAt) : ''}</p>
 
+                    </div>
+                    <div>
+                        <p className="font-semibold mt-2">Tax Token Number:</p>
+                        <p>{vehicleDetail?.taxTokenCertificateNumber}</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold mt-2">Challan No:</p>
+                        <p>{vehicleDetail?.challanNo}</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold mt-2">Payment ID:</p>
+                        <p>{vehicleDetail?.paymentId}</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold mt-2">Paid Amount:</p>
+                        <p>{vehicleDetail?.paidAmount}</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold mt-2">Chassis Number:</p>
+                        <p>{vehicleDetail?.vehicleInfo?.chassisNumber}</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold mt-2">Engine Number:</p>
+                        <p>{vehicleDetail?.vehicleInfo?.engineNumber}</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold mt-2">Seats / Laden Wt. (Kg):</p>
+                        <p>{vehicleDetail?.vehicleInfo?.totalSeat} / {vehicleDetail?.vehicleInfo?.maxLadenWeight} (Kg)</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold mt-2">Owner Name:</p>
+                        <p>{vehicleDetail?.vehicleOwner?.name}</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold">Father/Husband Name:</p>
+                        <p>{vehicleDetail?.vehicleOwner?.fatherOrHusbandName}</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold">Address:</p>
+                        <p>{vehicleDetail?.vehicleOwner?.addressInfo?.fullAddressEn}</p>
+                    </div>
+                    <div>
+                        {/* 
                         <p className="font-semibold mt-2">Previous Expiry Date:</p>
                         <p>08-FEB-2017</p>
 
                         <p className="font-semibold mt-2">Issue Date:</p>
-                        <p>12-FEB-2017</p>
+                        <p>12-FEB-2017</p> */}
                     </div>
 
-                    <div>
+                    {/* <div>
                         <p className="font-semibold mt-2">Principal Amount (Tk):</p>
                         <p>4,995.00</p>
 
@@ -114,7 +181,7 @@ const TaxTokenPrintSectionWithoutImage = ({ t }) => {
 
                         <p className="font-semibold mt-2">Total Amount Paid (Tk):</p>
                         <p>5,022.00</p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -167,7 +234,8 @@ const MyDocument = () => (
     </Document>
 );
 
-const TaxTokenPage = ({ t }) => {
+const TaxTokenPage = ({ serviceRequestId }) => {
+    const { t } = useTranslation();
     const handlePrint = () => {
         printJS({
             printable: 'printable-section',
@@ -196,10 +264,10 @@ const TaxTokenPage = ({ t }) => {
             </div>
 
             <div id="printable-section">
-                <TaxTokenPrintSectionWithoutImage t={t} />
+                <TaxTokenPrintSectionWithoutImage serviceRequestId={serviceRequestId} />
             </div>
         </div>
     )
 }
 
-export default withNamespaces()(TaxTokenPage)
+export default (TaxTokenPage)

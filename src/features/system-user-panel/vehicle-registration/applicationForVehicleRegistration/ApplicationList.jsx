@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactSelect from '@/components/ui/ReactSelect';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
 import Loading from '@/components/common/Loading';
@@ -16,7 +16,8 @@ import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPag
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { useNavigate } from 'react-router-dom';
 
-const UserList = ({ t }) => {
+const UserList = () => {
+const { t } = useTranslation();
 
     const navigate = useNavigate()
 
@@ -514,4 +515,4 @@ const UserList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(UserList)
+export default (UserList)

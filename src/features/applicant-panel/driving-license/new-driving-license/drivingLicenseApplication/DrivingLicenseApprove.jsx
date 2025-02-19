@@ -1,4 +1,4 @@
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Loading from '@/components/common/Loading';
@@ -12,7 +12,8 @@ import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
 import helpers, { toaster } from '@/utils/helpers.js';
 
-const DrivingLicenseApprove = ({ t, editData }) => {
+const DrivingLicenseApprove = ({ editData }) => {
+const { t } = useTranslation();
 
     const dispatch = useDispatch();
 
@@ -65,6 +66,7 @@ const DrivingLicenseApprove = ({ t, editData }) => {
                 enableReinitialize={true}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
+const { t } = useTranslation();
                     // console.log('Form Submitted', values);
                     // You can reset the form here as well after submission
                     // handleReset(resetForm);
@@ -120,4 +122,4 @@ const DrivingLicenseApprove = ({ t, editData }) => {
 
 }
 
-export default withNamespaces()(DrivingLicenseApprove);
+export default (DrivingLicenseApprove);

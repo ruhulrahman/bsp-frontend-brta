@@ -1,10 +1,11 @@
 import logo from '@/assets/images/logo.png';
 import i18n from '@/i18n';
 import React from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
-const TopNavbar = ({ t }) => {
+const TopNavbar = () => {
+const { t } = useTranslation();
 
     const setLanguage = (language) => {
         localStorage.setItem('preferredLanguage', language);
@@ -80,4 +81,4 @@ const TopNavbar = ({ t }) => {
     )
 }
 
-export default withNamespaces()(TopNavbar)
+export default (TopNavbar)

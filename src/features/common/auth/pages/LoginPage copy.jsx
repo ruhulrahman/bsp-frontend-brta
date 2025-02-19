@@ -5,14 +5,15 @@ import helpers, { toaster } from '@/utils/helpers.js';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 // import { ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setToken, setTokenInfo, setUserPermissions } from '../authSlice';
 
-const LoginPage = ({ t }) => {
+const LoginPage = () => {
+const { t } = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
@@ -117,4 +118,4 @@ const LoginPage = ({ t }) => {
     )
 }
 
-export default withNamespaces()(LoginPage)
+export default (LoginPage)

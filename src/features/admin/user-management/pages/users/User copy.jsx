@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 // import Badge from 'react-bootstrap/Badge';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Spinner from 'react-bootstrap/Spinner';
 // import Pagination from 'react-bootstrap/Pagination'
 import AddNew from './AddNew';
 import Loading from '@/components/common/Loading';
 
-const User = ({ t }) => {
+const User = () => {
+const { t } = useTranslation();
 
     const [loading, setLoading] = useState(true)
 
@@ -385,4 +386,4 @@ const User = ({ t }) => {
     )
 }
 
-export default withNamespaces()(User)
+export default (User)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
@@ -16,8 +16,10 @@ import RevenueCheck from "./RevenueCheck.jsx"
 import VehicleApprove from "./VehicleApprove.jsx"
 import useCommonFunctions from '@/hooks/useCommonFunctions';
 import helpers, { toaster } from '@/utils/helpers.js';
+import ForwardHeader from './ForwardHeader.jsx';
 
-const ApplicationForwardInspector = ({ t, show, onHide, onSave, editData }) => {
+const ApplicationForwardInspector = ({ show = false, onHide = () => { }, onSave = () => { }, editData = null }) => {
+    const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { hasPermission } = useCommonFunctions();
@@ -49,6 +51,10 @@ const ApplicationForwardInspector = ({ t, show, onHide, onSave, editData }) => {
         console.log(values);
     }
 
+    const reloadList = (serviceRequestId) => {
+        onSave(serviceRequestId)
+    }
+
     return (
         <>
             {editData &&
@@ -57,34 +63,28 @@ const ApplicationForwardInspector = ({ t, show, onHide, onSave, editData }) => {
                         <Modal.Title>{t('applicationForward')}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="row p-3">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <h1 className='font-semibold mb-3'>Service Request No: {editData.serviceRequestNo}</h1>
-                                            <h1 className='font-semibold mb-3'>Chassis No: {editData.chassisNumber}</h1>
-                                            <h1 className='font-semibold mb-3'>Engine No: {editData.engineNumber}</h1>
-                                            <h1 className='font-semibold mb-3'>Vehicle Class: {editData.vehicleClassName}</h1>
+                        <ForwardHeader editData={editData}/>
 
-                                        </div>
-                                        <div className="col-md-6">
-                                            <h1 className='font-semibold mb-3'>CC: {editData.ccOrKw}</h1>
-                                            <h1 className='font-semibold mb-3'>Manufacturing Year: {editData.manufacturingYear}</h1>
-                                            <h1 className='font-semibold mb-3'>Application Date: {helpers.dDate(editData.applicationDate)}</h1>
-                                            <h1 className='font-semibold mb-3'>Application Status: {editData.applicationStatusName}</h1>
+                        {/* <div className="row">
+                            <div className="col-md-3"></div>
+                            <div className="col-md-6">
+                                <VehicleInspection editData={editData}></VehicleInspection>
+                            </div>
+                            <div className="col-md-3"></div>
+                        </div> */}
+
+                        <div className="row px-1 mt-[24px]">
+                            <div className="col-sm-12 col-md-6 col-lg-6">
+                                <div className="card px-[24px] border-none pb-[24px]">
+                                    <h3 className="text-xl text-green-600 mb-6 pt-[24px]">{t('vehicleInspection')}</h3>
+                                    <div className="row">
+                                        <div className="col-sm-12">
+                                            <VehicleInspection editData={editData} reloadList={reloadList}></VehicleInspection>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-md-3"></div>
-                            <div className="col-md-6">
-                                <VehicleInspection editData={editData}></VehicleInspection>
-                            </div>
-                            <div className="col-md-3"></div>                            
-                        </div>                       
 
                     </Modal.Body>
                     <Modal.Footer>
@@ -96,4 +96,4 @@ const ApplicationForwardInspector = ({ t, show, onHide, onSave, editData }) => {
     );
 };
 
-export default withNamespaces()(ApplicationForwardInspector);
+export default (ApplicationForwardInspector);

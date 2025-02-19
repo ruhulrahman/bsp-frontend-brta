@@ -1,4 +1,4 @@
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Loading from '@/components/common/Loading';
@@ -13,7 +13,8 @@ import Button from 'react-bootstrap/Button';
 import helpers, { toaster } from '@/utils/helpers.js';
 import useCommonFunctions from '@/hooks/useCommonFunctions';
 
-const VehicleInspection = ({ t, editData }) => {
+const VehicleInspection = ({ editData, reloadList = () => { } }) => {
+    const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { hasPermission } = useCommonFunctions();
@@ -35,34 +36,37 @@ const VehicleInspection = ({ t, editData }) => {
 
     const [isViewable, setIsViewable] = useState(false)
 
-
-    // useEffect(() => {
-    //     // setIsViewable(true);
-    //     console.log('editData', editData);
-    //     const newObject = {...editData}
-    //     setInitialValues(newObject);
-
-    //     if (editData && editData?.inspectorId) {
-    //         setIsViewable(true)
-    //     }
-    // }, [editData.id])
-
     useEffect(() => {
-        // setIsViewable(true);
         if (editData) {
-            const updatedData = {
+            setInitialValues((prevValues) => ({
+                ...prevValues,
                 ...editData,
-            }
-            updatedData.forwardDateForInspection = updatedData.forwardDateForInspection ? updatedData.forwardDateForInspection.split("T")[0] : ""
-            updatedData.inspectionDate = updatedData.inspectionDate ? updatedData.inspectionDate.split("T")[0] : ""
-            setInitialValues(updatedData);
+                forwardDateForInspection: editData.forwardDateForInspection ? editData.forwardDateForInspection.split("T")[0] : "",
+                inspectionDate: editData.inspectionDate ? editData.inspectionDate.split("T")[0] : ""
+            }));
         }
-        if (editData && editData?.inspectorId) {
-            setIsViewable(true)
+        if (editData?.inspectorId) {
+            setIsViewable(true);
         }
     }, [editData]);
 
-    const submitData = async (values, setSubmitting, resetForm) => {
+    const [userList, setUserList] = useState([]);
+
+    useEffect(() => {
+        getOrganizationUsers();
+    }, [])
+
+    const getOrganizationUsers = async () => {
+
+        try {
+            const { data } = await RestApi.get(`api/v1/admin/user-management/user/get-organization-users`)
+            setUserList(data);
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
+    const submitData = async (values, setSubmitting, setValues) => {
         const params = Object.assign({}, values)
         params.forwardDateForInspection = params.forwardDateForInspection ? new Date(params.forwardDateForInspection) : ''
         params.inspectionDate = params.inspectionDate ? new Date(params.inspectionDate) : ''
@@ -71,12 +75,27 @@ const VehicleInspection = ({ t, editData }) => {
         dispatch(setLoading(true));
         try {
             const { data } = await RestApi.post(postUrl, params)
+
+            const { inspectorId, forwardDateForInspection } = data;
+
+            setValues({
+                ...values,
+                inspectorId,
+                forwardDateForInspection,
+            });
+
+            reloadList(values.serviceRequestId)
+
             toaster(hasPermission('vehicle_application_approval') ? 'Application has been forwarded to inspector successfully' : "Vehicle Inspection Report submitted successfully");
         } catch (error) {
             console.log('error', error)
         } finally {
             dispatch(setLoading(false));
         }
+    }
+
+    const disableField = () => {
+        return !hasPermission('vehicle_inspection_submission') || editData && editData.inspectionStatusId
     }
 
     return (
@@ -87,16 +106,13 @@ const VehicleInspection = ({ t, editData }) => {
                 initialValues={initialValues}
                 enableReinitialize={true}
                 validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting, resetForm }) => {
-                    // console.log('Form Submitted', values);
-                    // You can reset the form here as well after submission
-                    // handleReset(resetForm);
-                    submitData(values, setSubmitting, resetForm);
+                onSubmit={(values, { setSubmitting, setValues }) => {
+                    submitData(values, setSubmitting, setValues);
                 }}
             >
-                {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => (
+                {({ values, isSubmitting, handleChange, setFieldValue }) => (
                     <FormikForm>
-                        <Loading loading={loading} loadingText={t('submitting')} />                        
+                        <Loading loading={loading} loadingText={t('submitting')} />
                         <div className="row mt-3">
                             <div className="col-md-4">
                                 <Form.Label>{t('forwardTo')} <span className='text-red-500'>*</span></Form.Label>
@@ -109,7 +125,7 @@ const VehicleInspection = ({ t, editData }) => {
                                         id="inspectorId"
                                         name="inspectorId"
                                         component={ReactSelect}
-                                        options={dropdowns.userList}
+                                        options={userList}
                                         placeholder={t('dropdownDefaultSelect')}
                                         value={values.inspectorId}
                                         onChange={(option) => {
@@ -122,7 +138,17 @@ const VehicleInspection = ({ t, editData }) => {
                         </div>
                         {isViewable && (
                             <>
-
+                                <div className="row">
+                                    <div className="col-md-4">
+                                        <Form.Label>{t('forwardDate')} <span className='text-red-500'>*</span></Form.Label>
+                                    </div>
+                                    <div className="col-md-8">
+                                        <Form.Group className="mb-1" controlId="forwardDateForInspection">
+                                            <Field type="date" name="forwardDateForInspection" className="form-control" placeholder={t('forwardDateForInspection')} disabled={editData && editData.forwardDateForInspection} />
+                                            <ErrorMessage name="forwardDateForInspection" component="div" className="text-danger" />
+                                        </Form.Group>
+                                    </div>
+                                </div>
                                 <div className="row">
                                     <div className="col-md-4">
                                         <Form.Label>{t('inspectionStatus')} <span className='text-red-500'>*</span></Form.Label>
@@ -131,6 +157,7 @@ const VehicleInspection = ({ t, editData }) => {
                                         <Form.Group className="mb-1" controlId="inspectionStatusId">
                                             {/* <Form.Label>{t('inspectorId')} <span className='text-red-500'>*</span></Form.Label> */}
                                             <Field
+                                                disabled={disableField()}
                                                 id="inspectionStatusId"
                                                 name="inspectionStatusId"
                                                 component={ReactSelect}
@@ -152,20 +179,8 @@ const VehicleInspection = ({ t, editData }) => {
                                     </div>
                                     <div className="col-md-8">
                                         <Form.Group className="mb-1" controlId="inspectionRemarks">
-                                            <Field type="text" name="inspectionRemarks" className="form-control" placeholder={t('remarks')} />
+                                            <Field disabled={disableField()} type="text" name="inspectionRemarks" className="form-control" placeholder={t('remarks')} />
                                             <ErrorMessage name="inspectionRemarks" component="div" className="text-danger" />
-                                        </Form.Group>
-                                    </div>
-                                </div>
-
-                                <div className="row">
-                                    <div className="col-md-4">
-                                        <Form.Label>{t('forwardDate')} <span className='text-red-500'>*</span></Form.Label>
-                                    </div>
-                                    <div className="col-md-8">
-                                        <Form.Group className="mb-1" controlId="forwardDateForInspection">
-                                            <Field type="date" name="forwardDateForInspection" className="form-control" placeholder={t('forwardDateForInspection')} disabled={editData && editData.forwardDateForInspection} />
-                                            <ErrorMessage name="forwardDateForInspection" component="div" className="text-danger" />
                                         </Form.Group>
                                     </div>
                                 </div>
@@ -176,7 +191,7 @@ const VehicleInspection = ({ t, editData }) => {
                                     </div>
                                     <div className="col-md-8">
                                         <Form.Group className="mb-1" controlId="inspectionDate">
-                                            <Field type="date" name="inspectionDate" className="form-control" placeholder={t('inspectionDate')} />
+                                            <Field disabled={disableField()} type="date" name="inspectionDate" className="form-control" placeholder={t('inspectionDate')} />
                                             <ErrorMessage name="inspectionDate" component="div" className="text-danger" />
                                         </Form.Group>
                                     </div>
@@ -184,7 +199,7 @@ const VehicleInspection = ({ t, editData }) => {
                             </>
                         )}
 
-                        {editData && !editData.inspectionStatusId && (
+                        {((hasPermission('vehicle_application_approval') && !editData.inspectorId) || (hasPermission('vehicle_inspection_submission')  && !editData.inspectionStatusId)) && (
                             <div className="row mt-1">
                                 <div className="col-sm-12 text-right">
                                     <button type='reset' className='btn btn-success btn-rounded btn-xs mr-1'>{t('reset')}</button>
@@ -192,8 +207,6 @@ const VehicleInspection = ({ t, editData }) => {
                                 </div>
                             </div>
                         )}
-
-
 
                     </FormikForm>
                 )}
@@ -205,4 +218,4 @@ const VehicleInspection = ({ t, editData }) => {
 
 }
 
-export default withNamespaces()(VehicleInspection);
+export default (VehicleInspection);

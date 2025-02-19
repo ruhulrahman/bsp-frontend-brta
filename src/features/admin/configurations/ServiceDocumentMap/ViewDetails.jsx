@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { toBengaliNumber } from 'bengali-number';
 
-const ViewDetails = ({ t, show, onHide, onSave, viewData }) => {
+const ViewDetails = ({ show, onHide, onSave, viewData }) => {
+const { t } = useTranslation();
 
     const { activeStatusList, loading, listData, dropdowns } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
@@ -63,4 +64,4 @@ const ViewDetails = ({ t, show, onHide, onSave, viewData }) => {
     );
 };
 
-export default withNamespaces()(ViewDetails);
+export default (ViewDetails);

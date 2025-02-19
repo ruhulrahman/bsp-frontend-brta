@@ -4,7 +4,7 @@ import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'for
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
@@ -16,7 +16,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const VehicleRegistrationPage2 = ({ t }) => {
+const VehicleRegistrationPage2 = () => {
+const { t } = useTranslation();
 
     let { serviceRequestId, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
@@ -265,7 +266,6 @@ const VehicleRegistrationPage2 = ({ t }) => {
                         }}
                     >
                         {({ values, resetForm, isSubmitting, handleChange, handleBlur, handleSubmit, setFieldValue }) => {
-
 
                             useEffect(() => {
                                 if (values.vehicleTypeId) {
@@ -793,4 +793,4 @@ const VehicleRegistrationPage2 = ({ t }) => {
     );
 };
 
-export default withNamespaces()(VehicleRegistrationPage2);
+export default (VehicleRegistrationPage2);

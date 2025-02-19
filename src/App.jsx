@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg'
 // import './App.css'
 import { BrowserRouter as Router, HashRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 
 function App() {
   const preferredLanguage = localStorage.getItem('preferredLanguage');

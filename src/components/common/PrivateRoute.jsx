@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 // import { useAuth } from '../../hooks/useAuth';
 
 const PrivateRoute = ({ element }) => {
+const { t } = useTranslation();
   // const { isAuthenticated } = useAuth();
   const isAuthenticated = true
 

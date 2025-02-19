@@ -3,9 +3,10 @@ import { Button, Form } from 'react-bootstrap';
 // import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 
-const AddNew = ({ t, ...props }) => {
+const AddNew = ({ ...props }) => {
+const { t } = useTranslation();
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -38,4 +39,4 @@ const AddNew = ({ t, ...props }) => {
     )
 }
 
-export default withNamespaces()(AddNew)
+export default (AddNew)

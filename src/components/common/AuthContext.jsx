@@ -2,10 +2,12 @@ import React, { createContext, useState, useEffect } from 'react';
 import RestApi from '@/utils/RestApi';
 import { useDispatch } from 'react-redux';
 import { setCommonDropdowns as setStoreCommonDropdowns } from '@/store/commonSlice';
+import { withTranslation, useTranslation } from 'react-i18next';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+const { t } = useTranslation();
   const [commonDropdowns, setCommonDropdowns] = useState(null);
   const [loadingContext, setLoadingContext] = useState(true);
   const dispatch = useDispatch()

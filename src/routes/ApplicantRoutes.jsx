@@ -12,7 +12,7 @@ import VehicleRegistrationPage3 from '../features/applicant-panel/vehicle-regist
 import VehicleRegistrationPage4 from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationPage4.jsx';
 import PaymentForVehicleInspection from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/PaymentForVehicleInspection.jsx';
 import VehileRegistrationRelatedReports from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehileRegistrationRelatedReports.jsx';
-import VehicleRegistrationSecondPayment from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/VehicleRegistrationSecondPayment.jsx';
+import PaymentForVehicleRegistration from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/PaymentForVehicleRegistration.jsx';
 import PaymentSuccessForVehicleRegistration from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/PaymentSuccess.jsx';
 // import PaymentSuccess from '../features/applicant-panel/vehicle-registration/applicationForVehicleRegistration/PaymentSuccess.jsx';
 
@@ -39,7 +39,7 @@ const applicantRoutes = [
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-page4/:serviceRequestId?', element: <VehicleRegistrationPage4 /> },
     // { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment/:serviceRequestId?', element: <PaymentForVehicleInspection /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-first-payment/:serviceRequestId/:serviceRequestNo?', element: <PaymentForVehicleInspection /> },
-    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/:serviceRequestId/:serviceRequestNo?', element: <VehicleRegistrationSecondPayment /> },
+    { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-registration-second-payment/:serviceRequestId/:serviceRequestNo?', element: <PaymentForVehicleRegistration /> },
     { path: 'vehicle-registration/application-for-vehicle-registration/reports/:serviceRequestId?', element: <VehileRegistrationRelatedReports /> },
     // { path: 'vehicle-registration/payment-success-page/paymentStep/:serviceRequestNo?', element: <PaymentSuccessForVehicleRegistration /> },
 
@@ -47,9 +47,9 @@ const applicantRoutes = [
     { path: 'driving-license/new-driving-license/application-pre-requisites/:serviceRequestNo?', element: <DrivingLicenseApplicationPreRequisites /> },
     { path: 'driving-license/new-driving-license/application-page1/:serviceRequestNo?', element: <DrivingLicenseApplicationPage1 /> },
     { path: 'driving-license/new-driving-license/application-page2/:serviceRequestNo?', element: <DrivingLicenseApplicationPage2 /> },
-    { path: 'driving-license/new-driving-license/payment-for-learner/:serviceRequestNo?', element: <PaymentForLearnerDrivingLicense /> },
+    { path: 'driving-license/new-driving-license/payment-for-learner/:serviceRequestId/:serviceRequestNo?', element: <PaymentForLearnerDrivingLicense /> },
     { path: 'driving-license/new-driving-license/application-for-driving-license', element: <DrivingLicenseApplicationList />},
-    { path: 'driving-license/new-driving-license/payment-for-smart-card-driving-license-issue/:serviceRequestNo?', element: <PaymentForDLSmartCard /> },
+    { path: 'driving-license/new-driving-license/payment-for-smart-card-driving-license-issue/:serviceRequestId/:serviceRequestNo?', element: <PaymentForDLSmartCard /> },
     { path: 'driving-license/new-driving-license/reports/:serviceRequestNo?', element: <DrivingLicenseRelatedReports /> },
     { path: 'payment-success-page', element: <PaymentSuccessPage /> },
   ];

@@ -8,13 +8,14 @@ import RestApi from '@/utils/RestApi';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 
-const AddOrUpdateEmailTemplate = ({ t }) => {
+const AddOrUpdateEmailTemplate = () => {
+const { t } = useTranslation();
 
     const { id } = useParams()
     const navigate = useNavigate();
@@ -222,4 +223,4 @@ const AddOrUpdateEmailTemplate = ({ t }) => {
     );
 };
 
-export default withNamespaces()(AddOrUpdateEmailTemplate);
+export default (AddOrUpdateEmailTemplate);

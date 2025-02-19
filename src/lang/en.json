@@ -357,6 +357,14 @@
   "drivingLicense": "Driving License",
   "newDrivingLicenseApplication": "New Driving License Application",
   "pleaseSelectOne": "Please Select One",
+  "organizationList": "Organization List",
+  "parentOrganization": "Parent Organization",
+  "officeType": "Office Type",
+  "selectOfficeType": "Select Office Type",
+  "pleaseSelectOrganization": "Please Select Organization",
+  "pleaseSelectDivision": "Please Select Division",
+  "pleaseSelectDistrict": "Please Select District",
+  "pleaseSelectThana": "Please Select Thana",
   "drivingLicenseApplicationList": "Driving License Application List",
   "drivingLicenseApplication": "Driving License Application",
   "ApplicationList": "Application List",
@@ -449,5 +457,6 @@
   "selectApplicableForMultipleVehicleOwner":"Select Applicable For Multiple Vehicle Owner",
   "selectOfficeRole":"Select Office Role",
   "switchOfficeRole":"Switch Office Role",
+  "parentDesignation":"Parent Designation",
   "selectDocument":"Select Document"
 }

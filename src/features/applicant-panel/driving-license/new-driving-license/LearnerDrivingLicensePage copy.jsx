@@ -1,13 +1,14 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
 import React from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
 import manPhoto from '@/assets/images/man.png';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 
-const LearnerPrintSectionWithoutImage = ({ t }) => {
+const LearnerPrintSectionWithoutImage = () => {
+const { t } = useTranslation();
     return (
         // <div className="mx-auto my-4 p-4 border bg-white" style={{ width: '210mm', height: '297mm' }}>
         <div style={{ width: '210mm', height: '297mm' }} className="my-4 p-4 border-2 border-gray-400 bg-white rounded-lg shadow-md english-font bangla-font">
@@ -178,7 +179,8 @@ const MyDocument = () => (
     </Document>
 );
 
-const LearnerDrivingLicensePage = ({ t }) => {
+const LearnerDrivingLicensePage = () => {
+const { t } = useTranslation();
     const handlePrint = () => {
         printJS({
             printable: 'printable-learner-license',
@@ -213,4 +215,4 @@ const LearnerDrivingLicensePage = ({ t }) => {
     )
 }
 
-export default withNamespaces()(LearnerDrivingLicensePage)
+export default (LearnerDrivingLicensePage)

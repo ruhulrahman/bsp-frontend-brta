@@ -2,14 +2,15 @@ import Form from 'react-bootstrap/Form';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import React, { useEffect, useState } from 'react'
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Loading from '@/components/common/Loading';
 import RestApi from '@/utils/RestApi';
 import helper, { toaster } from '@/utils/helpers.js';
 import i18n from '@/i18n';
 import { useSelector } from 'react-redux';
 
-const ChangePassword = ({ t }) => {
+const ChangePassword = () => {
+const { t } = useTranslation();
 
   const currentLanguage = i18n.language;
 
@@ -98,6 +99,7 @@ const ChangePassword = ({ t }) => {
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={(values, {setErrors, resetForm, setSubmitting }) => {
+const { t } = useTranslation();
                 onSubmit(values, setErrors, resetForm, setSubmitting);
               }}
             >
@@ -135,4 +137,4 @@ const ChangePassword = ({ t }) => {
   )
 }
 
-export default withNamespaces()(ChangePassword)
+export default (ChangePassword)

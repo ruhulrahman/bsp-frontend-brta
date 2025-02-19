@@ -6,6 +6,7 @@ export default function Checkbox({ id, name, className }) {
       <Field
         name={name}
         render={({ field, form }) => {
+const { t } = useTranslation();
           return (
             <input
               type="checkbox"

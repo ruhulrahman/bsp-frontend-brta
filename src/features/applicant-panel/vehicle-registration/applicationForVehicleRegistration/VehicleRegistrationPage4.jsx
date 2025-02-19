@@ -4,7 +4,7 @@ import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'for
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
@@ -18,7 +18,8 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 
-const VehicleRegistrationPage4 = ({ t }) => {
+const VehicleRegistrationPage4 = () => {
+const { t } = useTranslation();
 
     let { serviceRequestId, isViewable } = useParams()
     const [serviceRequestNo, setServiceRequestNo] = useState(null);
@@ -377,8 +378,6 @@ const VehicleRegistrationPage4 = ({ t }) => {
                     >
                         {({ values, resetForm, isSubmitting, handleChange, handleBlur, handleSubmit, setFieldValue }) => {
 
-
-
                             const addNewRow = async (documentTypeId) => {
 
                                 const documentIndex = documentList.findIndex(item => item.documentTypeId === documentTypeId);
@@ -659,4 +658,4 @@ const VehicleRegistrationPage4 = ({ t }) => {
     );
 };
 
-export default withNamespaces()(VehicleRegistrationPage4);
+export default (VehicleRegistrationPage4);

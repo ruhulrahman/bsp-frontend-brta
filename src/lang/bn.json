@@ -356,6 +356,14 @@
   "drivingLicense": "ড্রাইভিং লাইসেন্স",
   "newDrivingLicenseApplication": "নতুন ড্রাইভিং লাইসেন্সের আবেদন",
   "pleaseSelectOne": "একটি নির্বাচন করুন",
+  "organizationList": "অধিদপ্তরের তালিকা",
+  "parentOrganization": "অভিভাবক অধিদপ্তর",
+  "officeType": "অফিস টাইপ",
+  "selectOfficeType": "অফিস টাইপ নির্বাচন করুন",
+  "pleaseSelectOrganization": "অধিদপ্তর নির্বাচন করুন",
+  "pleaseSelectDivision": "বিভাগ নির্বাচন করুন",
+  "pleaseSelectDistrict": "জেলা নির্বাচন করুন",
+  "pleaseSelectThana": "থানা নির্বাচন করুন",
   "drivingLicenseApplicationList": "ড্রাইভিং লাইসেন্সের আবেদন তালিকা",
   "drivingLicenseApplication": "ড্রাইভিং লাইসেন্সের আবেদন",
   "ApplicationList": "আবেদন তালিকা",
@@ -447,5 +455,6 @@
   "selectApplicableForMultipleVehicleOwner":"একাধিক যানবাহনের মালিকের জন্য প্রযোজ্য নির্বাচন করুন",
   "selectOfficeRole":"অফিস রোল নির্বাচন করুন",
   "switchOfficeRole":"অফিস রোল পরিবর্তন",
+  "parentDesignation":"Parent Designation",
   "selectDocument":"নথি নির্বাচন করুন"
 }

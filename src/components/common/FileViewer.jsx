@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
@@ -15,7 +15,8 @@ import useCommonFunctions from '@/hooks/useCommonFunctions';
 import helpers, { toaster } from '@/utils/helpers.js';
 
 
-const FileViewer = ({ t, show, onHide, data }) => {
+const FileViewer = ({ show, onHide, data }) => {
+const { t } = useTranslation();
 
     console.log('show', show)
     console.log('data', data)
@@ -74,4 +75,4 @@ const FileViewer = ({ t, show, onHide, data }) => {
     );
 };
 
-export default withNamespaces()(FileViewer);
+export default (FileViewer);

@@ -1,11 +1,12 @@
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import ApplicationForward from './ApplicationForward';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
-const ApplicationForwardList = ({ t }) => {
+const ApplicationForwardList = () => {
+const { t } = useTranslation();
 
     
 
@@ -58,4 +59,4 @@ const ApplicationForwardList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(ApplicationForwardList);
+export default (ApplicationForwardList);

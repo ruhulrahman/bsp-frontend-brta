@@ -1,7 +1,7 @@
 import Checkbox from '@/components/ui/Checkbox';
 import ReactSelect from '@/components/ui/ReactSelect';
 import i18n from '@/i18n';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'formik';
@@ -15,7 +15,8 @@ import manPhoto from '@/assets/images/man.png';
 import profileBackground from '@/assets/images/profile-background.png';
 import helpers, { toaster } from '@/utils/helpers.js';
 
-const ApplicantProfile = ({ t }) => {
+const ApplicantProfile = () => {
+const { t } = useTranslation();
 
   const dispatch = useDispatch();
   const { activeStatusList, loading, listData, dropdowns } = useSelector((state) => state.common)
@@ -197,6 +198,7 @@ const ApplicantProfile = ({ t }) => {
         enableReinitialize={true}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting, resetForm, setErrors }) => {
+const { t } = useTranslation();
           // console.log('Form Submitted', values);
           // You can reset the form here as well after submission
           // handleReset(resetForm);
@@ -237,7 +239,7 @@ const ApplicantProfile = ({ t }) => {
 
           return (
             <FormikForm>
-              <Loading loading={loading} loadingText={t('submitting')} />
+              <Loading loading={loading} loadingText={t('loading')} />
 
               <div className="row">
                 <div className="col-md-12">
@@ -561,7 +563,7 @@ const ApplicantProfile = ({ t }) => {
 
               </div>
 
-              <Loading loading={loading} loadingText={t('submitting')} />
+              <Loading loading={loading} />
               <div className="row mt-[24px]">
                 <div className="col-md-12">
                   <div className="card px-[24px] pb-[16px] border-none">
@@ -647,4 +649,4 @@ const ApplicantProfile = ({ t }) => {
   );
 };
 
-export default withNamespaces()(ApplicantProfile);
+export default (ApplicantProfile);

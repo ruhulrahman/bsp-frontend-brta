@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import i18n from '@/i18n';
+import { withTranslation, useTranslation } from 'react-i18next';
 
 const ReactSelect = ({
   isMulti = false,
@@ -14,6 +15,7 @@ const ReactSelect = ({
   styles,
   disabled = false,
 }) => {
+const { t } = useTranslation();
 
   const customStyles = {
     control: (provided, state) => ({

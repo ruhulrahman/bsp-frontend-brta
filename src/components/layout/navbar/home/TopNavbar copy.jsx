@@ -1,11 +1,12 @@
 import logo from '@/assets/images/logo.png';
 import i18n from '@/i18n';
 import React from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
-const TopNavbar = ({ t }) => {
+const TopNavbar = () => {
+const { t } = useTranslation();
 
     const { authUser } = useSelector((state) => state.auth) || {};
 
@@ -88,4 +89,4 @@ const TopNavbar = ({ t }) => {
     )
 }
 
-export default withNamespaces()(TopNavbar)
+export default (TopNavbar)

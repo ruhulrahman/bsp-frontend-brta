@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactSelect from '@/components/ui/ReactSelect';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
 import Loading from '@/components/common/Loading';
@@ -18,10 +18,12 @@ import { useNavigate } from 'react-router-dom';
 import useCommonFunctions from '@/hooks/useCommonFunctions';
 import DrivingLicenseApplicationListSearchComponent from '@/features/common/list/DrivingLicenseApplicationListSearchComponent';
 import DLApprovalModal from "./DLApprovalModal";
+import CustomPagination from '@/components/common/CustomPagination';
 // import DownloadReport from '@/components/common/DownloadReport';
 // import ReportViewer from '@/components/common/ReportViewer';
 
-const DLRegistrationApprovalList = ({ t }) => {
+const DLRegistrationApprovalList = () => {
+    const { t } = useTranslation();
 
     const navigate = useNavigate()
     const { hasPermission } = useCommonFunctions();
@@ -49,93 +51,7 @@ const DLRegistrationApprovalList = ({ t }) => {
     }
 
     const handlePageChange = (page) => {
-        // dispatch(setCurrentPage(page))
         setCurrentPage(page)
-    };
-
-
-    useEffect(() => {
-        getListData()
-    }, [currentPage]);
-
-    // Render pagination using React Bootstrap Pagination
-    const renderPagination = () => {
-        let items = [];
-
-        items.push(
-            <Pagination.First
-                key="first"
-                onClick={() => handlePageChange(0)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        items.push(
-            <Pagination.Prev
-                key="prev"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        // Ellipsis Logic (similar to previous example)
-        const maxLeft = Math.max(currentPage - Math.floor(windowSize / 2), 0);
-        const maxRight = Math.min(currentPage + Math.floor(windowSize / 2), totalPages - 1);
-
-        if (maxLeft > 0) {
-            items.push(
-                <Pagination.Item key={0} onClick={() => handlePageChange(0)}>
-                    {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}
-                </Pagination.Item>
-            );
-            if (maxLeft > 1) {
-                items.push(<Pagination.Ellipsis key="left-ellipsis" />);
-            }
-        }
-
-        for (let i = maxLeft; i <= maxRight; i++) {
-            items.push(
-                <Pagination.Item
-                    key={i}
-                    active={i === currentPage}
-                    onClick={() => handlePageChange(i)}
-                >
-                    {currentLanguage === 'en' ? i + 1 : toBengaliNumber(i + 1)}
-                </Pagination.Item>
-            );
-        }
-
-        if (maxRight < totalPages - 1) {
-            if (maxRight < totalPages - 2) {
-                items.push(<Pagination.Ellipsis key="right-ellipsis" />);
-            }
-            items.push(
-                <Pagination.Item
-                    key={totalPages - 1}
-                    onClick={() => handlePageChange(totalPages - 1)}
-                >
-                    {totalPages}
-                </Pagination.Item>
-            );
-        }
-
-        items.push(
-            <Pagination.Next
-                key="next"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        items.push(
-            <Pagination.Last
-                key="last"
-                onClick={() => handlePageChange(totalPages - 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        return items;
     };
 
     const [searchValues, setSearchValues] = useState({
@@ -154,26 +70,30 @@ const DLRegistrationApprovalList = ({ t }) => {
         applicationDate: '',
     };
 
-    const handleReset = (resetForm) => {
-        resetForm({
-            values: resetSearchValues, // Reset to initial values
-        });
+    // Fetch data whenever searchValues or currentPage changes
+    useEffect(() => {
+        getListData();
+    }, [searchValues, currentPage]);
 
-        if (currentPage != 0) {
-            setCurrentPage(0)
-        } else {
-            getListData()
+    const handleReset = (resetForm, currentValues) => {
+        if (!helpers.compareValuesAreSame(resetSearchValues, currentValues)) {
+
+            resetForm({
+                values: resetSearchValues, // Reset to initial values
+            });
+
+            // Always call getListData after resetting the form
+            setSearchValues(resetSearchValues); // Update the search values state
+            setCurrentPage(0); // Reset to the first page
+            // No need to call getListData here; useEffect will handle it
         }
-    };
+    }
 
     const searchData = (values) => {
         if (!helpers.compareValuesAreSame(searchValues, values)) {
-            if (currentPage != 0) {
-                setCurrentPage(0)
-                getListData(values)
-            } else {
-                getListData(values)
-            }
+            setSearchValues(values); // Update the search values
+            setCurrentPage(0); // Reset to the first page
+            // getListData(values); // Fetch data with the new search values
         }
     }
 
@@ -241,7 +161,7 @@ const DLRegistrationApprovalList = ({ t }) => {
                         >
                             {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
-                                    <DrivingLicenseApplicationListSearchComponent values={values} clearData={() => handleReset(resetForm)} />
+                                    <DrivingLicenseApplicationListSearchComponent values={values} clearData={() => handleReset(resetForm, values)} />
                                 </FormikForm>
                             )}
                         </Formik>
@@ -305,10 +225,10 @@ const DLRegistrationApprovalList = ({ t }) => {
 
                                         {(item.applicationStatusCode === 'dl_app_draft') && (
                                             <OverlayTrigger overlay={<Tooltip>{t('edit')}</Tooltip>}>
-                                            <button onClick={() => navigate(`/applicant-panel/driving-license/new-driving-license/application-page1/${item.serviceRequestNo}`)} className='btn btn-sm rounded-full text-[12px] btn-outline-info'>
-                                                <i className="fa fa-pen"></i>
-                                            </button>
-                                        </OverlayTrigger>
+                                                <button onClick={() => navigate(`/applicant-panel/driving-license/new-driving-license/application-page1/${item.serviceRequestNo}`)} className='btn btn-sm rounded-full text-[12px] btn-outline-info'>
+                                                    <i className="fa fa-pen"></i>
+                                                </button>
+                                            </OverlayTrigger>
                                         )}
 
                                         {(item.applicationStatusCode === 'dl_app_pending' || item.applicationStatusCode === 'dl_app_final_approved') && (
@@ -321,7 +241,8 @@ const DLRegistrationApprovalList = ({ t }) => {
 
                                         {!item.isLicenseFeePaid && item.applicationStatusCode === 'dl_app_primary_approved' && (
                                             <OverlayTrigger overlay={<Tooltip>{t('Submit Application')}</Tooltip>}>
-                                                <button onClick={() => navigate(`/applicant-panel/driving-license/new-driving-license/payment-for-smart-card-driving-license-issue/${item.serviceRequestNo}`)} className="btn btn-sm text-xs btn-outline-primary">
+                                                {/* <button onClick={() => navigate(`/applicant-panel/driving-license/new-driving-license/payment-for-smart-card-driving-license-issue/${item.serviceRequestNo}`)} className="btn btn-sm text-xs btn-outline-primary"> */}
+                                                <button onClick={() => navigate(`/applicant-panel/driving-license/new-driving-license/payment-for-smart-card-driving-license-issue/${item.serviceRequestId}/${item.serviceRequestNo}`)} className="btn btn-sm text-xs btn-outline-primary">
                                                     Apply for Smart Card
                                                 </button>
                                             </OverlayTrigger>
@@ -342,7 +263,11 @@ const DLRegistrationApprovalList = ({ t }) => {
                 </div>
 
                 <div className="flex justify-end m-4">
-                    <Pagination size="sm">{renderPagination()}</Pagination>
+                    <CustomPagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
                 </div>
 
                 <DLApprovalModal
@@ -358,4 +283,4 @@ const DLRegistrationApprovalList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(DLRegistrationApprovalList)
+export default (DLRegistrationApprovalList)

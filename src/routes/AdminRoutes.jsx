@@ -34,6 +34,7 @@ import OfficeJurisdictionList from '../features/admin/configurations/officeJuris
 import ExamCenterList from '../features/admin/configurations/officeExamCenter/ExamCenterList.jsx';
 import VehicleRegistrationMarkList from '../features/admin/configurations/vehicleRegistrationMark/VehicleRegistrationMarkList.jsx';
 import ServiceDocumentMapList from '../features/admin/configurations/ServiceDocumentMap/ServiceDocumentMapList.jsx';
+import OrganizationList from '../features/admin/configurations/organization/OrganizationList.jsx';
 
 const adminRoutes = [
     { path: 'dashboard/:orgId?/:roleId?', element: <DashboardPage /> },
@@ -59,6 +60,7 @@ const adminRoutes = [
     { path: 'configurations/vehicle-maker-list', element: <VehicleMakerList /> },
     { path: 'configurations/vehicle-brand-list', element: <VehicleBrandList /> },
     { path: 'configurations/vehicle-class-list', element: <VehicleClassList /> },
+    { path: 'configurations/organization-list', element: <OrganizationList /> },
     { path: 'configurations/office-jurisdiction-list', element: <OfficeJurisdictionList /> },
     { path: 'configurations/exam-center-list', element: <ExamCenterList /> },
     { path: 'configurations/vehicle-registration-mark-list', element: <VehicleRegistrationMarkList /> },

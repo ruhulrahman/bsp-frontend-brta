@@ -6,12 +6,13 @@ import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 
-const AddNew = ({ t, show, onHide, onSave, editData, ...props }) => {
+const AddNew = ({ show = false, onHide = () => {}, onSave = () => {}, editData = null, ...props }) => {
+const { t } = useTranslation();
 
     // const { vehicleMakerList } = props;
 
@@ -140,4 +141,4 @@ AddNew.defaultProps = {
 };
 
 
-export default withNamespaces()(AddNew);
+export default (AddNew);

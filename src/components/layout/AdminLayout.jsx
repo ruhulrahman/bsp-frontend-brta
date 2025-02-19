@@ -5,7 +5,7 @@ import i18n from '@/i18n';
 import { setCommonDropdowns } from '@/store/commonSlice';
 import RestApi from '@/utils/RestApi';
 import { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -13,7 +13,8 @@ import { setAuthUser, setUserOfficeRole, setUserPermissions, setToken, setUserIm
 import AdminNavbar from './navbar/admin/AdminNavbar';
 import AdminSidebar from './navbar/admin/AdminSidebar';
 
-const AdminLayout = ({ t }) => {
+const AdminLayout = () => {
+const { t } = useTranslation();
 
     const { screenWidth, screenHeight } = useWindowSize();
 
@@ -166,4 +167,4 @@ const AdminLayout = ({ t }) => {
     );
 };
 
-export default withNamespaces()(AdminLayout);
+export default (AdminLayout);

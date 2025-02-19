@@ -11,13 +11,15 @@ import Form from 'react-bootstrap/Form';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Pagination from 'react-bootstrap/Pagination';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import AddNew from './AddNew';
 import { updateAndFetchDropdowns } from '../../../../store/commonSlice';
+import CustomPagination from '@/components/common/CustomPagination';
 
-const VehicleMakerList = ({ t }) => {
+const VehicleMakerList = () => {
+    const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns } = useSelector((state) => state.common)
@@ -50,97 +52,8 @@ const VehicleMakerList = ({ t }) => {
     }
 
     const handlePageChange = (page) => {
-        // dispatch(setCurrentPage(page))
         setCurrentPage(page)
-    };
-
-    // useEffect(() => {
-    //     dispatch(setResetPagination())
-    // }, []);
-
-    useEffect(() => {
-        getListData()
-    }, [currentPage]);
-
-    // Render pagination using React Bootstrap Pagination
-    const renderPagination = () => {
-        let items = [];
-
-        items.push(
-            <Pagination.First
-                key="first"
-                onClick={() => handlePageChange(0)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        items.push(
-            <Pagination.Prev
-                key="prev"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
-            />
-        );
-
-        // Ellipsis Logic (similar to previous example)
-        const maxLeft = Math.max(currentPage - Math.floor(windowSize / 2), 0);
-        const maxRight = Math.min(currentPage + Math.floor(windowSize / 2), totalPages - 1);
-
-        if (maxLeft > 0) {
-            items.push(
-                <Pagination.Item key={0} onClick={() => handlePageChange(0)}>
-                    {currentLanguage === 'en' ? 1 : toBengaliNumber(1)}
-                </Pagination.Item>
-            );
-            if (maxLeft > 1) {
-                items.push(<Pagination.Ellipsis key="left-ellipsis" />);
-            }
-        }
-
-        for (let i = maxLeft; i <= maxRight; i++) {
-            items.push(
-                <Pagination.Item
-                    key={i}
-                    active={i === currentPage}
-                    onClick={() => handlePageChange(i)}
-                >
-                    {currentLanguage === 'en' ? i + 1 : toBengaliNumber(i + 1)}
-                </Pagination.Item>
-            );
-        }
-
-        if (maxRight < totalPages - 1) {
-            if (maxRight < totalPages - 2) {
-                items.push(<Pagination.Ellipsis key="right-ellipsis" />);
-            }
-            items.push(
-                <Pagination.Item
-                    key={totalPages - 1}
-                    onClick={() => handlePageChange(totalPages - 1)}
-                >
-                    {totalPages}
-                </Pagination.Item>
-            );
-        }
-
-        items.push(
-            <Pagination.Next
-                key="next"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        items.push(
-            <Pagination.Last
-                key="last"
-                onClick={() => handlePageChange(totalPages - 1)}
-                disabled={currentPage === totalPages - 1}
-            />
-        );
-
-        return items;
-    };
+    }
 
     const [searchValues, setSearchValues] = useState({
         nameEn: '',
@@ -154,29 +67,30 @@ const VehicleMakerList = ({ t }) => {
         isActive: '',
     };
 
+    // Fetch data whenever searchValues or currentPage changes
+    useEffect(() => {
+        getListData();
+    }, [searchValues, currentPage]);
+
     const handleReset = (resetForm, currentValues) => {
-        if (!helpers.compareValuesAreSame(searchValues, currentValues)) {
+        if (!helpers.compareValuesAreSame(resetSearchValues, currentValues)) {
 
             resetForm({
                 values: resetSearchValues, // Reset to initial values
             });
 
-            if (currentPage != 0) {
-                setCurrentPage(0)
-            } else {
-                getListData()
-            }
+            // Always call getListData after resetting the form
+            setSearchValues(resetSearchValues); // Update the search values state
+            setCurrentPage(0); // Reset to the first page
+            // No need to call getListData here; useEffect will handle it
         }
     }
 
     const searchData = (values) => {
         if (!helpers.compareValuesAreSame(searchValues, values)) {
-            if (currentPage != 0) {
-                setCurrentPage(0)
-                getListData(values)
-            } else {
-                getListData(values)
-            }
+            setSearchValues(values); // Update the search values
+            setCurrentPage(0); // Reset to the first page
+            // getListData(values); // Fetch data with the new search values
         }
     }
 
@@ -451,7 +365,11 @@ const VehicleMakerList = ({ t }) => {
                         <div className="col-md-12 text-right">
                             <div className="flex items-center justify-end">
                                 <div className="flex">
-                                    <Pagination size='sm'>{renderPagination()}</Pagination>
+                                    <CustomPagination
+                                        currentPage={currentPage}
+                                        totalPages={totalPages}
+                                        onPageChange={handlePageChange}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -462,4 +380,4 @@ const VehicleMakerList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(VehicleMakerList)
+export default (VehicleMakerList)

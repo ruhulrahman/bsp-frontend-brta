@@ -4,7 +4,7 @@ import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'for
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
@@ -16,7 +16,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 
-const VehicleRegistrationPage3 = ({ t }) => {
+const VehicleRegistrationPage3 = () => {
+const { t } = useTranslation();
 
     let { serviceRequestId, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
@@ -269,6 +270,15 @@ const VehicleRegistrationPage3 = ({ t }) => {
             if (apiResponse && apiResponse.pageCompleted < 1) {
                 navigate(`/applicant-panel/vehicle-registration/application-for-vehicle-registration/vehicle-registration-page1`)
             }
+            
+            if (!apiResponse.vehicleOwner.isOwnerTypePublic) {
+                Object.keys(apiResponse.vehicleOwner).forEach(key => {
+                    if (apiResponse.vehicleOwner[key] === null) {
+                        apiResponse.vehicleOwner[key] = "";
+                    }
+                })
+            }
+            console.log('apiResponse.vehicleOwner.isOwnerTypePublic', apiResponse.vehicleOwner.isOwnerTypePublic)
             setInitialValues(apiResponse);
 
             const newJointOwnerLocation = {
@@ -1053,7 +1063,6 @@ const VehicleRegistrationPage3 = ({ t }) => {
 
                                             {values.vehicleOwner.isOwnerTypePublic && (
 
-
                                                 <div className="row">
                                                     <hr className='mb-3' />
                                                     <h3 className='font-bold text-center'>{t('Additional Information for Public Vehicle')}</h3>
@@ -1262,4 +1271,4 @@ const VehicleRegistrationPage3 = ({ t }) => {
     );
 };
 
-export default withNamespaces()(VehicleRegistrationPage3);
+export default (VehicleRegistrationPage3);

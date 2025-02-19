@@ -5,7 +5,7 @@ import i18n from '@/i18n';
 import { setCommonDropdowns } from '@/store/commonSlice';
 import RestApi from '@/utils/RestApi';
 import { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -13,7 +13,8 @@ import { setAuthUser, setUserPermissions, setToken, setOfficeRole, setUserImage,
 import Navbar from './navbar/system-user/Navbar';
 import Sidebar from './navbar/system-user/Sidebar';
 
-const SystemUserLayout = ({ t }) => {
+const SystemUserLayout = () => {
+const { t } = useTranslation();
 
     const { screenWidth, screenHeight } = useWindowSize();
 
@@ -173,4 +174,4 @@ const SystemUserLayout = ({ t }) => {
     );
 };
 
-export default withNamespaces()(SystemUserLayout);
+export default (SystemUserLayout);

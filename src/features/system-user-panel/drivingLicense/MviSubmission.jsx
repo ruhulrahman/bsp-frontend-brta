@@ -1,4 +1,4 @@
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Loading from '@/components/common/Loading';
@@ -13,7 +13,8 @@ import Button from 'react-bootstrap/Button';
 import helpers, { toaster } from '@/utils/helpers.js';
 import useCommonFunctions from '@/hooks/useCommonFunctions';
 
-const MviSubmission = ({ t, editData, onCloseModal, listReload }) => {
+const MviSubmission = ({ editData, onCloseModal, listReload }) => {
+const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { hasPermission } = useCommonFunctions();
@@ -205,4 +206,4 @@ const MviSubmission = ({ t, editData, onCloseModal, listReload }) => {
 
 }
 
-export default withNamespaces()(MviSubmission);
+export default (MviSubmission);

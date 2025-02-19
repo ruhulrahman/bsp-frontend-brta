@@ -2,6 +2,7 @@ import React from 'react';
 import './ListComponent.css';
 
 const ListComponent = ({ renderItem, emptyMessage }) => {
+const { t } = useTranslation();
     return (
         <div className="p-0 overflow-auto min-h-[300px]">
             {0 === 0 ? (

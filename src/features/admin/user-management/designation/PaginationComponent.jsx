@@ -3,6 +3,7 @@ import Pagination from 'react-bootstrap/Pagination';
 import { useSelector } from 'react-redux';
 
 const PaginationComponent = ({ onPageChange }) => {
+const { t } = useTranslation();
 
     const { pagination } = useSelector((state) => state.common)
 

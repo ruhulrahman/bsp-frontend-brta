@@ -57,7 +57,7 @@ const authSlice = createSlice({
             state.permissions = [];
         },
         setUserImage: (state, action) => {
-            console.log('action=============', action)
+            // console.log('action=============', action)
             state.userImage = action.payload;
         },
         removeUserImage: (state) => {

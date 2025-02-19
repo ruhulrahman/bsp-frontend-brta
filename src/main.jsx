@@ -9,6 +9,7 @@ import App from './App.jsx';
 import './i18n';
 import './index.css';
 import { store } from './store/store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 window.pagination = {
   page: 1,
@@ -32,11 +33,15 @@ window.pagination = {
 
 // library.add(fas, far, fab)
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
   //   <App />
   // </StrictMode>,
   <Provider store={store}>
-    <App />
-  </Provider>,
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  </Provider>
 )

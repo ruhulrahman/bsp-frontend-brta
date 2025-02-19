@@ -1,7 +1,7 @@
 import Checkbox from '@/components/ui/Checkbox';
 import ReactSelect from '@/components/ui/ReactSelect';
 import i18n from '@/i18n';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'formik';

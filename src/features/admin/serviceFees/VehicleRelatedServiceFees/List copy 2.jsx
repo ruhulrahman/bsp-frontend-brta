@@ -11,14 +11,15 @@ import Form from 'react-bootstrap/Form';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Pagination from 'react-bootstrap/Pagination';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import AddNew from './AddNew';
 import ViewDetails from './ViewDetails';
 import { Dropdown } from 'react-bootstrap';
 
-const VehicleRelatedServiceFeesList = ({ t }) => {
+const VehicleRelatedServiceFeesList = () => {
+const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, dropdowns, listData, windowSize, yesNoList, showFilter } = useSelector((state) => state.common)
@@ -361,6 +362,7 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
                         <Formik
                             initialValues={searchValues}
                             onSubmit={(values, { resetForm }) => {
+const { t } = useTranslation();
                                 // console.log('Form Submitted', values);
                                 // searchData(values);
                                 setSearchValues(values); // Update state with new search values
@@ -699,4 +701,4 @@ const VehicleRelatedServiceFeesList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(VehicleRelatedServiceFeesList)
+export default (VehicleRelatedServiceFeesList)

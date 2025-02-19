@@ -3,10 +3,11 @@ import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 
-const AddNew = ({ t, show, onHide, onSave, editData }) => {
+const AddNew = ({ show = false, onHide = () => {}, onSave = () => {}, editData = null }) => {
+const { t } = useTranslation();
 
     const handleClose = () => setFormOpen(false);
     const handleShow = () => setFormOpen(true);
@@ -83,6 +84,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     // console.log('values', values);
 
     // const onSubmit = (values, { setSubmitting }) => {
+const { t } = useTranslation();
     //     // Perform form submission logic here
     //     console.log('Form submitted:', values);
     //     setSubmitting(false);
@@ -105,6 +107,7 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
                         initialValues={initialValues}
                         validationSchema={validationSchema}
                         onSubmit={(values, { resetForm }) => {
+const { t } = useTranslation();
                             // console.log('Form Submitted', values);
                             // You can reset the form here as well after submission
                             // handleReset(resetForm);
@@ -159,4 +162,4 @@ const AddNew = ({ t, show, onHide, onSave, editData }) => {
     );
 };
 
-export default withNamespaces()(AddNew);
+export default (AddNew);

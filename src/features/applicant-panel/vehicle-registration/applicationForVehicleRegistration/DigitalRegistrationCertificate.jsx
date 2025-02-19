@@ -1,7 +1,7 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
 import React, { useEffect } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import govLogo from '@/assets/images/gov-logo.png';
 import brtaLogo from '@/assets/images/logo.png';
 import { Container, Row, Col, Table } from 'react-bootstrap';
@@ -15,12 +15,14 @@ import Loading from '@/components/common/Loading';
 import helpers from '@/utils/helpers.js';
 import QRCode from "react-qr-code";
 
-const MainContent = ({ t, serviceRequestId }) => {
+const MainContent = ({ serviceRequestId }) => {
+    const { t } = useTranslation();
 
     const navigate = useNavigate();
     const currentLanguage = i18n.language;
     const [vehicleDetail, setVehicleDetail] = useState({});
     const { activeStatusList, loading, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
+    const { authUser, userImage } = useSelector((state) => state.auth) || {};
 
     useEffect(() => {
         if (serviceRequestId) {
@@ -42,7 +44,7 @@ const MainContent = ({ t, serviceRequestId }) => {
 
             setQrCodeValue(`
                 Owner Name: ${data?.vehicleOwner?.name}
-                Registration No: ${data?.vehicleOwner?.fullRegNumber}
+                Registration No: ${data?.vehicleRegistration?.fullRegNumber}
                 Vehicle Type: ${data?.vehicleInfo?.vehicleType?.nameEn}
             `)
 
@@ -78,19 +80,20 @@ const MainContent = ({ t, serviceRequestId }) => {
         <div className="container mx-auto p-4 space-y-6">
 
             {/* Card 1: Vehicle Details */}
-            <div className="border rounded-lg shadow-lg p-4 bg-white max-w-md mx-auto">
-                <h5 className="text-center font-bold text-lg">Certificate of Registration</h5>
-                <h6 className="text-center text-sm text-gray-500 mb-2">Bangladesh Road Transport Authority</h6>
+            <div className="border rounded-lg shadow-sm p-2 bg-white max-w-md mx-auto">
+                {/* <h5 className="text-center font-bold text-sm">Certificate of Registration</h5> */}
+                <h5 className="text-center font-bold text-sm">Digital Registration Certificate</h5>
+                <h6 className="text-center text-sm text-gray-500">Bangladesh Road Transport Authority</h6>
 
-                <div className="text-center mb-2">
+                <div className="text-center mb-1">
                     {/* <div className="bg-gray-300 h-16 w-1/2 mx-auto rounded-md"></div>  */}
                     {/* Placeholder for QR/Barcode */}
                     <div className="mx-auto d-flex align-items-center justify-content-center">
-                        <Barcode value={barCodeValue}
+                        {/* {barCodeValue && <Barcode value={barCodeValue}
                             displayValue={false}
                             width={2} // Customize the barcode width if desired
                             height={50} // Customize the barcode height if desired
-                        />
+                        />} */}
                         {/* <Barcode value="Name: Ruhul Amin"
                             displayValue={false}
                             width={2} // Customize the barcode width if desired
@@ -99,24 +102,21 @@ const MainContent = ({ t, serviceRequestId }) => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div>
+                <div className="grid grid-cols-2 gap-2 text-[12px]">
+                    <div className='col-span-2'>
                         <strong>Registration No:</strong> {vehicleDetail?.vehicleRegistration?.fullRegNumber}
                     </div>
-                    <div>
-                        <strong>Date:</strong> {vehicleDetail?.vehicleRegistration?.createdAt ? helpers.dDate(vehicleDetail?.vehicleRegistration?.createdAt) : ''}
+                    <div className='col-span-2'>
+                        <strong>Issuing Authority:</strong> {vehicleDetail?.issuingAuthority?.nameEn}
+                    </div>
+                    <div className='col-span-2'>
+                        <strong>Vehicle Class:</strong> {vehicleDetail?.vehicleInfo?.vehicleClass?.nameEn}
+                    </div>
+                    <div className=''>
+                        <strong>Registration Date:</strong> {vehicleDetail?.vehicleRegistration?.createdAt ? helpers.dDate(vehicleDetail?.vehicleRegistration?.createdAt) : ''}
                     </div>
                     <div>
                         <strong>Vehicle Type:</strong> {vehicleDetail?.vehicleInfo?.vehicleType?.nameEn}
-                    </div>
-                    <div>
-                        <strong>Vehicle Class:</strong> {vehicleDetail?.vehicleInfo?.vehicleClass?.nameEn}
-                    </div>
-                    <div>
-                        <strong>Color:</strong> {vehicleDetail?.vehicleInfo?.vehicleColor?.nameEn}
-                    </div>
-                    <div>
-                        <strong>Fuel:</strong> {vehicleDetail?.vehicleInfo?.fuelType?.nameEn}
                     </div>
                     <div>
                         <strong>Engine No:</strong> {vehicleDetail?.vehicleInfo?.engineNumber}
@@ -125,7 +125,10 @@ const MainContent = ({ t, serviceRequestId }) => {
                         <strong>Chassis No:</strong> {vehicleDetail?.vehicleInfo?.chassisNumber}
                     </div>
                     <div>
-                        <strong>Seat:</strong> {vehicleDetail?.vehicleInfo?.totalSeat}
+                        <strong>Color:</strong> {vehicleDetail?.vehicleInfo?.vehicleColor?.nameEn}
+                    </div>
+                    <div>
+                        <strong>Fuel:</strong> {vehicleDetail?.vehicleInfo?.fuelType?.nameEn}
                     </div>
                     <div>
                         <strong>Weight (Unladen):</strong> {vehicleDetail?.vehicleInfo?.unladenWeight} kg
@@ -133,21 +136,21 @@ const MainContent = ({ t, serviceRequestId }) => {
                     <div>
                         <strong>Weight (Laden):</strong> {vehicleDetail?.vehicleInfo?.maxLadenWeight} kg
                     </div>
-                    <div>
-                        <strong>Issuing Authority:</strong> {vehicleDetail?.issuingAuthority?.nameEn}
-                    </div>
                 </div>
 
             </div>
 
             {/* Card 2: Owner's Information */}
-            <div className="border rounded-lg shadow-lg p-4 bg-white max-w-md mx-auto">
+            <div className="border rounded-lg shadow-sm p-2 bg-white max-w-md mx-auto text-[12px]">
                 <header className="flex justify-between items-center mb-4">
                     <div className="w-1/3">
                         {/* Owner photo Placeholder */}
                         {/* <div className="bg-gray-300 h-16 w-full rounded-md"></div> */}
                         <div className="bg-gray-300 h-16 w-16 rounded-md">
-                            <img src={vehicleDetail?.ownerPhotoInfo?.base64Content} alt="" />
+                            {/* <img src={vehicleDetail?.ownerPhotoInfo?.base64Content} alt="" /> */}
+                            {userImage && (
+                                <img src={userImage} alt="" className="h-16 w-16 rounded-md" />
+                            )}
                         </div>
                     </div>
                     <div className="text-right">
@@ -155,17 +158,23 @@ const MainContent = ({ t, serviceRequestId }) => {
                         {/* <div className="bg-green-600 w-8 h-5 rounded-sm"></div> */}
                         {/* <div className="bg-gray-300 h-16 w-16 rounded-md"></div> */}
                         {/* {qrCodeValue} */}
-                        <QRCode className="bg-gray-300 h-16 w-16 rounded-md" value={qrCodeValue} />
+                        {qrCodeValue && <QRCode className="bg-gray-300 h-16 w-16 rounded-md" value={qrCodeValue} />}
                     </div>
                 </header>
 
-                <h6 className="text-lg font-bold mb-2">Owner's Name & Address</h6>
-                <p className="text-sm mb-1"><strong>Name:</strong> {vehicleDetail?.vehicleOwner?.name}</p>
-                <p className="text-sm mb-1"><strong>Address:</strong> {vehicleDetail?.addressInfo?.fullAddressEn}</p>
-
-                <div className="grid grid-cols-2 gap-2 my-4 text-sm">
+                <h6 className="text-sm font-bold mb-2">Owner's Name & Address</h6>
+                <div className="grid grid-cols-2 gap-2 my-2">
+                    <p className="mb-1"><strong>Name:</strong> {vehicleDetail?.vehicleOwner?.name}</p>
                     <div>
                         <strong>Owner Type:</strong> {vehicleDetail?.vehicleOwner?.ownerType?.nameEn}
+                    </div>
+                </div>
+                {/* <p className="mb-1"><strong>Address:</strong> {vehicleDetail?.addressInfo?.fullAddressEn}</p> */}
+                <p className="mb-1"><strong>Address:</strong> {vehicleDetail?.vehicleOwner?.addressInfo?.fullAddressEn}</p>
+
+                <div className="grid grid-cols-2 gap-2">
+                    <div>
+                        <strong>Seat:</strong> {vehicleDetail?.vehicleInfo?.totalSeat}
                     </div>
                     <div>
                         <strong>Tyre Size:</strong> {vehicleDetail?.vehicleInfo?.tyreSize}
@@ -174,11 +183,14 @@ const MainContent = ({ t, serviceRequestId }) => {
                         <strong>Manufacturing Year:</strong> {vehicleDetail?.vehicleInfo?.manufacturingYear}
                     </div>
                     <div>
-                        <strong>Axle Weight:</strong> Front - {vehicleDetail?.vehicleInfo?.frontAxle1}kg
+                        <strong>Axle Weight:</strong>
+                        {vehicleDetail?.vehicleInfo?.frontAxle1 && (
+                            <span className='ml-1'>Front - {vehicleDetail?.vehicleInfo?.frontAxle1}kg</span>
+                        )}
                     </div>
                 </div>
 
-                <footer className="mt-4 text-center text-xs text-gray-500">
+                <footer className="mt-2 text-center text-xs text-gray-500">
                     If lost or found, please inform the nearest police station.
                 </footer>
             </div>
@@ -196,8 +208,8 @@ const styles = StyleSheet.create({
 });
 
 
-
-const DigitalRegistrationCertificate = ({ t, serviceRequestId }) => {
+const DigitalRegistrationCertificate = ({ serviceRequestId }) => {
+    const { t } = useTranslation();
     const handlePrint = () => {
         printJS({
             printable: 'printable-section-digital-registration-certificate',
@@ -222,10 +234,10 @@ const DigitalRegistrationCertificate = ({ t, serviceRequestId }) => {
             </div>
 
             <div id={`printable-section-digital-registration-certificate`}>
-                <MainContent t={t} serviceRequestId={serviceRequestId} />
+                <MainContent serviceRequestId={serviceRequestId} />
             </div>
         </div>
     )
 }
 
-export default withNamespaces()(DigitalRegistrationCertificate)
+export default (DigitalRegistrationCertificate)

@@ -1,7 +1,7 @@
 import Checkbox from '@/components/ui/Checkbox';
 import ReactSelect from '@/components/ui/ReactSelect';
 import i18n from '@/i18n';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'formik';
@@ -20,7 +20,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 
-const UserProfile = ({ t }) => {
+const UserProfile = () => {
+const { t } = useTranslation();
 
 	const dispatch = useDispatch();
 	const { activeStatusList, loading, listData, dropdowns } = useSelector((state) => state.common)
@@ -223,6 +224,7 @@ const UserProfile = ({ t }) => {
 				enableReinitialize={true}
 				validationSchema={validationSchema}
 				onSubmit={async (values, { setSubmitting, resetForm, setErrors }) => {
+const { t } = useTranslation();
 					// console.log('Form Submitted', values);
 					// You can reset the form here as well after submission
 					// handleReset(resetForm);
@@ -420,4 +422,4 @@ const UserProfile = ({ t }) => {
 	);
 };
 
-export default withNamespaces()(UserProfile);
+export default (UserProfile);

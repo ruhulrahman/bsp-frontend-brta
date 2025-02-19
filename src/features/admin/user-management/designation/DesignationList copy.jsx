@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // import Badge from 'react-bootstrap/Badge';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import Pagination from 'react-bootstrap/Pagination'
 import AddNew from './AddNew';
@@ -18,7 +18,8 @@ import helpers, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData } from '@/store/commonSlice';
 import ReactPaginate from 'react-paginate';
 
-const DesignationList = ({ t }) => {
+const DesignationList = () => {
+const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { statusList, loading, listData } = useSelector((state) => state.common)
@@ -386,6 +387,7 @@ const DesignationList = ({ t }) => {
                         <Formik
                             initialValues={searchValues}
                             onSubmit={(values, { resetForm }) => {
+const { t } = useTranslation();
                                 // console.log('Form Submitted', values);
                                 // You can reset the form here as well after submission
                                 // handleReset(resetForm);
@@ -587,4 +589,4 @@ const DesignationList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(DesignationList)
+export default (DesignationList)

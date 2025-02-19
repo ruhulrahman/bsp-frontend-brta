@@ -1,4 +1,4 @@
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Loading from '@/components/common/Loading';
@@ -12,7 +12,8 @@ import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
 import helpers, { toaster } from '@/utils/helpers.js';
 
-const VehicleApprove = ({ t, editData }) => {
+const VehicleApprove = ({ editData, reloadList = () => { } }) => {
+    const { t } = useTranslation();
 
     const dispatch = useDispatch();
 
@@ -24,7 +25,13 @@ const VehicleApprove = ({ t, editData }) => {
         approvalRemarks: "",
     })
 
+    const resetValues = {
+        applicationStatusId: "",
+        approvalRemarks: "",
+    };
+
     const [remarksMendatory, setRemarksMendatory] = useState(false)
+
     const validationSchema = Yup.object().shape({
         applicationStatusId: Yup.string().required('This field is required'),
         approvalRemarks: Yup.string().when([], {
@@ -36,14 +43,16 @@ const VehicleApprove = ({ t, editData }) => {
 
     const [isViewable, setIsViewable] = useState(false)
 
-
     useEffect(() => {
         if (editData) {
-            setIsViewable(true)
+            // setIsViewable(true)
             const updatedData = {
                 ...editData,
             }
             setInitialValues(updatedData);
+        }
+        if (editData?.inspectionStatusId) {
+            setIsViewable(true);
         }
     }, [editData])
 
@@ -52,6 +61,7 @@ const VehicleApprove = ({ t, editData }) => {
         dispatch(setLoading(true));
         try {
             const { data } = await RestApi.post('api/v1/vservice-request/update-approval-by-authority', params)
+            reloadList(values.serviceRequestId)
             toaster("Application approval report submitted successfully");
         } catch (error) {
             console.log('error', error)
@@ -94,6 +104,13 @@ const VehicleApprove = ({ t, editData }) => {
         }
     }
 
+    const handleReset = (resetForm) => {
+        const resetData = {...editData, applicationStatusId: '', approvalRemarks: ''}
+        resetForm({
+            values: resetData, // Reset to initial values
+        })
+    };
+
     return (
         <div>
             {/* <h1>{t('vehicleApprovalSection')}</h1>
@@ -134,6 +151,7 @@ const VehicleApprove = ({ t, editData }) => {
                                 <div className="col-md-8">
                                     <Form.Group className="mb-1" controlId="applicationStatusId">
                                         <Field
+                                            disabled={disableApprovalSection()}
                                             id="applicationStatusId"
                                             name="applicationStatusId"
                                             component={ReactSelect}
@@ -155,18 +173,20 @@ const VehicleApprove = ({ t, editData }) => {
                                 </div>
                                 <div className="col-md-8">
                                     <Form.Group className="mb-1" controlId="approvalRemarks">
-                                        <Field type="text" name="approvalRemarks" className="form-control" placeholder={t('remarks')} />
+                                        <Field disabled={disableApprovalSection()} type="text" name="approvalRemarks" className="form-control" placeholder={t('remarks')} />
                                         <ErrorMessage name="approvalRemarks" component="div" className="text-danger" />
                                     </Form.Group>
                                 </div>
                             </div>
 
-                            <div className="row mt-1">
-                                <div className="col-sm-12 text-right">
-                                    <button type='button' className='btn btn-success btn-rounded btn-xs mr-1' onClick={() => resetForm()}>{t('reset')}</button>
-                                    <button type='submit' className='btn btn-success btn-rounded btn-xs'>{t('save')}</button>
+                            {isViewable && !disableApprovalSection() && (
+                                <div className="row mt-1">
+                                    <div className="col-sm-12 text-right">
+                                        <button type='reset' className='btn btn-success btn-rounded btn-xs mr-1' onClick={() => handleReset(resetForm) }>{t('reset')}</button>
+                                        <button type='submit' className='btn btn-success btn-rounded btn-xs'>{t('save')}</button>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                         </FormikForm>
                     )
@@ -179,4 +199,4 @@ const VehicleApprove = ({ t, editData }) => {
 
 }
 
-export default withNamespaces()(VehicleApprove);
+export default (VehicleApprove);

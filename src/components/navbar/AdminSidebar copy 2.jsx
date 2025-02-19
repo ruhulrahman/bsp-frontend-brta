@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 const AdminSidebar = ({ openSidebar }) => {
+const { t } = useTranslation();
 
     const [openConfiguration, setOpenConfiguration] = useState(false);
     const [openUserManagement, setOpenUserManagement] = useState(false);

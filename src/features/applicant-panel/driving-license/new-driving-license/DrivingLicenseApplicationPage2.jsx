@@ -4,7 +4,7 @@ import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'for
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
@@ -18,7 +18,8 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import FileViewer from '@/components/common/FileViewer';
 
-const DrivingLicenseApplicationPage2 = ({ t }) => {
+const DrivingLicenseApplicationPage2 = () => {
+const { t } = useTranslation();
 
     let { serviceRequestNo, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
@@ -257,7 +258,8 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
                     return;
                 }
                 toaster(data.message)
-                navigate(`/applicant-panel/driving-license/new-driving-license/payment-for-learner/${data.data.serviceRequestNo}`)
+                // navigate(`/applicant-panel/driving-license/new-driving-license/payment-for-learner/${data.data.serviceRequestNo}`)
+                navigate(`/applicant-panel/driving-license/new-driving-license/payment-for-learner/${data.data.serviceRequestId}/${data.data.serviceRequestNo}`)
             }
 
         } catch (error) {
@@ -1421,4 +1423,4 @@ const DrivingLicenseApplicationPage2 = ({ t }) => {
     );
 };
 
-export default withNamespaces()(DrivingLicenseApplicationPage2);
+export default (DrivingLicenseApplicationPage2);

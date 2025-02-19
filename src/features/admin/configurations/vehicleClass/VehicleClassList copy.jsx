@@ -11,12 +11,13 @@ import Form from 'react-bootstrap/Form';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Pagination from 'react-bootstrap/Pagination';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import AddNew from './AddNew';
 
-const VehicleClassList = ({ t }) => {
+const VehicleClassList = () => {
+const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns } = useSelector((state) => state.common)
@@ -452,4 +453,4 @@ const VehicleClassList = ({ t }) => {
     )
 }
 
-export default withNamespaces()(VehicleClassList)
+export default (VehicleClassList)

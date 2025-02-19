@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
@@ -16,7 +16,8 @@ import DrivingLicenseApprove from "./DrivingLicenseApprove.jsx"
 import useCommonFunctions from '@/hooks/useCommonFunctions';
 import helpers, { toaster } from '@/utils/helpers.js';
 
-const DLApprovalModal = ({ t, show, onHide, onSave, editData }) => {
+const DLApprovalModal = ({ show = false, onHide = () => {}, onSave = () => {}, editData = null }) => {
+const { t } = useTranslation();
 
     const { hasPermission } = useCommonFunctions();
 
@@ -94,4 +95,4 @@ const DLApprovalModal = ({ t, show, onHide, onSave, editData }) => {
     );
 };
 
-export default withNamespaces()(DLApprovalModal);
+export default (DLApprovalModal);

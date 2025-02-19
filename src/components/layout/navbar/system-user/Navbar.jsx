@@ -1,7 +1,7 @@
 import i18n from '@/i18n';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -23,7 +23,8 @@ const navigation = [
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
-const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
+const AdminNavbar = ({ openSidebar, onToggleSidebar }) => {
+const { t } = useTranslation();
     const navigate = useNavigate()
     const currentLanguage = i18n.language;
     const dispatch = useDispatch()
@@ -350,4 +351,4 @@ const AdminNavbar = ({ t, openSidebar, onToggleSidebar }) => {
     )
 }
 
-export default withNamespaces()(AdminNavbar)
+export default (AdminNavbar)

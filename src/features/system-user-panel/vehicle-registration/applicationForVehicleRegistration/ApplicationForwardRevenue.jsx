@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import Button from 'react-bootstrap/Button';
@@ -17,7 +17,8 @@ import RevenueCheck from "./RevenueCheck.jsx"
 import VehicleApprove from "./VehicleApprove.jsx"
 import useCommonFunctions from '@/hooks/useCommonFunctions';
 
-const ApplicationForwardRevenue = ({ t, show, onHide, onSave, editData }) => {
+const ApplicationForwardRevenue = ({ show = false, onHide = () => {}, onSave = () => {}, editData = null }) => {
+const { t } = useTranslation();
 
     const dispatch = useDispatch();
     const { hasPermission } = useCommonFunctions();
@@ -96,4 +97,4 @@ const ApplicationForwardRevenue = ({ t, show, onHide, onSave, editData }) => {
     );
 };
 
-export default withNamespaces()(ApplicationForwardRevenue);
+export default (ApplicationForwardRevenue);

@@ -1,7 +1,7 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
 import React, { useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import helpers, { toaster } from '@/utils/helpers.js';
@@ -10,7 +10,8 @@ import i18n from '@/i18n';
 import RestApi from '@/utils/RestApi';
 import Loading from '@/components/common/Loading';
 
-const PaymentSuccessPage = ({ t }) => {
+const PaymentSuccessPage = () => {
+const { t } = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns, permissionTypeList } = useSelector((state) => state.common)
@@ -106,4 +107,4 @@ const PaymentSuccessPage = ({ t }) => {
     )
 }
 
-export default withNamespaces()(PaymentSuccessPage)
+export default (PaymentSuccessPage)

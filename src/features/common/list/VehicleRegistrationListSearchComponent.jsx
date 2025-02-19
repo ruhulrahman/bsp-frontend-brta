@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './SearchComponent.css'; // Import the CSS file
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { ErrorMessage, Field, Formik, Form as FormikForm } from 'formik';
 import Form from 'react-bootstrap/Form';
 import ReactSelect from '@/components/ui/ReactSelect';
@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import { Label } from '@headlessui/react';
 
-const SearchComponent = ({ t, values, clearData }) => {
+const SearchComponent = ({ values, clearData }) => {
+const { t } = useTranslation();
 
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns, permissionTypeList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
@@ -94,4 +95,4 @@ const SearchComponent = ({ t, values, clearData }) => {
     );
 };
 
-export default withNamespaces()(SearchComponent);
+export default (SearchComponent);

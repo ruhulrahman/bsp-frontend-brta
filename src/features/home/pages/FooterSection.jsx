@@ -1,7 +1,7 @@
 import logo from '@/assets/images/logo.png';
 import i18n from '@/i18n';
 import React, { useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import slider6 from '@/assets/images/slider/slider-6.jpg';
@@ -15,7 +15,8 @@ import Loading from '@/components/common/Loading';
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 import { toBengaliNumber } from 'bengali-number';
 
-const FooterSection = ({ t }) => {
+const FooterSection = () => {
+const { t } = useTranslation();
     const { activeStatusList, loading, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
 
     const currentLanguage = i18n.language;
@@ -36,4 +37,4 @@ const FooterSection = ({ t }) => {
     );
 };
 
-export default withNamespaces()(FooterSection);
+export default (FooterSection);

@@ -1,7 +1,7 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
 import React, { useContext, useEffect, useState } from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import Nav from 'react-bootstrap/Nav';
 import { NavLink, useParams } from 'react-router-dom';
 import Tab from 'react-bootstrap/Tab';
@@ -19,7 +19,8 @@ import helpers, { toaster } from '@/utils/helpers.js';
 import { setLoading, setListData, setCurrentPage, setPaginationData, setResetPagination, toggleShowFilter } from '@/store/commonSlice';
 import { AuthContext } from '@/components/common/AuthContext';
 
-const DrivingLicenseRelatedReports = ({ t }) => {
+const DrivingLicenseRelatedReports = () => {
+const { t } = useTranslation();
     let { serviceRequestNo } = useParams()
     const dispatch = useDispatch();
     const { activeStatusList, listData, dropdowns, yesNoList } = useSelector((state) => state.common)
@@ -88,4 +89,4 @@ const DrivingLicenseRelatedReports = ({ t }) => {
     )
 }
 
-export default withNamespaces()(DrivingLicenseRelatedReports)
+export default (DrivingLicenseRelatedReports)

@@ -1,11 +1,12 @@
 import { Document, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
 import printJS from 'print-js';
 import React from 'react';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 
-const PaymentSuccess = ({ t }) => {
+const PaymentSuccess = () => {
+const { t } = useTranslation();
     const navigate = useNavigate();
 
     return (
@@ -20,4 +21,4 @@ const PaymentSuccess = ({ t }) => {
     )
 }
 
-export default withNamespaces()(PaymentSuccess)
+export default (PaymentSuccess)

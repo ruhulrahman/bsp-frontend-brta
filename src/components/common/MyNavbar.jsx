@@ -4,6 +4,7 @@ import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 // import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const MyNavbar = ({ username, onLogout }) => {
+const { t } = useTranslation();
   return (
     <Navbar bg="light" expand="lg">
       <Container>

@@ -4,7 +4,7 @@ import { ErrorMessage, Field, Formik, Form as FormikForm, FieldArray } from 'for
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import RestApi from '@/utils/RestApi';
@@ -22,7 +22,8 @@ import dummyUserImage from '@/assets/images/dummy-user.png';
 import manPhoto from '@/assets/images/man.png';
 import profileBackground from '@/assets/images/profile-background.png';
 
-const DrivingLicenseApplicationPage1 = ({ t }) => {
+const DrivingLicenseApplicationPage1 = () => {
+const { t } = useTranslation();
 
     let { serviceRequestNo, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
@@ -800,4 +801,4 @@ const DrivingLicenseApplicationPage1 = ({ t }) => {
     );
 };
 
-export default withNamespaces()(DrivingLicenseApplicationPage1);
+export default (DrivingLicenseApplicationPage1);
