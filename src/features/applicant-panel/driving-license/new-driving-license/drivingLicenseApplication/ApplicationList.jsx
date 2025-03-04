@@ -104,7 +104,7 @@ const DLRegistrationApprovalList = () => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.post('api/driving-license/v1/application-list', values, { params })
+            const { data } = await RestApi.post('api/driving-license/v1/application-list-for-applicant', values, { params })
             dispatch(setListData(data.content));
             setPaginationData(data);
             console.log(data.content);
