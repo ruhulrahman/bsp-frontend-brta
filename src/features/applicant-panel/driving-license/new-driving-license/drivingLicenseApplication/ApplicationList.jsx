@@ -161,7 +161,7 @@ const DLRegistrationApprovalList = () => {
                         >
                             {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
-                                    <DrivingLicenseApplicationListSearchComponent values={values} clearData={() => handleReset(resetForm, values)} />
+                                    <DrivingLicenseApplicationListSearchComponent values={values} clearData={() => handleReset(resetForm, values)} setFieldValue={setFieldValue} />
                                 </FormikForm>
                             )}
                         </Formik>

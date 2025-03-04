@@ -917,7 +917,7 @@ const { t } = useTranslation();
 
                                                 <div className="col-sm-12 col-lg-6 col-xl-6">
                                                     <Form.Group className="mb-3" controlId="vehicleOwner.ownerTypeId">
-                                                        <Form.Label>{t('Owner type')} <span className='text-red-500'>*</span></Form.Label>
+                                                        <Form.Label>{t('ownerType')} <span className='text-red-500'>*</span></Form.Label>
                                                         <Field
                                                             disabled={isViewable}
                                                             name="vehicleOwner.ownerTypeId"

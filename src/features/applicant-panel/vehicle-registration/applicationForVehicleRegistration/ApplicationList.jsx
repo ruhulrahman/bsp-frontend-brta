@@ -164,7 +164,7 @@ const UserList = () => {
                 >
                     {({ values, resetForm, setFieldValue }) => (
                         <FormikForm>
-                            <SearchComponent values={values} clearData={() => handleReset(resetForm, values)} />
+                            <SearchComponent values={values} clearData={() => handleReset(resetForm, values)} setFieldValue={setFieldValue} />
                         </FormikForm>
                     )}
                 </Formik>

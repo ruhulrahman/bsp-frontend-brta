@@ -362,6 +362,7 @@
   "officeType": "Office Type",
   "selectOfficeType": "Select Office Type",
   "pleaseSelectOrganization": "Please Select Organization",
+  "pleaseSelectOffice": "Please Select Office",
   "pleaseSelectDivision": "Please Select Division",
   "pleaseSelectDistrict": "Please Select District",
   "pleaseSelectThana": "Please Select Thana",
@@ -458,5 +459,15 @@
   "selectOfficeRole":"Select Office Role",
   "switchOfficeRole":"Switch Office Role",
   "parentDesignation":"Parent Designation",
+  "reports":"Reports",
+  "vehicleRegistrationReport":"Vehicle Registration Report",
+  "drivingLicenseReport":"Driving License Report",
+  "ownerType":"Owner type",
+  "licenseType":"License Type",
+  "drivingLicenseType":"Driving License Type",
+  "licenseNo":"License No",
+  "licenseIssueDate":"License Issue Date",
+  "licenseExpiryDate":"License Expiry Date",
+  "pleaseSelectDate":"Please Select Date",
   "selectDocument":"Select Document"
 }

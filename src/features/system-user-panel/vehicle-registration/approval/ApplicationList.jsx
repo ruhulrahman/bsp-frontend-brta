@@ -107,7 +107,9 @@ const VehicleRegistrationApprovalList = () => {
         dispatch(setLoading(true));
         dispatch(setListData([]));
         try {
-            const { data } = await RestApi.post('api/reg/applications/v1/vehicles', searchValues, { params })
+            // const { data } = await RestApi.post('api/reg/applications/v1/vehicles', searchValues, { params })
+            const { data } = await RestApi.post('api/reg/applications/v1/vehicles-for-approval', searchValues, { params })
+            // const { data } = await RestApi.post('api/reg/applications/v1/vehicles-for-mvi', searchValues, { params })
             dispatch(setListData(data.content));
             setPaginationData(data);
             if (serviceRequestId) {
@@ -195,7 +197,7 @@ const VehicleRegistrationApprovalList = () => {
                         >
                             {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
-                                    <SearchComponent values={values} clearData={() => handleReset(resetForm, values)} />
+                                    <SearchComponent values={values} clearData={() => handleReset(resetForm, values)} setFieldValue={setFieldValue} />
                                 </FormikForm>
                             )}
                         </Formik>

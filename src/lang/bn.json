@@ -361,6 +361,7 @@
   "officeType": "অফিস টাইপ",
   "selectOfficeType": "অফিস টাইপ নির্বাচন করুন",
   "pleaseSelectOrganization": "অধিদপ্তর নির্বাচন করুন",
+  "pleaseSelectOffice": "অফিস নির্বাচন করুন",
   "pleaseSelectDivision": "বিভাগ নির্বাচন করুন",
   "pleaseSelectDistrict": "জেলা নির্বাচন করুন",
   "pleaseSelectThana": "থানা নির্বাচন করুন",
@@ -456,5 +457,15 @@
   "selectOfficeRole":"অফিস রোল নির্বাচন করুন",
   "switchOfficeRole":"অফিস রোল পরিবর্তন",
   "parentDesignation":"Parent Designation",
+  "reports":"রিপোর্টসমূহ",
+  "vehicleRegistrationReport":"যানবাহন নিবন্ধন রিপোর্ট",
+  "drivingLicenseReport":"ড্রাইভিং লাইসেন্স রিপোর্ট",
+  "ownerType":"মালিকের ধরণ",
+  "licenseType":"লাইসেন্সের ধরণ",
+  "drivingLicenseType":"ড্রাইভিং লাইসেন্সের ধরণ",
+  "licenseNo":"লাইসেন্স নম্বর",
+  "licenseIssueDate":"লাইসেন্স ইস্যু তারিখ",
+  "licenseExpiryDate":"লাইসেন্স মেয়াদ উত্তীর্ণের তারিখ",
+  "pleaseSelectDate":"তারিখ নির্বাচন করুন",
   "selectDocument":"নথি নির্বাচন করুন"
 }

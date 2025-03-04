@@ -89,7 +89,7 @@ const { t } = useTranslation();
                 {({ values, resetForm, isSubmitting, handleChange, setFieldValue }) => (
                     <FormikForm>
                         <Loading loading={loading} loadingText={t('submitting')} />
-                        <div className="row">
+                        {/* <div className="row">
                             <div className="col-md-6">
                                 <Form.Label>{t('dctbExamSheet')}</Form.Label>
                             </div>
@@ -100,7 +100,7 @@ const { t } = useTranslation();
                                     </div>
                                 ) : null}
                             </div>
-                        </div>
+                        </div> */}
 
 
 

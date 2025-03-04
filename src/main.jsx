@@ -8,6 +8,8 @@ import 'sweetalert2/src/sweetalert2.scss';
 import App from './App.jsx';
 import './i18n';
 import './index.css';
+import "flatpickr/dist/themes/material_green.css";
+// import "flatpickr/dist/flatpickr.css";
 import { store } from './store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 

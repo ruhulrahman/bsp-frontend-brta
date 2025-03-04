@@ -154,7 +154,7 @@ const UserList = () => {
                             {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
                                     {/* <SearchComponent onSearch={setSearchValues} /> */}
-                                    <DrivingLicenseApplicationListSearchComponent values={values} clearData={() => handleReset(resetForm, values)} />
+                                    <DrivingLicenseApplicationListSearchComponent values={values} clearData={() => handleReset(resetForm, values)} setFieldValue={setFieldValue} />
                                 </FormikForm>
                             )}
                         </Formik>

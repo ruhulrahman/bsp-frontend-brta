@@ -58,16 +58,16 @@ const MainContent = ({ serviceRequestId }) => {
 
     return (
         <>
-            {/* <div class="max-w-[800px] mx-auto bg-white p-6 shadow-lg rounded-md border border-gray-300">
-                <div class="text-center border-b border-gray-400 pb-2 mb-4">
-                    <h2 class="text-xl font-bold text-red-600">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h2>
-                    <h3 class="text-lg font-semibold text-green-600">বাংলাদেশ রোড ট্রান্সপোর্ট অথরিটি</h3>
-                    <h4 class="text-md font-medium">ফিটনেস সনদ</h4>
+            {/* <div className="max-w-[800px] mx-auto bg-white p-6 shadow-lg rounded-md border border-gray-300">
+                <div className="text-center border-b border-gray-400 pb-2 mb-4">
+                    <h2 className="text-xl font-bold text-red-600">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h2>
+                    <h3 className="text-lg font-semibold text-green-600">বাংলাদেশ রোড ট্রান্সপোর্ট অথরিটি</h3>
+                    <h4 className="text-md font-medium">ফিটনেস সনদ</h4>
                 </div>
-                <div class="mb-4">
-                    <p class="font-semibold">FC: <span class="text-red-600 font-bold">8738673</span></p>
+                <div className="mb-4">
+                    <p className="font-semibold">FC: <span className="text-red-600 font-bold">8738673</span></p>
                 </div>
-                <div class="grid grid-cols-2 gap-2 text-sm">
+                <div className="grid grid-cols-2 gap-2 text-sm">
                     <p><strong>যানের পরিচিতি:</strong> 2-0216210</p>
                     <p><strong>প্রাপ্ত পরিচিতি:</strong> 2-000173032</p>
                     <p><strong>রেজিস্ট্রেশন নম্বর:</strong> DHAKA METRO-GHA-11-7939</p>
@@ -81,11 +81,11 @@ const MainContent = ({ serviceRequestId }) => {
                     <p><strong>টায়ারের সংখ্যা:</strong> 4</p>
                     <p><strong>টায়ারের সাইজ:</strong> 255/65R16</p>
                 </div>
-                <div class="border-t border-gray-400 mt-4 pt-4 text-sm">
+                <div className="border-t border-gray-400 mt-4 pt-4 text-sm">
                     <p><strong>নাম:</strong> PALLI KARMA SHAHYAK FOUNDATION</p>
                     <p><strong>ঠিকানা:</strong> PLOT#E-4/B, ASARAGOAN ADMN AREA, SHER-E-BANGLA NAGAR, DHAKA-1207, BANGLADESH</p>
                 </div>
-                <div class="border-t border-gray-400 mt-4 pt-4 text-sm">
+                <div className="border-t border-gray-400 mt-4 pt-4 text-sm">
                     <p><strong>বৈধতার সময়:</strong></p>
                     <p>হস্তান্তর: 09/01/2023</p>
                     <p>Approval Date: 09/01/2023 12:28</p>

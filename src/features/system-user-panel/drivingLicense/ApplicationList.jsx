@@ -103,6 +103,7 @@ const DLRegistrationApprovalList = () => {
         dispatch(setListData([]));
         try {
             const { data } = await RestApi.post('api/driving-license/v1/application-list', values, { params })
+            // const { data } = await RestApi.post('api/driving-license/v1/application-list-for-mvi', values, { params })
             dispatch(setListData(data.content));
             setPaginationData(data);
             // console.log(data.content);
@@ -156,7 +157,7 @@ const DLRegistrationApprovalList = () => {
                         >
                             {({ values, resetForm, setFieldValue }) => (
                                 <FormikForm>
-                                    <DrivingLicenseApplicationListSearchComponent values={values} clearData={() => handleReset(resetForm, values)} />
+                                    <DrivingLicenseApplicationListSearchComponent values={values} clearData={() => handleReset(resetForm, values)} setFieldValue={setFieldValue} />
                                 </FormikForm>
                             )}
                         </Formik>

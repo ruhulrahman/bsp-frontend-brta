@@ -158,7 +158,7 @@ export default {
   },
   dDate: function (value, format = "DD-MM-YYYY") {
     // return moment(value).local().format(format);
-    if (value) {
+    if (value) {``
       return moment(value).format(format);
     }
     return ''

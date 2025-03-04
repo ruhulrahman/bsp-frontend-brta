@@ -15,6 +15,8 @@ import RevenueCheck from '../features/system-user-panel/vehicle-registration/app
 import VehicleApprove from '../features/system-user-panel/vehicle-registration/applicationForVehicleRegistration/VehicleApprove.jsx';
 import VehicleRegistrationApprovalList from '../features/system-user-panel/vehicle-registration/approval/ApplicationList.jsx';
 import DrivingLicenseApplicationList from '../features/system-user-panel/drivingLicense/ApplicationList.jsx';
+import VehicleRegistrationReport from '../features/system-user-panel/reports/vehicle/VehicleRegistrationReport.jsx';
+import DrivingLicenseReport from '../features/system-user-panel/reports/drivingLicense/DrivingLicenseReport.jsx';
 
 const SystemUserRoutes = [
     { path: 'dashboard/:orgId?/:roleId?', element: <DashboardPage /> },
@@ -33,6 +35,8 @@ const SystemUserRoutes = [
     { path: 'vehicle-registration/application-for-vehicle-registration/vehicle-approve', element: <VehicleApprove /> },
     { path: 'vehicle-registration/approval-1', element: <VehicleRegistrationApprovalList />},
     { path: 'driving-license-registration/application-for-driving-license', element: <DrivingLicenseApplicationList />},
+    { path: 'reports/vehicle/registration-report', element: <VehicleRegistrationReport /> },
+    { path: 'reports/driving-license/driving-license-report', element: <DrivingLicenseReport /> },
   ];
   
   const privateRoutes = [

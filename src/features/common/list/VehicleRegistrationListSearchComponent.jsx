@@ -7,9 +7,11 @@ import ReactSelect from '@/components/ui/ReactSelect';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import { Label } from '@headlessui/react';
+import Flatpickr from "react-flatpickr";
+import helpers, { toaster } from '@/utils/helpers.js';
 
-const SearchComponent = ({ values, clearData }) => {
-const { t } = useTranslation();
+const SearchComponent = ({ setFieldValue, values, clearData }) => {
+    const { t } = useTranslation();
 
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns, permissionTypeList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
@@ -26,7 +28,7 @@ const { t } = useTranslation();
                     <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
                         <Form.Group className="mb-3" controlId="serviceRequestNo">
                             <label htmlFor="serviceRequestNo" className='labelClass'>Service Request No</label>
-                            <Field type="text" name="serviceRequestNo" className="form-control"  placeholder={t('enterSomething')}/>
+                            <Field type="text" name="serviceRequestNo" className="form-control" placeholder={t('enterSomething')} />
                             <ErrorMessage name="serviceRequestNo" component="div" className="text-danger" />
                         </Form.Group>
                     </div>
@@ -34,7 +36,7 @@ const { t } = useTranslation();
                     <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
                         <Form.Group className="mb-3" controlId="chassisNumber">
                             <label htmlFor="chassisNumber" className='labelClass'>Chassis No</label>
-                            <Field type="text" name="chassisNumber" className="form-control"  placeholder={t('enterSomething')}/>
+                            <Field type="text" name="chassisNumber" className="form-control" placeholder={t('enterSomething')} />
                             <ErrorMessage name="chassisNumber" component="div" className="text-danger" />
                         </Form.Group>
                     </div>
@@ -42,14 +44,14 @@ const { t } = useTranslation();
                     <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
                         <Form.Group className="mb-3" controlId="engineNumber">
                             <label htmlFor="engineNumber" className='labelClass'>Engine No</label>
-                            <Field type="text" name="engineNumber" className="form-control"  placeholder={t('enterSomething')}/>
+                            <Field type="text" name="engineNumber" className="form-control" placeholder={t('enterSomething')} />
                             <ErrorMessage name="engineNumber" component="div" className="text-danger" />
                         </Form.Group>
                     </div>
                     <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
                         <Form.Group className="mb-3" controlId="nid">
                             <label htmlFor="nid" className='labelClass'>NID</label>
-                            <Field type="text" name="nid" className="form-control"  placeholder={t('enterSomething')}/>
+                            <Field type="text" name="nid" className="form-control" placeholder={t('enterSomething')} />
                             <ErrorMessage name="nid" component="div" className="text-danger" />
                         </Form.Group>
                     </div>
@@ -57,15 +59,33 @@ const { t } = useTranslation();
                     <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
                         <Form.Group className="mb-3" controlId="mobile">
                             <label htmlFor="mobile" className='labelClass'>Mobile No</label>
-                            <Field type="text" name="mobile" className="form-control"  placeholder={t('enterSomething')}/>
+                            <Field type="text" name="mobile" className="form-control" placeholder={t('enterSomething')} />
                             <ErrorMessage name="mobile" component="div" className="text-danger" />
                         </Form.Group>
                     </div>
 
-                    <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
+                    {/* <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
                         <Form.Group className="mb-3" controlId="applicationDate">
                             <label htmlFor="applicationDate" className='labelClass'>Application Date</label>
-                            <Field type="date" name="applicationDate" value={values.applicationDate} className="form-control"  placeholder={t('enterSomething')}/>
+                            <Field type="date" name="applicationDate" value={values.applicationDate} className="form-control" placeholder={t('enterSomething')} />
+                            <ErrorMessage name="applicationDate" component="div" className="text-danger" />
+                        </Form.Group>
+                    </div> */}
+
+                    <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
+                        <Form.Group className="mb-3" controlId="applicationDate">
+                            <label htmlFor="applicationDate" className='labelClass'>{t('applicationDate')}</label>
+                            <Flatpickr
+                                className="form-control"
+                                placeholder={t('pleaseSelectDate')}
+                                options={{ dateFormat: 'Y-m-d' }}
+                                name="applicationDate"
+                                value={values.applicationDate}
+                                onChange={(option) => {
+                                    const dateValue = helpers.dDate(option[0], 'YYYY-MM-DD')
+                                    setFieldValue('applicationDate', dateValue ? dateValue : '')
+                                }}
+                            />
                             <ErrorMessage name="applicationDate" component="div" className="text-danger" />
                         </Form.Group>
                     </div>

@@ -38,13 +38,13 @@ const Logout = () => {
 
                 // Redirect to the login page
             }
-            localStorage.removeItem('token');
-            localStorage.setItem('roleSet', false);
-            navigate('/login');
         } catch (error) {
             console.log('error', error)
         } finally {
             setLoading(false);
+            localStorage.removeItem('token');
+            localStorage.setItem('roleSet', false);
+            navigate('/login');
         }
     }
 

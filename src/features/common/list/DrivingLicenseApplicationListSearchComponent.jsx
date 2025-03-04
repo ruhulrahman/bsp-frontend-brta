@@ -7,9 +7,11 @@ import ReactSelect from '@/components/ui/ReactSelect';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from '@/i18n';
 import { Label } from '@headlessui/react';
+import Flatpickr from "react-flatpickr";
+import helpers, { toaster } from '@/utils/helpers.js';
 
-const DrivingLicenseApplicationListSearchComponent = ({ values, clearData }) => {
-const { t } = useTranslation();
+const DrivingLicenseApplicationListSearchComponent = ({ setFieldValue, values, clearData}) => {
+    const { t } = useTranslation();
 
     const { activeStatusList, loading, listData, windowSize, pagination, showFilter, dropdowns, permissionTypeList } = useSelector((state) => state.common)
     const currentLanguage = i18n.language;
@@ -54,10 +56,28 @@ const { t } = useTranslation();
                         </Form.Group>
                     </div>
 
-                    <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
+                    {/* <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
                         <Form.Group className="mb-3" controlId="applicationDate">
                             <label htmlFor="applicationDate" className='labelClass'>Application Date</label>
                             <Field type="date" name="applicationDate" value={values.applicationDate} className="form-control" placeholder={t('enterSomething')} />
+                            <ErrorMessage name="applicationDate" component="div" className="text-danger" />
+                        </Form.Group>
+                    </div> */}
+
+                    <div className="col-md-4 col-lg-3 col-xxl-2 col-sm-12">
+                        <Form.Group className="mb-3" controlId="applicationDate">
+                            <label htmlFor="applicationDate" className='labelClass'>{t('applicationDate')}</label>
+                            <Flatpickr
+                                className="form-control"
+                                placeholder={t('pleaseSelectDate')}
+                                options={{ dateFormat: 'Y-m-d' }}
+                                name="applicationDate"
+                                value={values.applicationDate}
+                                onChange={(option) => {
+                                    const dateValue = helpers.dDate(option[0], 'YYYY-MM-DD')
+                                    setFieldValue('applicationDate', dateValue ? dateValue : '')
+                                }}
+                            />
                             <ErrorMessage name="applicationDate" component="div" className="text-danger" />
                         </Form.Group>
                     </div>
