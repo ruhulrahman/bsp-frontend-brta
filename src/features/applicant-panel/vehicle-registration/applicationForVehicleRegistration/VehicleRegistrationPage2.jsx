@@ -273,6 +273,16 @@ const { t } = useTranslation();
                                 }
                             }, [values.vehicleTypeId]);
 
+                            const [remainingLifeInDate, setRemainingLifeInDate] = useState('')
+
+                            useEffect(() => {
+                                if (values.economicLife) {
+                                    let remainingLife = helpers.calculateRemainingLife(values.economicLife, values.manufacturingYear)
+                                    setRemainingLifeInDate(remainingLife)
+                                    setFieldValue('remainingLife', remainingLife)
+                                }
+                            }, [values.economicLife, values.manufacturingYear]);
+
                             const [vehicleClassList, setVehicleClassList] = useState([])
                             const getVehicleClassListByVehicleTypeId = async (vehicleTypeId) => {
 
@@ -550,7 +560,7 @@ const { t } = useTranslation();
                                                 <div className="col-sm-12 col-lg-6 col-xl-6">
                                                     <Form.Group className="mb-3" controlId="economicLife">
                                                         <Form.Label>{t('economicLife')}</Form.Label>
-                                                        <Field disabled={isViewable} type="date" name="economicLife" className="form-control" placeholder="Enter economic life" />
+                                                        <Field disabled={isViewable} type="number" name="economicLife" className="form-control" placeholder="Enter economic life" />
                                                         <ErrorMessage name="economicLife" component="div" className="text-danger" />
                                                     </Form.Group>
                                                 </div>
@@ -558,8 +568,9 @@ const { t } = useTranslation();
                                                 <div className="col-sm-12 col-lg-6 col-xl-6">
                                                     <Form.Group className="mb-3" controlId="remainingLife">
                                                         <Form.Label>{t('remainingLife')}</Form.Label>
-                                                        <Field disabled={isViewable} type="date" name="remainingLife" className="form-control" placeholder="Enter remaining life" />
-                                                        <ErrorMessage name="remainingLife" component="div" className="text-danger" />
+                                                        <span className="form-control">{remainingLifeInDate}</span>
+                                                        {/* <Field disabled={isViewable} type="date" name="remainingLife" className="form-control" placeholder="Enter remaining life" /> */}
+                                                        {/* <ErrorMessage name="remainingLife" component="div" className="text-danger" /> */}
                                                     </Form.Group>
                                                 </div>
 

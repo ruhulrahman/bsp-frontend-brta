@@ -19,7 +19,7 @@ import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import FileViewer from '@/components/common/FileViewer';
 
 const DrivingLicenseApplicationPage2 = () => {
-const { t } = useTranslation();
+    const { t } = useTranslation();
 
     let { serviceRequestNo, isViewable } = useParams()
     isViewable = isViewable === 'true' ? true : false
@@ -509,7 +509,7 @@ const { t } = useTranslation();
                 responseType: isPdf ? "arraybuffer" : "text", // Use "arraybuffer" for PDFs and "text" for Base64
             })
 
-            console.log('response.data', response.data)
+            // console.log('response.data', response.data)
 
             if (fileName.endsWith(".pdf")) {
                 const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -1234,7 +1234,11 @@ const { t } = useTranslation();
                                                                                         <OverlayTrigger overlay={<Tooltip>{t('Save File')}</Tooltip>}>
                                                                                             <button type='button' className='btn btn-sm btn-rounded btn-outline-info' onClick={() => handleFileUpload(selectedMedicleFile.documentTypeId)}><i className="fa fa-save"></i></button>
                                                                                         </OverlayTrigger>
-                                                                                        <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                        {/* <OverlayTrigger overlay={<Tooltip>{t('View File')}</Tooltip>}>
+                                                                                            <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => handleViewSelectedFile(selectedMedicleFile.fileUrl, selectedMedicleFile.fileName)}><i className="fa fa-eye"></i></button>
+                                                                                        </OverlayTrigger> */}
+
+                                                                                        <OverlayTrigger overlay={<Tooltip>{t('Preview File')}</Tooltip>}>
                                                                                             <button type='button' className='btn btn-sm btn-rounded btn-outline-default ml-2' onClick={() => handleViewSelectedFile(selectedMedicleFile.fileUrl, selectedMedicleFile.fileName)}><i className="fa fa-eye"></i></button>
                                                                                         </OverlayTrigger>
                                                                                     </>

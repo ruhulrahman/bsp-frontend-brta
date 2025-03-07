@@ -20,6 +20,8 @@ import helpers, { toaster } from '@/utils/helpers.js';
 const ForwardHeader = ({ editData = null }) => {
     const { t } = useTranslation();
 
+    console.log('editData', editData)
+
     const { hasPermission } = useCommonFunctions();
 
     const { activeStatusList, loading, listData, dropdowns } = useSelector((state) => state.common)

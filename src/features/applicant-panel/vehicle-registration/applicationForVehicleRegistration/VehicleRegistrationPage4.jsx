@@ -19,7 +19,7 @@ import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { setListData, setLoading, toggleShowFilter } from '@/store/commonSlice';
 
 const VehicleRegistrationPage4 = () => {
-const { t } = useTranslation();
+    const { t } = useTranslation();
 
     let { serviceRequestId, isViewable } = useParams()
     const [serviceRequestNo, setServiceRequestNo] = useState(null);
@@ -170,13 +170,13 @@ const { t } = useTranslation();
         }
     }
 
-    const handleViewSelectedFile = async (selectedFile, fileName) => {
-        console.log("selectedFile", selectedFile)
-        console.log("fileName", fileName)
-        setFileUrl(selectedFile);
-        setFileViewerData({ fileUrl: selectedFile, fileName: fileName });
-        openModal()
-    }
+    // const handleViewSelectedFile = async (selectedFile, fileName) => {
+    //     // console.log("selectedFile", selectedFile)
+    //     // console.log("fileName", fileName)
+    //     setFileUrl(selectedFile);
+    //     setFileViewerData({ fileUrl: selectedFile, fileName: fileName });
+    //     openModal()
+    // }
     // Fetch File URL
     const viewSampleFile = async (fileName, documentType) => {
         try {
@@ -199,24 +199,53 @@ const { t } = useTranslation();
         }
     }
     // Fetch File URL
+    // const getFileViewByFileName = async (fileName) => {
+    //     try {
+    //         // const response = await RestApi.get(`/api/files/view/${fileName}`, {
+    //         const response = await RestApi.get(`/api/files/get-file-by-name/${fileName}`, {
+    //             // responseType: "blob", // Important for handling file content
+    //             responseType: 'arraybuffer'
+    //         });
+
+    //         console.log('response', response)
+
+    //         // Create a URL for the file blob
+    //         const blob = new Blob([response.data], { type: 'application/pdf' });
+    //         const url = URL.createObjectURL(blob);
+
+    //         setFileUrl(url);
+    //         setFileViewerData({ fileUrl: url, fileName: fileName });
+    //         openModal()
+    //     } catch (error) {
+    //         console.error("Error fetching file URL:", error);
+    //     }
+    // }
+
     const getFileViewByFileName = async (fileName) => {
         try {
-            const response = await RestApi.get(`/api/files/view/${fileName}`, {
-                // responseType: "blob", // Important for handling file content
-                responseType: 'arraybuffer'
-            });
+            const isPdf = fileName.toLowerCase().endsWith(".pdf");
 
-            console.log('response', response)
+            const response = await RestApi.get(`api/files/get-file-by-name/${fileName}`, {
+                responseType: isPdf ? "arraybuffer" : "text", // Use "arraybuffer" for PDFs and "text" for Base64
+            })
 
-            // Create a URL for the file blob
-            const blob = new Blob([response.data], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
+            // console.log('response.data', response.data)
 
-            setFileUrl(url);
-            setFileViewerData({ fileUrl: url, fileName: fileName });
-            openModal()
+            if (fileName.endsWith(".pdf")) {
+                const blob = new Blob([response.data], { type: 'application/pdf' });
+                const url = window.URL.createObjectURL(blob);
+                // window.open(url, "_blank"); // Open the PDF in a new tab
+                setFileViewerData({ fileUrl: url, fileName: fileName });
+                setOpenFileViewer(true);
+            } else {
+                const base64String = await response.data; // Base64 is returned as plain text
+                // const image = new Image();
+                // image.src = `data:image/jpeg;base64,${base64String}`;
+                setFileViewerData({ fileUrl: `data:image/jpeg;base64,${base64String}`, fileName: fileName });
+                setOpenFileViewer(true);
+            }
         } catch (error) {
-            console.error("Error fetching file URL:", error);
+            console.error("Error fetching PDF:", error);
         }
     }
 
@@ -247,7 +276,7 @@ const { t } = useTranslation();
                     'content-type': 'multipart/form-data'
                 }
             })
-            console.log('data', data)
+            // console.log('data', data)
         } catch (error) {
             console.log('error', error)
         }
@@ -337,11 +366,11 @@ const { t } = useTranslation();
     const [fileUrl, setFileUrl] = useState("");
 
     const [modalOpen, setModalOpen] = useState(false);
+    const [openFileViewer, setOpenFileViewer] = useState(false);
     const [fileViewerData, setFileViewerData] = useState({
         fileUrl: '',
         fileName: ''
     });
-
 
     const openModal = () => {
         setModalOpen(true);
@@ -349,13 +378,23 @@ const { t } = useTranslation();
         // setFileViewerData(item);
     };
 
+    const handleViewSelectedFile = async (selectedFile, fileName) => {
+        setFileUrl(selectedFile);
+        setFileViewerData({ fileUrl: selectedFile, fileName: fileName });
+        setOpenFileViewer(true);
+    }
+
     const handleCloseModal = () => {
-        setModalOpen(false);
-        setFileViewerData({
-            fileUrl: '',
-            fileName: ''
-        }); // Reset edit data
+        setOpenFileViewer(false);
     };
+
+    // const handleCloseModal = () => {
+    //     setModalOpen(false);
+    //     setFileViewerData({
+    //         fileUrl: '',
+    //         fileName: ''
+    //     }); // Reset edit data
+    // };
 
     return (
         <div>
@@ -425,7 +464,7 @@ const { t } = useTranslation();
                             }
 
                             const clearRow = async (documentType) => {
-                                
+
                             }
 
                             // Handle File Selection
@@ -550,7 +589,7 @@ const { t } = useTranslation();
                                                 <div className="col-sm-12 col-lg-12 col-xl-12 text-[14px]">
 
                                                     <FileViewer
-                                                        show={modalOpen}
+                                                        show={openFileViewer}
                                                         onHide={handleCloseModal}
                                                         data={fileViewerData}
                                                     />

@@ -233,7 +233,7 @@ const { t } = useTranslation();
         try {
             const data = await RestApi.get(`api/v1/admin/common/get-organization-by-thana-id/${thanaId}`)
             setOrganization(data.data);
-            setFieldValue('orgId', data.data.id);
+            // setFieldValue('orgId', data.data.id);
         } catch (error) {
             console.log('error', error)
         }
@@ -278,7 +278,7 @@ const { t } = useTranslation();
                     }
                 })
             }
-            console.log('apiResponse.vehicleOwner.isOwnerTypePublic', apiResponse.vehicleOwner.isOwnerTypePublic)
+            // console.log('apiResponse.vehicleOwner.isOwnerTypePublic', apiResponse.vehicleOwner.isOwnerTypePublic)
             setInitialValues(apiResponse);
 
             const newJointOwnerLocation = {
@@ -288,9 +288,6 @@ const { t } = useTranslation();
             }
 
             if (apiResponse.vehicleJointOwners.length) {
-                // for (let i = 0; i < apiResponse.vehicleJointOwners.length; i++) {
-                //     setJointOwnerLocations((prevLocations) => [...prevLocations, newJointOwnerLocation]);
-                // }
                 setJointOwnerLocations(
                     apiResponse.vehicleJointOwners.map(() => ({
                         divisionList: dropdowns.divisionList,
@@ -298,6 +295,8 @@ const { t } = useTranslation();
                         thanaList: [],
                     }))
                 );
+            } else {
+                setJointOwnerLocations([newJointOwnerLocation]);
             }
             fetchDivisionList()
 

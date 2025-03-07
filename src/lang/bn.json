@@ -467,5 +467,7 @@
   "licenseIssueDate":"লাইসেন্স ইস্যু তারিখ",
   "licenseExpiryDate":"লাইসেন্স মেয়াদ উত্তীর্ণের তারিখ",
   "pleaseSelectDate":"তারিখ নির্বাচন করুন",
+  "paymentReport":"পেমেন্ট রিপোর্ট",
+  "paymentList":"পেমেন্ট তালিকা",
   "selectDocument":"নথি নির্বাচন করুন"
 }

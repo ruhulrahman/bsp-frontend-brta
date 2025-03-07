@@ -98,7 +98,7 @@ const { t } = useTranslation();
                     <div className=''>
                         <p className="font-bold text-lg bangla-font">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</p>
                         <p className="font-bold text-lg bangla-font">বাংলাদেশ রোড ট্রান্সপোর্ট অথরিটি</p>
-                        <h2 className="font-bold text-lg bangla-font"><strong>Circle: </strong>{helper.cn(learnerData, 'issuedOffice.nameEn', 'Unknown')}</h2>
+                        <h2 className="font-bold text-lg bangla-font"><strong>Circle: </strong>{helpers.cn(learnerData, 'issuedOffice.nameEn', 'Unknown')}</h2>
                         <h2 className="font-bold text-xl bangla-font my-2 underline">Learner Driving License</h2>
                     </div>
                     <div className="flex-1">
@@ -124,8 +124,8 @@ const { t } = useTranslation();
                     <p><strong>Issue Date :</strong> {currentLanguage === 'en' ? helpers.dDate(learnerData?.issueDate) : toBengaliNumber(helpers.dDate(learnerData?.issueDate))}</p>
                     <p><strong>Expiry Date :</strong> {currentLanguage === 'en' ? helpers.dDate(learnerData?.expireDate) : toBengaliNumber(helpers.dDate(learnerData?.expireDate))}</p>
                     {/* <p><strong>License Type :</strong> NON-PROFESSIONAL</p> */}
-                    <p><strong>License Type :</strong> {currentLanguage === 'en' ? helper.cn(learnerData, 'licenseType.nameEn', 'Unknown') : helper.cn(learnerData, 'licenseType.nameBn', 'Unknown')}</p>
-                    <p><strong>Application Type :</strong> {currentLanguage === 'en' ? helper.cn(learnerData, 'applicationType.nameEn', 'Unknown') : helper.cn(learnerData, 'applicationType.nameBn', 'Unknown')}</p>
+                    <p><strong>License Type :</strong> {currentLanguage === 'en' ? helpers.cn(learnerData, 'licenseType.nameEn', 'Unknown') : helpers.cn(learnerData, 'licenseType.nameBn', 'Unknown')}</p>
+                    <p><strong>Application Type :</strong> {currentLanguage === 'en' ? helpers.cn(learnerData, 'applicationType.nameEn', 'Unknown') : helpers.cn(learnerData, 'applicationType.nameBn', 'Unknown')}</p>
                     {/* <p><strong>Vehicle Description :</strong> LIGHT and MOTORCYCLE</p> */}
                     {/* <p><strong>Vehicle Description :</strong> {vehicleCLasses && vehicleCLasses.length > 0 && vehicleCLasses.map((item) => item.nameBn).join(', ')}</p> */}
 
@@ -179,7 +179,7 @@ const { t } = useTranslation();
                         {/* <p><strong>{t('permanentAddress')} :</strong> FARAZI BARI, KOLAKOPA, DOUALTKHAN, BHOLA-8301</p> */}
                         <p><strong>{t('permanentAddress')} :</strong> {currentLanguage === 'en' ? learnerData?.dlInformation?.permanentAddress?.fullAddressEn : learnerData?.dlInformation?.permanentAddress?.fullAddressBn}</p>
                         <p><strong>Date of Birth :</strong> {currentLanguage === 'en' ? helpers.dDate(learnerData?.userNidInfo?.dob) : toBengaliNumber(helpers.dDate(learnerData?.userNidInfo?.dob))}</p>
-                        <p><strong>Blood Group :</strong> {currentLanguage === 'en' ? helper.cn(learnerData, 'bloodGroup.nameEn', 'Unknown') : helper.cn(learnerData, 'bloodGroup.nameBn', 'Unknown')}</p>
+                        <p><strong>Blood Group :</strong> {currentLanguage === 'en' ? helpers.cn(learnerData, 'bloodGroup.nameEn', 'Unknown') : helpers.cn(learnerData, 'bloodGroup.nameBn', 'Unknown')}</p>
                     </div>
                 </div>
                 <p className='text-sm font-bold mt-4'>This document is automatically generated from system, No signature required</p>

@@ -150,7 +150,7 @@ const AcsDrivingLicensePayment = ({ title, backUrl, serviceCode, serviceRequestI
             let paidAmount = grandTotalItem.grandTotalAmount
 
             const requestBody = {
-                "serviceType": 'vehicle',
+                "serviceType": 'dl',
                 "serviceCode": serviceCode,
                 "serviceRequestNo": serviceRequestNo,
                 "paymentid": helpers.generateUniqueId(),

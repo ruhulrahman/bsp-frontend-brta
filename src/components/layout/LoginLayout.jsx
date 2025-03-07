@@ -12,7 +12,7 @@ import LoginBackground from '../../assets/images/login-background.png';
         height: 100%;
         background-image: url('${LoginBackground.png}');
         background-size: cover;
-      } 
+      }
   `}
 </stlye>
 

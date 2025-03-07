@@ -89,8 +89,8 @@ const { t } = useTranslation();
                         <p><strong>নাম:</strong> {learnerData?.userNidInfo?.nameBn}</p>
                         <p><strong>পিতার নাম:</strong> {learnerData?.userNidInfo?.fatherOrHusbandNameBn}</p>
                         <p><strong>মাতার নাম:</strong> {learnerData?.userNidInfo?.motherNameBn}</p>
-                        <p><strong>Blood Group:</strong> {helper.cn(learnerData, 'bloodGroup.nameEn', 'Unknown')}</p>
-                        <p><strong>NID Number:</strong> {helper.masked(helper.cn(learnerData, 'userNidInfo.nidNumber'))}</p>
+                        <p><strong>Blood Group:</strong> {helpers.cn(learnerData, 'bloodGroup.nameEn', 'Unknown')}</p>
+                        <p><strong>NID Number:</strong> {helpers.masked(helpers.cn(learnerData, 'userNidInfo.nidNumber'))}</p>
 
                     </div>
                 </div>
@@ -101,12 +101,12 @@ const { t } = useTranslation();
                 <h6 className="font-bold border-bottom border-black pb-1">License Details Information</h6>
                 <div className="row text-sm">
                     <div className="col-6">
-                        <p><strong>Reference No.:</strong> {helper.cn(learnerData, 'dlInformation.dlReferenceNumber', 'Unknown')}</p>
-                        <p><strong>License Type:</strong> {helper.cn(learnerData, 'licenseType.nameEn', 'Unknown')}</p>
+                        <p><strong>Reference No.:</strong> {helpers.cn(learnerData, 'dlInformation.dlReferenceNumber', 'Unknown')}</p>
+                        <p><strong>License Type:</strong> {helpers.cn(learnerData, 'licenseType.nameEn', 'Unknown')}</p>
                         <p><strong>Issue Date:</strong> {helpers.dDate(learnerData?.dlInformation?.issueDate)}</p>
                     </div>
                     <div className="col-6">
-                        <p><strong>Licensing Authority:</strong> {helper.cn(learnerData, 'dlInformation.issuedOffice.nameEn', 'Unknown')}, BRTA</p>
+                        <p><strong>Licensing Authority:</strong> {helpers.cn(learnerData, 'dlInformation.issuedOffice.nameEn', 'Unknown')}, BRTA</p>
                         <p>
                             <strong>License Class:</strong>{" "}
                             {vehicleCLasses && vehicleCLasses.length > 0 &&

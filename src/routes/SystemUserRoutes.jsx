@@ -1,7 +1,7 @@
 import SystemUserLayout from '../components/layout/SystemUserLayout.jsx';
 
 import AuthGuard from './AuthGuard.jsx';
-import DashboardPage from '../features/admin/dashboard/pages/DashboardPage.jsx';
+import DashboardPage from '../features/system-user-panel/dashboard/pages/DashboardPage.jsx';
 import ChangePassword from '../features/common/profile-management/pages/ChangePassword.jsx';
 import Profile from '../features/common/profile-management/pages/Profile.jsx';
 import UserProfile from '../features/common/profile-management/pages/UserProfile.jsx';
@@ -17,6 +17,7 @@ import VehicleRegistrationApprovalList from '../features/system-user-panel/vehic
 import DrivingLicenseApplicationList from '../features/system-user-panel/drivingLicense/ApplicationList.jsx';
 import VehicleRegistrationReport from '../features/system-user-panel/reports/vehicle/VehicleRegistrationReport.jsx';
 import DrivingLicenseReport from '../features/system-user-panel/reports/drivingLicense/DrivingLicenseReport.jsx';
+import PaymentList from '../features/system-user-panel/reports/payment/PaymentList.jsx';
 
 const SystemUserRoutes = [
     { path: 'dashboard/:orgId?/:roleId?', element: <DashboardPage /> },
@@ -37,6 +38,7 @@ const SystemUserRoutes = [
     { path: 'driving-license-registration/application-for-driving-license', element: <DrivingLicenseApplicationList />},
     { path: 'reports/vehicle/registration-report', element: <VehicleRegistrationReport /> },
     { path: 'reports/driving-license/driving-license-report', element: <DrivingLicenseReport /> },
+    { path: 'reports/payment/payment-list', element: <PaymentList /> },
   ];
   
   const privateRoutes = [

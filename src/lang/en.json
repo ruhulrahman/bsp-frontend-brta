@@ -469,5 +469,7 @@
   "licenseIssueDate":"License Issue Date",
   "licenseExpiryDate":"License Expiry Date",
   "pleaseSelectDate":"Please Select Date",
+  "paymentReport":"Payment Report",
+  "paymentList":"Payment List",
   "selectDocument":"Select Document"
 }

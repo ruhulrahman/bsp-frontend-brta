@@ -210,6 +210,14 @@ export default {
     // return moment(value).fromNow()
     return moment.utc(value).local().fromNow();
   },
+  calculateRemainingLife: function (economicLife, manufacturingYear) {
+    if (!economicLife) {
+      return 0;
+    }
+    const currentYear = new Date().getFullYear();
+    const remainingLife = economicLife - (currentYear - manufacturingYear);
+    return remainingLife;
+  },
   integer: function (value = 0) {
     const integerValue = value | 0;
     return Number(integerValue).toLocaleString();
