@@ -229,7 +229,7 @@ const UserList = () => {
                                     <td>{item.ccOrKw}</td>
                                     <td>{item.manufacturingYear}</td>
                                     <td>{helpers.dDate(item.applicationDate)}</td>
-                                    <td>{item.applicationStatusName}</td>
+                                    <td><span className={`badge bg-${item.applicationStatusColor}`}>{item.applicationStatusName}</span></td>
                                     <td className='text-left'>
                                         {/* <OverlayTrigger overlay={<Tooltip>{t('applicationDetails')}</Tooltip>}>
                                             <button onClick={() => openModal(item)} className="btn btn-sm rounded-full text-xs btn-outline-dark mr-2">

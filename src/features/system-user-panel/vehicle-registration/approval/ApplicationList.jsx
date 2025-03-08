@@ -251,7 +251,7 @@ const VehicleRegistrationApprovalList = () => {
                                     <td>{item.ccOrKw}</td>
                                     <td>{item.manufacturingYear}</td>
                                     <td>{helpers.dDate(item.applicationDate)}</td>
-                                    <td>{item.applicationStatusName}</td>
+                                    <td><span className={`badge bg-${item.applicationStatusColor}`}>{item.applicationStatusName}</span></td>
                                     {/* <td><span className={`badge bg-${item.applicationStatusColor}`}>{item.applicationStatusName}</span></td> */}
                                     <td className='text-center'>
                                         {hasPermission('vehicle_application_approval') && (

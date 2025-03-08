@@ -17,6 +17,7 @@ import { toBengaliNumber, toBengaliWord } from 'bengali-number'
 import { useNavigate } from 'react-router-dom';
 import useCommonFunctions from '@/hooks/useCommonFunctions';
 import CustomPagination from '@/components/common/CustomPagination';
+import ViewDetails from './ViewDetails';
 
 const PaymentList = () => {
     const { t } = useTranslation();
@@ -158,18 +159,41 @@ const PaymentList = () => {
         setEditData('');
     };
 
-    const handleOpenViewDetailsModal = (item) => {
-        setEditData(item);
-        setModalOpen(true);
-    };
-
     const handleCloseModal = () => {
         setModalOpen(false);
         setEditData(null); // Reset edit data
     };
-    const handleSave = async (serviceRequestId) => {
-        getListData(serviceRequestId)
+    const handleSave = async () => {
+        // getListData()
     };
+
+    const [viewModalOpen, setViewModalOpen] = useState(false);
+    const [viewData, setViewData] = useState(null);
+    const handleOpenViewDetailsModal = (item) => {
+        // setViewData(item)
+        getPaymentDetails(item)
+    };
+
+    const handleCloseViewDetailsModal = () => {
+        setViewModalOpen(false);
+        setViewData(null); // Reset edit data
+    }
+
+    const getPaymentDetails = async (item) => {
+        const params = Object.assign({paymentid: item.paymentId});
+        dispatch(setLoading(true));
+        try {
+            const { data } = await RestApi.get(`api/bsp/acs/v1/payment/details/${item.paymentId}`, { params })
+            console.log('data', data);
+            const paymentDetails = Object.assign({}, item, data)
+            setViewData(paymentDetails)
+            setViewModalOpen(true)
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            dispatch(setLoading(false));
+        }
+    }
 
     return (
         <>
@@ -245,6 +269,13 @@ const PaymentList = () => {
                     </div>
                 </div>
 
+                <ViewDetails
+                    show={viewModalOpen}
+                    onHide={handleCloseViewDetailsModal}
+                    onSave={handleSave}
+                    viewData={viewData}
+                />
+
                 <div className="p-0 overflow-auto min-h-[300px]">
                     <Loading loading={loading} />
                     <table className="table-auto min-w-full text-left border border-gray-200">
@@ -256,11 +287,10 @@ const PaymentList = () => {
                                 <th>Client Name</th>
                                 <th>Paid Amount</th>
                                 <th>Payment ID</th>
-                                {/* <th className='text-center'>Actions</th> */}
+                                <th className='text-center'>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-
                             {listData && listData.map((item, index) => (
                                 <tr key={item.sl} className='text-slate-500 text-sm'>
                                     <td>{currentLanguage === 'en' ? slOffset + index : toBengaliNumber(slOffset + index)}.</td>
@@ -269,13 +299,13 @@ const PaymentList = () => {
                                     <td>{item.clientName}</td>
                                     <td>{item.paidAmount}</td>
                                     <td>{item.paymentId}</td>
-                                    {/* <td className='text-center'>
-                                        <OverlayTrigger overlay={<Tooltip>{t('applicationDetails')}</Tooltip>}>
-                                            <button onClick={() => openModal(item, 'revenue')} className='btn btn-sm rounded-full text-[12px] btn-outline-dark mr-1'>
+                                    <td className='text-center'>
+                                        <OverlayTrigger overlay={<Tooltip>{t('viewDetails')}</Tooltip>}>
+                                            <button onClick={() => handleOpenViewDetailsModal(item)} className='btn btn-rounded btn-sm text-[12px] btn-outline-dark'>
                                                 <i className="fa fa-eye"></i>
                                             </button>
                                         </OverlayTrigger>
-                                    </td> */}
+                                    </td>
                                 </tr>
                             ))}
 
